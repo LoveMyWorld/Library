@@ -13,7 +13,6 @@
             overflow-x: hidden; /* 禁用横向滚动条 */
         }
         .sidebar {
-
             width: 200px;
             background-color: #07598a;
             color: #ecf0f1;
@@ -27,8 +26,8 @@
             font-family: '楷体';
             font-weight: bold;
             text-align: center;
-            padding: 30px;
             margin-bottom: 30px;
+            padding: 30px;
         }
         .sidebar a {
 
@@ -52,11 +51,11 @@
             transform: scale(0.98); /* 按下时按钮稍微缩小 */
             background-color: #2c3e50; /* 按下时按钮背景颜色 */
         }
-
         /*改*/
         .sidebar-footer {
             text-align: center;
-            padding: 280px 0;
+            padding: 350px 0;   /*改变下方横线位置，就改这里*/
+
         }
 
         .sidebar-footer .divider {
@@ -86,7 +85,9 @@
             background-color: #34495e;
             transform: scale(1.01);
         }
-/*改*/
+        /*改*/
+
+
         .container {
             margin-left: 220px; /* 调整左边距适应侧边栏宽度 */
             padding: 15px;
@@ -240,26 +241,27 @@
 <body>
 <div class="sidebar">
     <div>
-    <h3>冠军小队</h3>
-    <a href="#" class="active">预约</a>
-    <a href="#" class="active">借书</a>
-    <a href="#" class="active">还书</a>
-    <a href="#" class="active">查询</a>
+        <h3>冠军小队</h3>
 
-</div>
+        <a href="#" class="active">编目管理</a>
+        <a href="#" class="active">验收清单</a>
+        <a href="#" class="active">报损</a>
 
-<!-- 底部横杠和关于我们按钮 -->
-<div class="sidebar-footer">
-    <div class="divider"></div>
-    <a href="#" class="about-btn">关于我们</a>
-    <a href="#" class="about-btn">帮助</a>
-</div>
+
+    </div>
+
+    <!-- 底部横杠和关于我们按钮 -->
+    <div class="sidebar-footer">
+        <div class="divider"></div>
+        <a href="#" class="about-btn">关于我们</a>
+        <a href="#" class="about-btn">帮助</a>
+    </div>
 </div>
 
 <div class="container">
     <!-- 冠军小队编目系统框 -->
     <div class="system-title-box">
-        冠军小队流通系统
+        冠军小队编目系统
     </div>
 
     <!-- 编目管理列表框 -->
@@ -270,27 +272,27 @@
         <div class="toolbar">
             <div class="tools">
                 <button>
-                    <img src="image/add-icon.png" alt="添加">
+                    <img src="../image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
                 <button>
-                    <img src="image/edit-icon.png" alt="编辑">
+                    <img src="../image/edit-icon.png" alt="编辑">
                     <div class="tooltip">编辑</div>
                 </button>
                 <button>
-                    <img src="image/delete-icon.png" alt="删除">
+                    <img src="../image/delete-icon.png" alt="删除">
                     <div class="tooltip">删除</div>
                 </button>
                 <button>
-                    <img src="image/refresh-icon.png" alt="刷新">
+                    <img src="../image/refresh-icon.png" alt="刷新">
                     <div class="tooltip">刷新</div>
                 </button>
                 <button>
-                    <img src="image/ru.png" alt="导入">
+                    <img src="../image/ru.png" alt="导入">
                     <div class="tooltip">导入</div>
                 </button>
                 <button>
-                    <img src="image/chu.png" alt="导出">
+                    <img src="../image/chu.png" alt="导出">
                     <div class="tooltip">导出</div>
                 </button>
             </div>

@@ -1,0 +1,19 @@
+Index: web/web/index.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><%--\r\n  Created by IntelliJ IDEA.\r\n  User: yunxiu\r\n  Date: 2024/12/22\r\n  Time: 23:07\r\n  To change this template use File | Settings | File Templates.\r\n--%>\r\n<%@ page contentType=\"text/html;charset=UTF-8\" language=\"java\" %>\r\n<html>\r\n  <head>\r\n    <title>$Title$</title>\r\n  </head>\r\n  <body>\r\n  $END$\r\n\r\n  Welcome\r\n  </body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/web/web/index.jsp b/web/web/index.jsp
+--- a/web/web/index.jsp	(revision af303051035eceabf2fe664b760fa4550eeb329f)
++++ b/web/web/index.jsp	(date 1735796315178)
+@@ -12,7 +12,7 @@
+   </head>
+   <body>
+   $END$
+-
++哈哈哈
+   Welcome
+   </body>
+ </html>

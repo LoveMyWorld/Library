@@ -272,27 +272,27 @@
         <div class="toolbar">
             <div class="tools">
                 <button>
-                    <img src="image/add-icon.png" alt="添加">
+                    <img src="../image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
                 <button>
-                    <img src="image/edit-icon.png" alt="编辑">
+                    <img src="../image/edit-icon.png" alt="编辑">
                     <div class="tooltip">编辑</div>
                 </button>
                 <button>
-                    <img src="image/delete-icon.png" alt="删除">
+                    <img src="../image/delete-icon.png" alt="删除">
                     <div class="tooltip">删除</div>
                 </button>
                 <button>
-                    <img src="image/refresh-icon.png" alt="刷新">
+                    <img src="../image/refresh-icon.png" alt="刷新">
                     <div class="tooltip">刷新</div>
                 </button>
                 <button>
-                    <img src="image/ru.png" alt="导入">
+                    <img src="../image/ru.png" alt="导入">
                     <div class="tooltip">导入</div>
                 </button>
                 <button>
-                    <img src="image/chu.png" alt="导出">
+                    <img src="../image/chu.png" alt="导出">
                     <div class="tooltip">导出</div>
                 </button>
             </div>
