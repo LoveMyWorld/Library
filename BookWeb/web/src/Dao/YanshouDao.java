@@ -47,7 +47,7 @@ class YanshouDao {
                 yanshou.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
                 yanshou.setSubscribeNum(rs.getInt("subscribeNum"));                           // 征订册数
                 yanshou.setAuthor(rs.getString("author"));                                    // 作者
-
+                yanshou.setBianmu(rs.getBoolean("isBianmu"));
                 // 根据 Yanshou 类的字段继续添加赋值逻辑
                 dataList.add(yanshou); // 将对象添加到列表
             }

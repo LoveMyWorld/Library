@@ -18,10 +18,12 @@ public class Yanshou {
     private LocalDate publicationDate; // 出版日期
     private int subscribeNum; // 征订册数
     private String author; // 作者
+    private boolean isBianmu;
     public Yanshou(){};
-    public Yanshou(String supplier, String orderName, String title, String publisher, String orderPerson, String receiver, String ISBN, DocumentType documentType, int currencyID, double price, String edition, String printingHouse, LocalDate publicationDate, int subscribeNum, String author) {
+
+    public Yanshou(String supplier, String orderName, String title, String publisher, String orderPerson, String receiver, String ISBN, DocumentType documentType, int currencyID, double price, String edition, String printingHouse, LocalDate publicationDate, int subscribeNum, String author, boolean isBianmu) {
         this.supplier = supplier;
-        this.orderName = this.orderName;
+        this.orderName = orderName;
         this.title = title;
         this.publisher = publisher;
         this.orderPerson = orderPerson;
@@ -35,6 +37,15 @@ public class Yanshou {
         this.publicationDate = publicationDate;
         this.subscribeNum = subscribeNum;
         this.author = author;
+        this.isBianmu = isBianmu;
+    }
+
+    public boolean isBianmu() {
+        return isBianmu;
+    }
+
+    public void setBianmu(boolean bianmu) {
+        isBianmu = bianmu;
     }
 
     public void setSupplier(String supplier) {
