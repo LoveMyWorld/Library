@@ -1,12 +1,12 @@
 package Entity;
 
 public class BackupCycle {
-    private String backupName;
+    private BackupNameType backupName;
     private int backupCycle;
     private String backupLoc;
     private String operator;
 
-    public BackupCycle(String backupName, int backupCycle, String backupLoc, String operator) {
+    public BackupCycle(BackupNameType backupName, int backupCycle, String backupLoc, String operator) {
         this.backupName = backupName;
         this.backupCycle = backupCycle;
         this.backupLoc = backupLoc;
@@ -17,11 +17,11 @@ public class BackupCycle {
     }
 
     // Getters and Setters
-    public String getBackupName() {
+    public BackupNameType getBackupName() {
         return backupName;
     }
 
-    public void setBackupName(String backupName) {
+    public void setBackupName(BackupNameType backupName) {
         this.backupName = backupName;
     }
 

@@ -1,6 +1,7 @@
 package Dao;
 
 import Entity.BackupUpdate;
+import Entity.OpType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class BackupUpdateDao {
         try (PreparedStatement ps = dao.conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             ps.setString(1, update.getBackupID());
-            ps.setString(2, update.getOpType());
+            ps.setString(2, update.getOpType().getDescription());
             ps.setString(3, update.getOperator());
             ps.executeUpdate();
         }
@@ -33,7 +34,7 @@ public class BackupUpdateDao {
             while (rs.next()) {
                 BackupUpdate update = new BackupUpdate();
                 update.setBackupID(rs.getString("backupID"));
-                update.setOpType(rs.getString("opType"));
+                update.setOpType(OpType.fromDescription(rs.getString("opType")));
                 update.setOperator(rs.getString("operator"));
                 updates.add(update);
             }

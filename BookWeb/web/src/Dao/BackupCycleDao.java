@@ -1,6 +1,7 @@
 package Dao;
 
 import Entity.BackupCycle;
+import Entity.BackupNameType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class BackupCycleDao {
         String sql = "INSERT INTO library.backup_cycle (backupName, backupCycle, backupLoc, operator) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = dao.conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            ps.setString(1, cycle.getBackupName());
+            ps.setString(1, cycle.getBackupName().getDescription());
             ps.setInt(2, cycle.getBackupCycle());
             ps.setString(3, cycle.getBackupLoc());
             ps.setString(4, cycle.getOperator());
@@ -33,7 +34,7 @@ public class BackupCycleDao {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 BackupCycle cycle = new BackupCycle();
-                cycle.setBackupName(rs.getString("backupName"));
+                cycle.setBackupName(BackupNameType.fromDescription(rs.getString("backupName")));
                 cycle.setBackupCycle(rs.getInt("backupCycle"));
                 cycle.setBackupLoc(rs.getString("backupLoc"));
                 cycle.setOperator(rs.getString("operator"));
