@@ -577,6 +577,9 @@
                             $('#categoryName').val(response.resultInfo.data.categoryName);
                             $('#categoryName').prop('disabled' , true);
                         }
+                        else{
+                            $('#categoryName').prop('disabled' , false);
+                        }
 
                          console.log(response.resultInfo.data.isbn);
                          console.log(response.publicationDate);
@@ -675,6 +678,9 @@
                         if(response.resultInfo.data.categoryName){
                             $('#categoryName').val(response.resultInfo.data.categoryName);
                             $('#categoryName').prop('disabled' , true);
+                        }
+                        else{
+                            $('#categoryName').prop('disabled' , false);
                         }
 
 
