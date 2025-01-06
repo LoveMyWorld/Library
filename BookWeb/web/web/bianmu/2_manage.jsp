@@ -573,7 +573,11 @@
                         $('#price').val(response.resultInfo.data.price);
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
-                        $('#categoryName').val(response.resultInfo.data.categoryName);
+                        if(response.resultInfo.data.categoryName){
+                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            $('#categoryName').prop('disabled' , true);
+                        }
+
                          console.log(response.resultInfo.data.isbn);
                          console.log(response.publicationDate);
                         console.log(response.resultInfo.data.supplier);
@@ -676,6 +680,7 @@
                         // $('#myModal').show();
                     } else {
                         alert(response.resultInfo.errorMsg);
+                        $('#myModal').hide();
                     }
                     <%
                         System.out.println("success");

@@ -32,12 +32,12 @@ class CatalogMDao
             {
                 // 假设编目号存储在 "categoryID" 字段中
                 cataloglist=new Cataloglist();
+                cataloglist.setBookID(rs.getString("BookID"));
                 cataloglist.setISBN(isbn);
                 cataloglist.setSupplier(rs.getString("supplier"));                                // 书商
                 cataloglist.setTitle(rs.getString("title"));                                      // 书名
                 cataloglist.setPublisher(rs.getString("publisher"));                              // 出版社
-                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                cataloglist.setReceiver(rs.getString("receiver"));                                // 验收人
+                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
                 cataloglist.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 cataloglist.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
@@ -108,6 +108,7 @@ class CatalogMDao
             dao.dbcmd(updatePs2);
 
             dao.AllClose();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace(); // 打印异常信息
         }

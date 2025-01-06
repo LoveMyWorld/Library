@@ -21,6 +21,23 @@ public class Cataloglist {
 //    private String printingHouse; // 印刷厂
     public Cataloglist(){};
 
+    public Cataloglist(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, String orderPerson, int bookNum, DocumentType documentType, String categoryName) {
+        this.bookID = bookID;
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.publicationDate = publicationDate;
+        this.publisher = publisher;
+        this.edition = edition;
+        this.supplier = supplier;
+        this.currencyID = currencyID;
+        this.price = price;
+        this.orderPerson = orderPerson;
+        this.bookNum = bookNum;
+        this.documentType = documentType;
+        this.categoryName = categoryName;
+    }
+
     public Cataloglist(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, String orderPerson, String receiver, int bookNum, DocumentType documentType, String categoryName) {
         this.bookID = bookID;
         this.title = title;
