@@ -2,7 +2,7 @@ package Entity;
 
 import java.time.LocalDate;
 
-public class Cataloglist {
+public class Liutong {
     private String bookID; // 图书编号
     private String title; // 书名
     private String author; // 作者
@@ -18,10 +18,9 @@ public class Cataloglist {
     private int bookNum; // 征订册数
     private DocumentType documentType;//文献类型
     private String categoryName;
-//    private String printingHouse; // 印刷厂
-    public Cataloglist(){};
+    public Liutong(){};
 
-    public Cataloglist(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, String orderPerson, String receiver, int bookNum, DocumentType documentType, String categoryName) {
+    public Liutong(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, String orderPerson, String receiver, int bookNum, DocumentType documentType, String categoryName) {
         this.bookID = bookID;
         this.title = title;
         this.author = author;
