@@ -145,7 +145,7 @@ class YanshouDao {
         }
         try {
             PreparedStatement ps = dao.conn.prepareStatement(sql);
-            ps.setString(1, searchValue);
+            ps.setBoolean(1, searchValue.equals("true")? true : false);
             ResultSet rs = ps.executeQuery();
             Yanshou yanshou = null;
             // 遍历结果集，将每一行转换为 Yanshou 对象并添加到列表

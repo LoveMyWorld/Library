@@ -359,28 +359,28 @@
                 <%--                    <div class="tooltip">添加</div>--%>
                 <%--                </button>--%>
                 <button id="addButton">
-                    <img src="../image/add-icon.png" alt="添加">
+                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
 
                 <button>
-                    <img src="../image/edit-icon.png" alt="编辑">
+                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
                     <div class="tooltip">编辑</div>
                 </button>
                 <button>
-                    <img src="../image/delete-icon.png" alt="删除">
+                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
                     <div class="tooltip">删除</div>
                 </button>
                 <button>
-                    <img src="../image/refresh-icon.png" alt="刷新">
+                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
                     <div class="tooltip">刷新</div>
                 </button>
                 <button>
-                    <img src="../image/ru.png" alt="导入">
+                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
                     <div class="tooltip">导入</div>
                 </button>
                 <button>
-                    <img src="../image/chu.png" alt="导出">
+                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
                     <div class="tooltip">导出</div>
                 </button>
             </div>
@@ -442,11 +442,11 @@
             书籍编目
             <span class="close" id="closeModal">&times;</span>
         </div>
-        <form id="bookForm">
+        <form id="bookForm" action="" method="get">
             <table class="modal-table">
                 <tr>
                     <th>图书编号</th>
-                    <td><input type="text" id="bookId" name="bookId" readonly ></td>
+                    <td><input type="text" id="bookID" name="bookID" readonly ></td>
                     <th>书名</th>
                     <td><input type="text" id="title" name="title" readonly ></td>
                 </tr>
@@ -458,40 +458,47 @@
                 </tr>
                 <tr>
                      <th>版次</th>
-                    <td><input type="text" id="edition" readonly ></td>
+                    <td><input type="text" id="edition" name="edition" readonly ></td>
                     <th>文献类型</th>
-                    <td><input type="text" id="documentType" readonly ></td>
+                    <td><input type="text" id="documentType" name="documentType" readonly ></td>
 <%--                    <th>币种编号</th>--%>
 <%--                    <td><input type="text" id="currencyCode"></td>--%>
                 </tr>
                  <tr>
                      <th>册数</th>
-                     <td><input type="text" id="bookCount" readonly ></td>
+                     <td><input type="text" id="bookNum" name="bookNum" readonly ></td>
                      <th>图书分类号</th>
-                     <td><select id="categoryCode">
-                        <option value="A">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
-                        <option value="A1">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
-                        <option value="A11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
-                        <option value="A12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
+                     <td><select id="categoryName" name="categoryName">
+                        <option value="A 马克思主义、列宁主义、毛泽东思想、邓小平理论">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
+                        <option value="A1 马克思、恩格斯著作">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
+                        <option value="A11 选集、文集">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
+                        <option value="A12 单行著作">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
 
                      </select></td>
                 </tr>
                 <tr>
                     <th>ISBN</th>
-                    <td><input type="text" id="isbn" readonly ></td>
+                    <td><input type="text" id="isbn" name="isbn" readonly ></td>
                     <th>出版社</th>
-                    <td><input type="text" id="publisher" readonly ></td>
+                    <td><input type="text" id="publisher" name="publisher" readonly ></td>
                 </tr>
                 <tr>
                     <th>书商</th>
-                    <td><input type="text" id="bookseller" readonly ></td>
+                    <td><input type="text" id="supplier" name="supplier" readonly ></td>
                     <th>定价</th>
-                    <td><input type="text" id="price" readonly ></td>
+                    <td><input type="text" id="price" name="price" readonly ></td>
                 </tr>
 
              </table>
-            <button type="button" id="submitForm">提交</button>
+            <button type="button" id="confirmButton" name="confirmButton">确定</button>
         </form>
+        <!-- 成功提示框 -->
+        <div id="successModal" style="display: none;">
+            <div class="modal-content">
+                <p>编目成功！</p>
+                <button id="closeSuccessModal">关闭</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -503,6 +510,10 @@
         var modal = document.getElementById("myModal");
         var addButton = document.getElementById("addButton");
         var closeModal = document.getElementById("closeModal");
+        var confirmButton = document.getElementById("confirmButton");
+        var successModal = document.getElementById("successModal");
+        var closeSuccessModal = document.getElementById("closeSuccessModal");
+
 
         // 打开模态框
         addButton.onclick = function () {
@@ -525,6 +536,7 @@
 
         // 向后端请求初始化弹框数据
         function fetchInitData() {
+            console.log("I an fetchInitData function");
             $.ajax({
                 url: '${pageContext.request.contextPath}/initBookForm',  // 后端接口，初始化表单数据
                 method: 'GET',
@@ -532,16 +544,33 @@
                 success: function (response) {
                     if (response.resultInfo.flag) {
                         // 假设后端返回的数据包含初始化的书籍信息
-                        $('#bookId').val(response.resultInfo.data.bookID);
+                        // $('#bookID').val(response.resultInfo.data.bookID);
+                        // $('#title').val(response.resultInfo.data.title);
+                        // $('#author').val(response.resultInfo.data.author);
+                        // $('#publicationDate').val(response.publicationDate);
+                        // console.log(response.flag);
+                        // console.log(response.data);
+                        // console.log(response.errorMessage);
+                        // console.log(dataString)
+                        $('#bookID').val(response.resultInfo.data.bookID);
                         $('#title').val(response.resultInfo.data.title);
                         $('#author').val(response.resultInfo.data.author);
-
+                        $('#isbn').val(response.resultInfo.data.isbn);
                         $('#publicationDate').val(response.publicationDate);
-                        console.log(response.flag);
-                        console.log(response.data);
-                        console.log(response.errorMessage);
-                        console.log(dataString)
+                        $('#publisher').val(response.resultInfo.data.publisher);
+                        $('#edition').val(response.resultInfo.data.edition);
+                        $('#supplier').val(response.resultInfo.data.supplier);
+                        $('#currencyID').val(response.resultInfo.data.currencyID);
+                        $('#price').val(response.resultInfo.data.price);
+                        $('#bookNum').val(response.resultInfo.data.bookNum);
+                        $('#documentType').val(response.resultInfo.data.documentType);
+                        $('#categoryName').val(response.resultInfo.data.categoryName);
+                         console.log(response.resultInfo.data.isbn);
+                         console.log(response.publicationDate);
+                        console.log(response.resultInfo.data.supplier);
+                        // console.log(dataString)
                         // 显示弹框
+
                         $('#myModal').show();
                     } else {
                         alert('初始化数据失败');
@@ -555,7 +584,102 @@
                 }
             });
         }
+        // 确认按钮点击事件
+        confirmButton.onclick = function () {
+            console.log("I am confirmButton onclick");
+            // 获取目录字段的值
+            var categoryName = document.getElementById("categoryName").value;
+            var isbn = document.getElementById("isbn").value;
+            // 如果目录字段为空，则提醒用户并返回
+            if (document.getElementById("categoryName").value==null||document.getElementById("categoryName").value=='') {
+                alert("目录不能为空！");
+                return;
+            }
+            else{
+                // // 弹出成功提示框
+                // successModal.style.display = "block";
+                //
+                // // 提交表单（普通提交，跳转到后端处理URL）
+                // document.getElementById("bookForm").submit();
+                //
+                // // 在点击时向后端请求相关数据
+                // fetchNextData();  // 获取并展示现有数据
+                // alert("编目成功！");
+                var formData = $('#bookForm').serialize();
+                $.ajax({
+                    url:'${pageContext.request.contextPath}/CatalogOneBook' ,
+                    method :'GET',
+                    data : formData,
+                    dataType : 'json',
+                    success : function (response) {
 
+                        if(response.resultInfo.flag){
+
+                            console.log(response.resultInfo.date);
+                            var BianmuBookID=response.BianmuBookID;
+                            alert("编目成功,图书编号为："+BianmuBookID);
+                            // // 在点击时向后端请求相关数据
+                            // fetchNextData();  // 获取并展示现有数据
+                            fetchNextData();
+                        }
+                        else{
+                            alert(response.resultInfo.ErrorMsg);
+                        }
+                    }
+                });
+
+
+
+            }
+
+
+
+        }
+        function fetchNextData() {
+            console.log("I an fetchNextData function");
+            $.ajax({
+                url: '${pageContext.request.contextPath}/initBookForm',  // 后端接口，初始化表单数据
+                method: 'GET',
+                dataType: 'json' ,
+                success: function (response) {
+                    if (response.resultInfo.flag) {
+                        // 假设后端返回的数据包含初始化的书籍信息
+
+                        console.log(response.resultInfo.data);
+                        $('#bookID').val(response.resultInfo.data.bookID);
+                        $('#title').val(response.resultInfo.data.title);
+                        $('#author').val(response.resultInfo.data.author);
+                        $('#isbn').val(response.resultInfo.data.isbn);
+                        $('#publicationDate').val(response.publicationDate);
+                        $('#publisher').val(response.resultInfo.data.publisher);
+                        $('#edition').val(response.resultInfo.data.edition);
+                        $('#supplier').val(response.resultInfo.data.supplier);
+                        $('#currencyID').val(response.resultInfo.data.currencyID);
+                        $('#price').val(response.resultInfo.data.price);
+                        $('#bookNum').val(response.resultInfo.data.bookNum);
+                        $('#documentType').val(response.resultInfo.data.documentType);
+                        $('#categoryName').val(response.resultInfo.data.categoryName);
+
+
+                        // 显示弹框
+
+                        // $('#myModal').show();
+                    } else {
+                        alert('初始化数据失败');
+                    }
+                    <%
+                        System.out.println("success");
+                    %>
+                },
+                error: function () {
+                    alert('请求失败，请稍后重试');
+                }
+            });
+        }
+        // 关闭成功提示框
+        closeSuccessModal.onclick = function () {
+            successModal.style.display = "none";
+        }
         // 关闭弹框
         $('.close').click(function() {
             $('#myModal').hide();

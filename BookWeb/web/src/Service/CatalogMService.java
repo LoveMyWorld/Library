@@ -13,6 +13,17 @@ public class CatalogMService {
     //其实都是通过验收i清单导出信息
     //验收i清单所有的信息都传给后端，这样编目清单表格中的空缺就只有图书编号，册数和分类号了
 
+    //将这几个函数融合
+    Cataloglist  cataloglistnew = new Cataloglist();
+
+    public Cataloglist getCataloglistnew() {
+        return cataloglistnew;
+    }
+
+    public void setCataloglistnew(Cataloglist cataloglistnew) {
+        this.cataloglistnew = cataloglistnew;
+    }
+
     public Yanshou getYanshouInfo() {
         YanshouDao yanshouDao = new YanshouDao();
         Yanshou yanshou = yanshouDao.findBooksBySearchOneLine("isbianmu", "false");
@@ -52,7 +63,7 @@ public class CatalogMService {
         }
         else return null;
     }
-    //将这几个函数融合
+
     public Cataloglist getCatalogInfoWithFallback() {
 //        YanshouDao yanshouDao = new YanshouDao();
 //
@@ -65,7 +76,7 @@ public class CatalogMService {
             System.out.println("不存在未编目书籍");
             return null; // 如果验收清单中没有数据，直接返回 null
         }
-        Cataloglist cataloglistnew = new   Cataloglist();
+        Cataloglist cataloglistnew = new Cataloglist();
         cataloglistnew.setTitle(yanshou.getTitle());
         cataloglistnew.setAuthor(yanshou.getAuthor());
         cataloglistnew.setISBN(yanshou.getISBN());
@@ -76,6 +87,7 @@ public class CatalogMService {
         cataloglistnew.setPrice(yanshou.getPrice());
         cataloglistnew.setBookNum(yanshou.getSubscribeNum());//暂时还是等于征订册数的
         cataloglistnew.setDocumentType(yanshou.getDocumentType());
+        cataloglistnew.setEdition(yanshou.getEdition());
         // 尝试从编目清单中获取数据
         Cataloglist cataloglist = getCatalogInfo(yanshou.getISBN());
         if (cataloglist != null) {
@@ -97,6 +109,19 @@ public class CatalogMService {
 
         return cataloglistnew;
     }
-
+    public boolean dirWriteCatalogList(){
+        Cataloglist  cataloglist = cataloglistnew;
+        CatalogMDao catalogMDao = new CatalogMDao();
+        boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
+        return issuceed;//是否在数据库成功写入
+    }
+    public boolean writeCatalogNew(Cataloglist cataloglist , String bookID, String precategoryName){
+        cataloglist = cataloglistnew;
+        cataloglist.setBookID(bookID);
+        cataloglist.setCategoryName(precategoryName);
+        CatalogMDao catalogMDao = new CatalogMDao();
+        boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
+        return issuceed;
+    }
 
 }
