@@ -672,7 +672,11 @@
                         $('#price').val(response.resultInfo.data.price);
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
-                        $('#categoryName').val(response.resultInfo.data.categoryName);
+                        if(response.resultInfo.data.categoryName){
+                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            $('#categoryName').prop('disabled' , true);
+                        }
+
 
 
                         // 显示弹框
