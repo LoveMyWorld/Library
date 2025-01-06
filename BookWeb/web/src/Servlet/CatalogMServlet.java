@@ -101,6 +101,8 @@ import java.util.Map;
 //            doGet(request, response);
     }
     public void processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
         CatalogMService catalogMService = new CatalogMService();
         Cataloglist cataloglist = catalogMService.getCatalogInfoWithFallback();
 
@@ -114,14 +116,16 @@ import java.util.Map;
             } else {
                 resultInfo.setErrorMsg("unBianmu");
             }
+
+            // 放入requst
+
+            session.setAttribute("readyBMBook", cataloglist);
         } else {
             resultInfo.setFlag(false);
-            resultInfo.setErrorMsg("all is ready");
+            resultInfo.setErrorMsg("书籍已经全部编目，无待编目书籍");
         }
 
-        // 放入requst
-        HttpSession session = request.getSession();
-        session.setAttribute("readyBMBook", cataloglist);
+
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
@@ -143,13 +147,14 @@ import java.util.Map;
         out.flush();
         out.close();
     }
+
     public void changePage(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException{
         // 分页处理
-        YanshouService yanshouService = new YanshouService();
+        CatalogMService catalogMService = new CatalogMService();
         // 当前页面
         int currentPage = request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage"));
         // 获取总记录数
-        int totalbook = yanshouService.getCurrentListBookNum();
+        int totalbook = catalogMService.getCurrentListBookNum();
         int totalPage = (int)Math.ceil(totalbook / (double)PAGE_SIZE);
         // 边界检测
         if (currentPage > totalPage)

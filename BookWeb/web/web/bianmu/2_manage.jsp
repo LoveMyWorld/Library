@@ -387,14 +387,17 @@
                 </button>
             </div>
             <div class="search">
-                <select>
-                    <option value="isbn">ISBN</option>
-                    <option value="title">书名</option>
-                    <option value="author">作者</option>
-                    <option value="classification">分类号</option>
-                </select>
-                <input type="text" placeholder="请输入查询内容">
-                <button>搜索</button>
+                <form action="${pageContext.request.contextPath}/CatalogMServlet" method="get">
+                    <select name="searchField">
+                        <option value="isbn">ISBN</option>
+                        <option value="title">书名</option>
+                        <option value="author">作者</option>
+                        <option value="publisher">出版社</option>
+                    </select>
+                    <input type="text" name="searchValue" placeholder="请输入关键词" />
+                    <input type="text" name="seach" value="" hidden="hidden"/>
+                    <button type="submit">搜索</button>
+                </form>
             </div>
         </div>
         <table>
@@ -433,11 +436,11 @@
         </table>
         <div class="pagination">
             <!-- 上一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/YanshouServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
             <!-- 当前页信息 -->
             <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
             <!-- 下一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/YanshouServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
         </div>
     </div>
 </div>
@@ -579,7 +582,8 @@
 
                         $('#myModal').show();
                     } else {
-                        alert('初始化数据失败');
+                        alert(response.resultInfo.errorMsg);
+                        $('#myModal').hide();
                     }
                     <%
                         System.out.println("success");
@@ -671,7 +675,7 @@
 
                         // $('#myModal').show();
                     } else {
-                        alert('初始化数据失败');
+                        alert(response.resultInfo.errorMsg);
                     }
                     <%
                         System.out.println("success");
