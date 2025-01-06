@@ -234,7 +234,7 @@
         function updateBackupTime() {
             // 获取当前时间
             const now = new Date();
-            const options = { timeZone: 'Asia/Shanghai', hour12: false };
+            const options = { timeZone: 'Asia/Beijing', hour12: false };
             const currentTime = now.toLocaleString('zh-CN', options);
 
             // 更新备份时间输入框的值
@@ -372,7 +372,7 @@
             <label for="operator">操作员</label>
             <input type="text" id="operator" name="operator" placeholder="请输入操作员名称">
 
-            <button onclick="updateBackupTime()">备份</button>
+            <button type="submit" onclick="updateBackupTime()">备份</button>
         </form>
     </div>
 

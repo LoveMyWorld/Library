@@ -50,7 +50,7 @@ public class BackupDao {
             return true;
 
         } catch (SQLException e) {
-            throw new RuntimeException("查询数据失败", e);
+            throw new RuntimeException("备份数据失败", e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -66,6 +66,31 @@ public class BackupDao {
                 return "rlevel_rule";
             default:
                 return ""; // 不支持的表
+        }
+    }
+
+    // 插入备份信息到数据库
+    public static void insertBackupInfo(String backupId, String backupName, String backupLoc,
+                                        String backupReason, String operator) throws SQLException {
+        Dao dao = new Dao();
+        String sql = "INSERT INTO library.backup_info (backupID, backupName, backupLoc, backupReason, backupTime, operator) " +
+                "VALUES (?, ?, ?, ?, NOW(), ?)";
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql);
+                ) {
+
+            ps.setString(1, backupId);
+            ps.setString(2, backupName);
+            ps.setString(3, backupLoc);
+            ps.setString(4, backupReason);
+            ps.setString(5, operator);
+
+            ps.executeUpdate();
+
+            dao.AllClose();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // 将异常抛出
         }
     }
 }
