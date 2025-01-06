@@ -7,6 +7,11 @@ import Entity.Cataloglist;
 import Entity.Liutong;
 import Entity.Yanshou;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 public class CatalogMService {
     //得到编目书籍的所有信息，如果能找到就传回编目清单或流通库的书籍，如果没有找到，就把验收清单此本书传回
 //从编目清单中找书
@@ -122,6 +127,34 @@ public class CatalogMService {
         CatalogMDao catalogMDao = new CatalogMDao();
         boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
         return issuceed;
+    }
+    public static List<Cataloglist> cataloglist = new ArrayList<>();
+    public int getTotalBookNum(){
+        CatalogMDao catalogMDao = new CatalogMDao();
+        cataloglist.clear();
+        cataloglist = catalogMDao.getAllData();
+        int totalBookNum = cataloglist.size();
+        return totalBookNum;
+    }
+
+    static public List<Cataloglist> getCurrentPage(int currentPage){
+        CatalogMDao catalogMDao = new CatalogMDao();
+        List <Cataloglist> currentPageList=new ArrayList<>();
+        for(int i=PAGE_SIZE*(currentPage-1);i<PAGE_SIZE*currentPage&&i<cataloglist.size();i++){
+            currentPageList.add(cataloglist.get(i));
+        }
+        return currentPageList;
+    }
+
+    public int getCurrentListBookNum(){
+        return cataloglist.size();
+    }
+    public  List<Cataloglist> getSelectBook(String searchField,String searchValue){
+        CatalogMDao catalogMDao = new CatalogMDao();
+        List<Cataloglist> selectBookList=catalogMDao.findBooksBySearch(searchField,searchValue);
+        cataloglist.clear();
+        cataloglist.addAll(selectBookList);
+        return selectBookList;
     }
 
 }

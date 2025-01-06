@@ -380,7 +380,6 @@
             <!-- 下一页 -->
             <button onclick="location.href='${pageContext.request.contextPath}/YanshouServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
         </div>
-
     </div>
   </div>
 </div>
