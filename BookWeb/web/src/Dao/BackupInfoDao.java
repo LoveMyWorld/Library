@@ -1,6 +1,7 @@
 package Dao;
 
 import Entity.BackupInfo;
+import Entity.BackupNameType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class BackupInfoDao {
         try (PreparedStatement ps = dao.conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             ps.setString(1, info.getBackupID());
-            ps.setString(2, info.getBackupName());
+            ps.setString(2, info.getBackupName().getDescription());
             ps.setString(3, info.getBackupLoc());
             ps.setString(4, info.getBackupReason());
             ps.setString(5, info.getBackupTime());
@@ -36,7 +37,7 @@ public class BackupInfoDao {
             while (rs.next()) {
                 BackupInfo info = new BackupInfo();
                 info.setBackupID(rs.getString("backupID"));
-                info.setBackupName(rs.getString("backupName"));
+                info.setBackupName(BackupNameType.fromDescription(rs.getString("backupName")));
                 info.setBackupLoc(rs.getString("backupLoc"));
                 info.setBackupReason(rs.getString("backupReason"));
                 info.setBackupTime(rs.getString("backupTime"));

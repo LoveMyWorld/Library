@@ -2,13 +2,13 @@ package Entity;
 
 public class BackupInfo {
     private String backupID;
-    private String backupName;
+    private BackupNameType backupName;
     private String backupLoc;
     private String backupReason;
     private String backupTime;
     private String operator;
 
-    public BackupInfo(String backupID, String backupName, String backupLoc, String backupReason, String backupTime, String operator) {
+    public BackupInfo(String backupID, BackupNameType backupName, String backupLoc, String backupReason, String backupTime, String operator) {
         this.backupID = backupID;
         this.backupName = backupName;
         this.backupLoc = backupLoc;
@@ -29,11 +29,11 @@ public class BackupInfo {
         this.backupID = backupID;
     }
 
-    public String getBackupName() {
+    public BackupNameType getBackupName() {
         return backupName;
     }
 
-    public void setBackupName(String backupName) {
+    public void setBackupName(BackupNameType backupName) {
         this.backupName = backupName;
     }
 
