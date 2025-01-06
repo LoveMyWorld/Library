@@ -3,7 +3,9 @@ package Dao;
 import Entity.BackupInfo;
 import Entity.BackupNameType;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,40 +13,135 @@ public class BackupInfoDao {
 
     public BackupInfoDao() {}
 
-    // 添加备份信息
-    public void addBackupInfo(BackupInfo info) throws SQLException {
+    // 获取所有备份信息
+    public List<BackupInfo> getAllBackupInfos() {
         Dao dao = new Dao();
-        String sql = "INSERT INTO library.backup_info (backupID, backupName, backupLoc, backupReason, backupTime, operator) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = dao.conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            ps.setString(1, info.getBackupID());
-            ps.setString(2, info.getBackupName().getDescription());
-            ps.setString(3, info.getBackupLoc());
-            ps.setString(4, info.getBackupReason());
-            ps.setString(5, info.getBackupTime());
-            ps.setString(6, info.getOperator());
-            ps.executeUpdate();
+        List<BackupInfo> backupInfoList = new ArrayList<>();
+        String sql = "SELECT * FROM library.backup_info";  // 假设表名是 backup_info
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                BackupInfo backupInfo = new BackupInfo();
+                backupInfo.setBackupID(rs.getString("backupID"));
+                backupInfo.setBackupName(BackupNameType.fromDescription(rs.getString("backupName")));
+                backupInfo.setBackupLoc(rs.getString("backupLoc"));
+                backupInfo.setBackupReason(rs.getString("backupReason"));
+                backupInfo.setBackupTime(rs.getString("backupTime"));
+                backupInfo.setOperator(rs.getString("operator"));
+                backupInfoList.add(backupInfo);
+            }
+
+            dao.AllClose();
+            return backupInfoList;
+        } catch (SQLException e) {
+            throw new RuntimeException("查询备份信息数据失败", e);
         }
     }
 
-    // 查询所有备份信息
-    public List<BackupInfo> getAllBackupInfos() throws SQLException {
+    // 根据字段搜索备份信息
+    public List<BackupInfo> findBackupInfoBySearch(String searchField, String searchValue) {
         Dao dao = new Dao();
-        String sql = "SELECT * FROM library.backup_info";
-        List<BackupInfo> infos = new ArrayList<>();
-        try (PreparedStatement ps = dao.conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                BackupInfo info = new BackupInfo();
-                info.setBackupID(rs.getString("backupID"));
-                info.setBackupName(BackupNameType.fromDescription(rs.getString("backupName")));
-                info.setBackupLoc(rs.getString("backupLoc"));
-                info.setBackupReason(rs.getString("backupReason"));
-                info.setBackupTime(rs.getString("backupTime"));
-                info.setOperator(rs.getString("operator"));
-                infos.add(info);
-            }
+        List<BackupInfo> backupInfoList = new ArrayList<>();
+        String sql = "";
+
+        // 根据 searchField 决定查询条件
+        switch (searchField) {
+            case "backupID":
+                sql = "SELECT * FROM library.backup_info WHERE backupID LIKE ?";
+                break;
+            case "backupName":
+                sql = "SELECT * FROM library.backup_info WHERE backupName LIKE ?";
+                break;
+            default:
+                throw new IllegalArgumentException("不支持的查询字段: " + searchField);
         }
-        return infos;
+
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + searchValue + "%");  // 使用模糊匹配
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                BackupInfo backupInfo = new BackupInfo();
+                backupInfo.setBackupID(rs.getString("backupID"));
+                backupInfo.setBackupName(BackupNameType.fromDescription(rs.getString("backupName")));
+                backupInfo.setBackupLoc(rs.getString("backupLoc"));
+                backupInfo.setBackupReason(rs.getString("backupReason"));
+                backupInfo.setBackupTime(rs.getString("backupTime"));
+                backupInfo.setOperator(rs.getString("operator"));
+                backupInfoList.add(backupInfo);
+            }
+
+            dao.AllClose();
+            return backupInfoList;
+        } catch (SQLException e) {
+            throw new RuntimeException("查询备份信息数据失败", e);
+        }
+    }
+
+    // 添加备份信息
+    public void addBackupInfo(BackupInfo backupInfo) {
+        Dao dao = new Dao();
+        String sql = "INSERT INTO library.backup_info (backupID, backupName, backupLoc, backupReason, backupTime, operator) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setString(1, backupInfo.getBackupID());
+            ps.setString(2, backupInfo.getBackupName().toString());
+            ps.setString(3, backupInfo.getBackupLoc());
+            ps.setString(4, backupInfo.getBackupReason());
+            ps.setString(5, backupInfo.getBackupTime());
+            ps.setString(6, backupInfo.getOperator());
+
+            ps.executeUpdate();
+            dao.AllClose();
+        } catch (SQLException e) {
+            throw new RuntimeException("添加备份信息数据失败", e);
+        }
+    }
+
+    // 更新备份信息
+    public void updateBackupInfo(BackupInfo backupInfo) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.backup_info SET backupName = ?, backupLoc = ?, backupReason = ?, backupTime = ?, operator = ? " +
+                "WHERE backupID = ?";
+
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setString(1, backupInfo.getBackupName().toString());
+            ps.setString(2, backupInfo.getBackupLoc());
+            ps.setString(3, backupInfo.getBackupReason());
+            ps.setString(4, backupInfo.getBackupTime());
+            ps.setString(5, backupInfo.getOperator());
+            ps.setString(6, backupInfo.getBackupID());
+
+            ps.executeUpdate();
+            dao.AllClose();
+        } catch (SQLException e) {
+            throw new RuntimeException("更新备份信息数据失败", e);
+        }
+    }
+
+    // 删除备份信息
+    public void deleteBackupInfo(String backupID) {
+        Dao dao = new Dao();
+        String sql = "DELETE FROM library.backup_info WHERE backupID = ?";
+
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setString(1, backupID);
+
+            ps.executeUpdate();
+            dao.AllClose();
+        } catch (SQLException e) {
+            throw new RuntimeException("删除备份信息数据失败", e);
+        }
     }
 }

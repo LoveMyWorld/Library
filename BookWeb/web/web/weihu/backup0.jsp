@@ -3,6 +3,9 @@
 
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="Entity.BackupCycle" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Entity.BackupInfo" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -126,18 +129,8 @@
             width: 98%;
             margin-left: 1%; /* 中心对齐，微微露出边框 */
         }
-        /*.content-box {*/
-        /*    border: 1px solid #015999;*/
-        /*    background-color: white;*/
-        /*    !*padding: 15px;*!*/
-        /*    padding: 0px 0px 10px 0px;*/
-        /*    width: 100%;*/
-        /*    margin-left: 1%; !* 边框微微露出 *!*/
-        /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
-        /*    position: relative;*/
-        /*}*/
 
-        .content-box {
+        .content-box1 {
             background-color: #ffffff;
             border: 1px solid #ccc;
             padding: 20px;
@@ -147,9 +140,9 @@
             font-size: 18px;
             line-height: 1.5;
         }
-        .content-box input[type="text"],
-        .content-box select,
-        .content-box textarea {
+        .content-box1 input[type="text"],
+        .content-box1 select,
+        .content-box1 textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -158,10 +151,10 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        .content-box textarea {
+        .content-box1 textarea {
             resize: vertical; /* 允许高度调整 */
         }
-        .content-box button {
+        .content-box1 button {
             background-color: #015999;
             color: #fff;
             padding: 10px 20px;
@@ -170,11 +163,20 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .content-box button:hover {
+        .content-box1 button:hover {
             background-color: #0288d1;
         }
 
-
+        .content-box {
+            border: 1px solid #015999;
+            background-color: white;
+            /*padding: 15px;*/
+            padding: 0px 0px 10px 0px;
+            width: 100%;
+            margin-left: 1%; /* 边框微微露出 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
         .header {
             background-color: #015999;
@@ -187,7 +189,77 @@
             border: 1px solid #444;
             margin-bottom: 10px;
         }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .tools {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* 按钮间距微调 */
+        }
+        .tools button {
+            position: relative;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .tools button img {
+            width: 24px;
+            height: 24px;
+        }
+        .tools button:hover img {
+            filter: brightness(0.8);
+        }
+        .tools button:hover .tooltip {
+            display: block;
+        }
+        .tools .tooltip {
+            display: none;
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .search {
+            padding: 0px 7px 0px 0px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
 
+        }
+        .search select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            height: 34px;
+        }
+        .search input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 180px; /* 缩小输入框宽度 */
+            height: 30px;
+        }
+        .search button {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .search button:hover {
+            background-color: #ddd;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -207,6 +279,21 @@
         tr:hover {
             background-color: #fffbcc; /* 悬停效果 */
         }
+        .pagination {
+            text-align: center;
+            padding: 10px;
+        }
+        .pagination button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #ddd;
+        }
+
     </style>
 
 
@@ -217,6 +304,11 @@
         }
 
         function showBackupForm() {
+            // 隐藏备份周期表和备份信息表
+            document.getElementById('backup-cycle-table').style.display = 'none';
+            document.getElementById('backup-info-table').style.display = 'none';
+
+            // 显示主动备份表单
             document.getElementById('backup-form').style.display = 'block';
         }
 
@@ -307,7 +399,24 @@
             });
         }
 
+        // 添加 JavaScript 控制显示/隐藏内容框
+        function toggleBackupCycle() {
+            var backupCycleDiv = document.getElementById('backup-cycle-table');
+            backupCycleDiv.style.display = (backupCycleDiv.style.display === 'none' || backupCycleDiv.style.display === '') ? 'block' : 'none';
 
+            // 隐藏主动备份表单和备份信息表
+            document.getElementById('backup-form').style.display = 'none';
+            document.getElementById('backup-info-table').style.display = 'none';
+        }
+
+        function toggleBackupInfo() {
+            var backupInfoDiv = document.getElementById('backup-info-table');
+            backupInfoDiv.style.display = (backupInfoDiv.style.display === 'none' || backupInfoDiv.style.display === '') ? 'block' : 'none';
+
+            // 隐藏主动备份表单和备份周期表
+            document.getElementById('backup-form').style.display = 'none';
+            document.getElementById('backup-cycle-table').style.display = 'none';
+        }
 
     </script>
 
@@ -321,9 +430,9 @@
             <a href="javascript:void(0);" onclick="toggleSubmenu()">备份</a>
             <div class="sidebar-submenu" id="backup-submenu" style="display: none;">
                 <a href="javascript:void(0);" onclick="showBackupForm()">主动备份</a>
-                <a href="#">备份周期表</a>
-                <a href="#">备份信息表</a>
-                <a href="#">备份更新表</a>
+                <a href="javascript:void(0);" onclick="toggleBackupCycle(); location.href='${pageContext.request.contextPath}/BackupCycleServlet';">备份周期表</a>
+                <a href="javascript:void(0);" onclick="toggleBackupInfo(); location.href='${pageContext.request.contextPath}/BackupInfoServlet';">备份信息表</a>
+<%--                <a href="#">备份更新表</a>--%>
             </div>
         </div>
         <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">书商字典维护</a>
@@ -349,7 +458,7 @@
 
 
     <!-- 主动备份内容框 -->
-    <div id="backup-form" class="content-box" style="display: none;">
+    <div id="backup-form" class="content-box1" style="display: none;">
         <h3>主动备份</h3>
         <form action="${pageContext.request.contextPath}/BackupServlet" method="post" onsubmit="submitBackupForm(event)">
             <!-- 选择要备份的表 -->
@@ -376,7 +485,186 @@
         </form>
     </div>
 
-    <!-- 管理列表框 -->
+    <!-- 备份周期表内容框，默认隐藏 -->
+    <div id="backup-cycle-table" class="content-box" style="<%= request.getAttribute("showBackupCycleTable") != null && (boolean)request.getAttribute("showBackupCycleTable") ? "display: block;" : "display: none;" %>">
+        <div class="header">备份周期表</div>
+        <div class="toolbar">
+            <div class="tools">
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
+                    <div class="tooltip">添加</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                    <div class="tooltip">编辑</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
+                    <div class="tooltip">删除</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
+                    <div class="tooltip">刷新</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
+                    <div class="tooltip">导入</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
+                    <div class="tooltip">导出</div>
+                </button>
+            </div>
+
+            <div class="search">
+                <form action="${pageContext.request.contextPath}/BackupCycleServletServlet" method="get">
+                    <select name="searchField">
+                        <option value="backupName">备份表名</option>
+                    </select>
+                    <input type="text" name="searchValue" placeholder="请输入关键词" />
+                    <input type="text" name="search" value="" hidden="hidden"/>
+                    <button type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>备份表名</th>
+                <th>备份周期</th>
+                <th>备份位置</th>
+                <th>操作员</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 这里用 Java 在后台动态填充数据 -->
+            <%
+                int currentPage = request.getAttribute("currentPage") == null ? 1 : (int) request.getAttribute("currentPage");
+                int totalPages = request.getAttribute("totalPage") == null ? 1 : (int) request.getAttribute("totalPage");
+                List<BackupCycle> backupCycleList = (List<BackupCycle>) request.getAttribute("backupCycleList");
+                int count = 1;
+                if (backupCycleList != null) {
+                    for (BackupCycle backupCycle : backupCycleList) {
+            %>
+            <tr>
+                <td><%= count++ %></td>
+                <td><%= backupCycle.getBackupName() %></td>
+                <td><%= backupCycle.getBackupCycle() %></td>
+                <td><%= backupCycle.getBackupLoc() %></td>
+                <td><%= backupCycle.getOperator() %></td>
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <!-- 上一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/BackupCycleServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+            <!-- 当前页信息 -->
+            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
+            <!-- 下一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/BackupCycleServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+        </div>
+    </div>
+
+    <!-- 备份信息表内容框，默认隐藏 -->
+    <div id="backup-info-table" class="content-box" style="<%= request.getAttribute("showBackupInfoTable") != null && (boolean)request.getAttribute("showBackupInfoTable") ? "display: block;" : "display: none;" %>">
+        <div class="header">备份信息表</div>
+        <div class="toolbar">
+            <div class="tools">
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
+                    <div class="tooltip">添加</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                    <div class="tooltip">编辑</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
+                    <div class="tooltip">删除</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
+                    <div class="tooltip">刷新</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
+                    <div class="tooltip">导入</div>
+                </button>
+                <button>
+                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
+                    <div class="tooltip">导出</div>
+                </button>
+            </div>
+
+            <div class="search">
+                <form action="${pageContext.request.contextPath}/BackupInfoServletServlet" method="get">
+                    <select name="searchField">
+                        <option value="backupName">备份表名</option>
+                        <option value="backupName">备份编号</option>
+                    </select>
+                    <input type="text" name="searchValue" placeholder="请输入关键词" />
+                    <input type="text" name="search" value="" hidden="hidden"/>
+                    <button type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>备份编号</th>
+                <th>备份表名</th>
+                <th>备份位置</th>
+                <th>备份原因</th>
+                <th>备份时间</th>
+                <th>操作员</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 这里用 Java 在后台动态填充数据 -->
+            <%
+                int currentPage1 = request.getAttribute("currentPage") == null ? 1 : (int) request.getAttribute("currentPage");
+                int totalPages1 = request.getAttribute("totalPage") == null ? 1 : (int) request.getAttribute("totalPage");
+                List<BackupInfo> backupInfoList = (List<BackupInfo>) request.getAttribute("backupInfoList");
+                int count1 = 1;
+                if (backupInfoList != null) {
+                    for (BackupInfo backupInfo : backupInfoList) {
+            %>
+            <tr>
+                <td><%= count1++ %></td>
+                <td><%= backupInfo.getBackupID() %></td>
+                <td><%= backupInfo.getBackupName() %></td>
+                <td><%= backupInfo.getBackupLoc() %></td>
+                <td><%= backupInfo.getBackupReason() %></td>
+                <td><%= backupInfo.getBackupTime() %></td>
+                <td><%= backupInfo.getOperator() %></td>
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <!-- 上一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/BackupInfoServlet?currentPage=<%= currentPage1 - 1 %>'">&laquo; 上一页</button>
+            <!-- 当前页信息 -->
+            <span>第 <%= currentPage %> / <%= totalPages1 %> 页，每页显示 16 条</span>
+            <!-- 下一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/BackupInfoServlet?currentPage=<%= currentPage1 + 1 %>'">下一页 &raquo;</button>
+        </div>
+    </div>
+
+
 </div>
 </body>
 </html>
