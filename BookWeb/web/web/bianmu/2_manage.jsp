@@ -1,3 +1,5 @@
+<%@ page import="Entity.Cataloglist" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -385,53 +387,60 @@
                 </button>
             </div>
             <div class="search">
-                <select>
-                    <option value="isbn">ISBN</option>
-                    <option value="title">书名</option>
-                    <option value="author">作者</option>
-                    <option value="classification">分类号</option>
-                </select>
-                <input type="text" placeholder="请输入查询内容">
-                <button>搜索</button>
+                <form action="${pageContext.request.contextPath}/CatalogMServlet" method="get">
+                    <select name="searchField">
+                        <option value="isbn">ISBN</option>
+                        <option value="title">书名</option>
+                        <option value="author">作者</option>
+                        <option value="publisher">出版社</option>
+                    </select>
+                    <input type="text" name="searchValue" placeholder="请输入关键词" />
+                    <input type="text" name="seach" value="" hidden="hidden"/>
+                    <button type="submit">搜索</button>
+                </form>
             </div>
         </div>
         <table>
             <thead>
             <tr>
                 <th>序号</th>
-                <th>正题名</th>
+                <th>书名</th>
                 <th>ISBN</th>
-                <th>副题名</th>
-                <th>从编题名</th>
-                <th>编著者</th>
-                <th>分类号</th>
+                <th>作者</th>
+                <th>出版社</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1</td>
-                <td>销售如何说...</td>
-                <td>9787545606681</td>
-                <td></td>
-                <td></td>
-                <td>陆汝香</td>
-                <td>F713.3</td>
+            <%
+                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
+                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
+                List<Cataloglist> cataloglist= (List<Cataloglist>) request.getAttribute("Cataloglist");
+                int count = 1; // 初始化计数器
+                if (cataloglist != null) { // 判断数据是否为空
+                    for (Cataloglist catalog : cataloglist) {
+            %>
+            <tr >
+                <td><%= count++ %></td>
+                <td><%= catalog.getTitle() %></td>
+                <td><%= catalog.getISBN() %></td>
+                <td><%= catalog.getAuthor() %></td>
+                <td><%= catalog.getPublisher() %></td>
+
             </tr>
-            <tr>
-                <td>2</td>
-                <td>蔡康永的说...</td>
-                <td>9787544143158</td>
-                <td></td>
-                <td></td>
-                <td>蔡康永</td>
-                <td>H019-49</td>
-            </tr>
+            <%
+                    }
+
+                }
+            %>
             </tbody>
         </table>
         <div class="pagination">
-            <button>&laquo; 上一页</button>
-            <span>第 1/2 页，每页显示 55 条</span>
-            <button>下一页 &raquo;</button>
+            <!-- 上一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+            <!-- 当前页信息 -->
+            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
+            <!-- 下一页 -->
+            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
         </div>
     </div>
 </div>
@@ -564,7 +573,14 @@
                         $('#price').val(response.resultInfo.data.price);
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
-                        $('#categoryName').val(response.resultInfo.data.categoryName);
+                        if(response.resultInfo.data.categoryName){
+                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            $('#categoryName').prop('disabled' , true);
+                        }
+                        else{
+                            $('#categoryName').prop('disabled' , false);
+                        }
+
                          console.log(response.resultInfo.data.isbn);
                          console.log(response.publicationDate);
                         console.log(response.resultInfo.data.supplier);
@@ -573,7 +589,8 @@
 
                         $('#myModal').show();
                     } else {
-                        alert('初始化数据失败');
+                        alert(response.resultInfo.errorMsg);
+                        $('#myModal').hide();
                     }
                     <%
                         System.out.println("success");
@@ -658,14 +675,22 @@
                         $('#price').val(response.resultInfo.data.price);
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
-                        $('#categoryName').val(response.resultInfo.data.categoryName);
+                        if(response.resultInfo.data.categoryName){
+                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            $('#categoryName').prop('disabled' , true);
+                        }
+                        else{
+                            $('#categoryName').prop('disabled' , false);
+                        }
+
 
 
                         // 显示弹框
 
                         // $('#myModal').show();
                     } else {
-                        alert('初始化数据失败');
+                        alert(response.resultInfo.errorMsg);
+                        $('#myModal').hide();
                     }
                     <%
                         System.out.println("success");

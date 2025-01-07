@@ -2,8 +2,11 @@ package Servlet;
 
 import Dao.YanshouDao;
 import Entity.Cataloglist;
+import Entity.DocumentType;
 import Entity.ResultInfo;
+import Entity.Yanshou;
 import Service.CatalogMService;
+import Service.YanshouService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -11,11 +14,16 @@ import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 @WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"}) public class CatalogMServlet extends HttpServlet {
+//    static final int PAGE_SIZE = 16;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置响应类型为 JSON
@@ -28,16 +36,46 @@ import java.util.Map;
                 processCatalogInfo(request, response);
                 break;
             case "/CatalogMServlet":
+                String page = request.getParameter("currentPage");
+                if(page != null ){ // 需要进行上下页切换
+                    changePage(request, response);
+                }
+                else { // 遇到新的搜索条件，默认从第1页起。
+                    searchBook(request, response);
+                }
                 request.getRequestDispatcher("/bianmu/2_manage.jsp").forward(request, response);
                 break;
             case "/CatalogOneBook"://操作：接收传回的数据，把数据写回编目清单
                 //说明已经编目
                 if (request.getParameter("bookID") != null && !request.getParameter("bookID").equals("")) {
                     //把已经编目的全部信息写入
-                    CatalogMService catalogMService = new CatalogMService();
-                    boolean iswriteDB= catalogMService.dirWriteCatalogList();
-                    ResultInfo resultInfo = new ResultInfo();
                     String bookID = request.getParameter("bookID");
+                    String title = request.getParameter("title");
+                    String author = request.getParameter("author");
+                    String ISBN = request.getParameter("isbn");
+                    LocalDate publicationDate = LocalDate.parse(request.getParameter("publicationDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String publisher = request.getParameter("publisher");
+                    String edition = request.getParameter("edition");
+                    String supplier = request.getParameter("supplier");
+                    String tcurrencyID = request.getParameter("currencyID")==null? "1" : request.getParameter("currencyID");
+                    int currencyID = Integer.parseInt(tcurrencyID);
+                    double price = Double.valueOf(request.getParameter("price"));
+                    int bookNum = Integer.parseInt(request.getParameter("bookNum"));
+                    DocumentType documentType = (DocumentType.valueOf(request.getParameter("documentType")));
+                    String categoryName = request.getParameter("categoryName");
+                    String orderPerson = request.getParameter("orderPerson");
+
+                    Cataloglist cataloglist = new Cataloglist(
+                            bookID,title , author,ISBN,publicationDate,publisher,edition,supplier,
+                            currencyID,price,orderPerson,bookNum,documentType,categoryName
+                    );
+
+                    CatalogMService catalogMService = new CatalogMService();
+                    boolean iswriteDB= catalogMService.dirWriteCatalogList(cataloglist);
+                    ResultInfo resultInfo = new ResultInfo();
+                    if(bookID==null || bookID.equals("")){
+                        bookID = request.getParameter("BianmuBookID");
+                    }
                     resultInfo.setData(bookID);
                     if(!iswriteDB){
                         resultInfo.setFlag(false);
@@ -49,7 +87,7 @@ import java.util.Map;
                     }
                     HashMap<String , Object> map = new HashMap<>();
                     map.put("resultInfo", resultInfo);
-                    map.put("bookID", bookID);
+                    map.put("BianmuBookID", bookID);
                     ObjectMapper objectMapper = new ObjectMapper();
                     String json = objectMapper.writeValueAsString(map);
                     PrintWriter out = response.getWriter();
@@ -90,6 +128,8 @@ import java.util.Map;
 //            doGet(request, response);
     }
     public void processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
         CatalogMService catalogMService = new CatalogMService();
         Cataloglist cataloglist = catalogMService.getCatalogInfoWithFallback();
 
@@ -103,14 +143,16 @@ import java.util.Map;
             } else {
                 resultInfo.setErrorMsg("unBianmu");
             }
+
+            // 放入requst
+
+            session.setAttribute("readyBMBook", cataloglist);
         } else {
             resultInfo.setFlag(false);
-            resultInfo.setErrorMsg("all is ready");
+            resultInfo.setErrorMsg("书籍已经全部编目，无待编目书籍");
         }
 
-        // 放入requst
-        HttpSession session = request.getSession();
-        session.setAttribute("readyBMBook", cataloglist);
+
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
@@ -131,5 +173,44 @@ import java.util.Map;
         out.print(json);
         out.flush();
         out.close();
+    }
+
+    public void changePage(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException{
+        // 分页处理
+        CatalogMService catalogMService = new CatalogMService();
+        // 当前页面
+        int currentPage = request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage"));
+        // 获取总记录数
+        int totalbook = catalogMService.getCurrentListBookNum();
+        int totalPage = (int)Math.ceil(totalbook / (double)PAGE_SIZE);
+        // 边界检测
+        if (currentPage > totalPage)
+            currentPage = totalPage;
+        if (currentPage < 1)
+            currentPage = 1;
+        // 获取当前页的数据
+        List<Cataloglist> cataloglist = null;
+        cataloglist  = CatalogMService.getCurrentPage(currentPage);
+        // 传给前端
+        request.setAttribute("Cataloglist", cataloglist);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPage", totalPage);
+    }
+
+    public void searchBook(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException {
+        CatalogMService catalogMService = new CatalogMService();
+        String searchField = request.getParameter("searchField");
+        String searchValue = request.getParameter("searchValue");
+        List<Cataloglist> cataloglist = null;
+        // 搜索条件不为空
+        if (searchField != null && !searchField.isEmpty() && searchValue != null && !searchValue.isEmpty())
+        {
+            cataloglist=catalogMService.getSelectBook(searchField,searchValue);
+        }
+        else { // 搜索条件为空
+            catalogMService.getTotalBookNum();
+        }
+
+        changePage(request,response);
     }
 }

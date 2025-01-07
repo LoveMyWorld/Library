@@ -1,12 +1,13 @@
-<%@ page import="Dao.CaifangDao" %>
-<%@ page import="Entity.Caifang" %>
+<%@ page import="Dao.YanshouDao" %>
+<%@ page import="Entity.Yanshou" %>
 <%@ page import="java.util.List" %>
+<%@ page import="Entity.Appointment" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>冠军小队采访系统</title>
+    <title>冠军小队流通系统——借书</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -89,8 +90,45 @@
             transform: scale(1.01);
         }
         /*改*/
+/*借书展开*/
+        .borrow-buttons {
+            display: flex;
+            align-items: center; /* 垂直居中 */
+        }
 
+        .borrow-btn {
+            width: 100%; /* 按钮宽度与侧边栏一致 */
+            box-sizing: border-box; /* 确保内边距和边框不会导致宽度超出 */
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            margin-bottom: 20px;
+            padding: 15px;
+            font-size: 23px; /* 编目管理和帮助字体变大 */
+            font-weight: bold;
+            font-family: '楷体';
+            text-align: center;
+            background-color: #07598a;
+            color: #ecf0f1;
+            border: none;
+            cursor: pointer;
+        }
 
+        .borrow-option {
+            margin-left: 10px; /* 与借书按钮的间距 */
+            padding: 10px 15px; /* 按钮内边距 */
+            font-size: 18px; /* 字体大小 */
+            font-weight: bold;
+            font-family: '楷体';
+            background-color: #34495e;
+            color: #ecf0f1;
+            border: none;
+            cursor: pointer;
+        }
+
+        .borrow-option:hover {
+            background-color: #2c3e50; /* 悬停时背景颜色 */
+        }
         .container {
             margin-left: 220px; /* 调整左边距适应侧边栏宽度 */
             padding: 15px;
@@ -242,20 +280,36 @@
     </style>
 </head>
 <body>
+<%--<div class="sidebar">--%>
+<%--  <div>--%>
+<%--    <h3>冠军小队</h3>--%>
+
+<%--    <a href="#" class="active">编目管理</a>--%>
+<%--&lt;%&ndash;    <a href="#" class="active">验收清单</a>&ndash;%&gt;--%>
+<%--      <a href="javascript:void(0);" class="active" id="yanshou-btn">验收清单</a>--%>
 
 
-
-
-
-
-
+<%--      <a href="#" class="active">报损</a>--%>
+<%--      改--%>
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
 
-        <a  onclick="location.href='${pageContext.request.contextPath}/DingdanServlet'">订单管理</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">退货</a>
+<%--        <a  onclick="location.href='${pageContext.request.contextPath}/BorrowBookServlet'">借书</a>--%>
+        <a onclick="showBorrowOptions()">借书</a>
+        <a  onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">还书</a>
+<%--        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">罚款</a>--%>
+    </div>
+    <!-- 借书选项的隐藏区域 -->
+<%--    <div id="borrowOptions" style="display: none;">--%>
+<%--        <button onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button>--%>
+<%--        <button onclick="location.href='${pageContext.request.contextPath}/ReaderBorrowServlet'">读者亲自借书</button>--%>
+<%--    </div>--%>
+    <div id="borrowOptions" style="display: none;">
+<%--        <button class="borrow-option">快速通道</button>--%>
+<%--        <button class="borrow-option">读者亲自借书</button>--%>
+    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button>
+    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/ReaderBorrowServlet'">读者亲自借书</button>
     </div>
     <%--      改--%>
     <!-- 底部横杠和关于我们按钮 -->
@@ -267,15 +321,15 @@
 </div>
 
 <div class="container">
-
+    <!-- 冠军小队编目系统框 -->
     <div class="system-title-box">
-        冠军小队采访系统
+        冠军小队流通系统
     </div>
 
     <!-- 编目管理列表框 -->
     <div class="content-box">
         <div class="header">
-            采访清单
+            流通管理列表
         </div>
         <div class="toolbar">
             <div class="tools">
@@ -301,12 +355,13 @@
             <%--        <button>搜索</button>--%>
             <%--      </div>--%>
             <div class="search">
-                <form action="${pageContext.request.contextPath}/DingdanServlet" method="get">
+                <form action="${pageContext.request.contextPath}/QuickBorrowServlet" method="get">
                     <select name="searchField">
-                        <option value="isbn">ISBN</option>
-                        <option value="author">作者</option>
+<%--                        <option value="isbn">ISBN</option>--%>
                         <option value="title">书名</option>
-                        <option value="referrer">推荐人</option>
+                        <option value="bookID">图书编号</option>
+                        <option value="name">借书人</option>
+                        <option value="readID">读者编号</option>
                     </select>
                     <input type="text" name="searchValue" placeholder="请输入关键词" />
                     <input type="text" name="seach" value="" hidden="hidden"/>
@@ -318,11 +373,15 @@
         <table>
             <thead>
             <tr>
+                <th>序号</th>
                 <th>书名</th>
-                <th>作者</th>
-                <th>ISBN</th>
-                <th>推荐人</th>
-                <th>电话</th>
+                <th>读者姓名</th>
+                <th>电话号码</th>
+                <th>图书编号</th>
+                <th>预约开始时间</th>
+                <th>预约结束时间</th>
+                <th>操作</th>
+
                 <%--        <th>编著者</th>--%>
                 <%--        <th>分类号</th>--%>
             </tr>
@@ -331,17 +390,19 @@
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Caifang> caifangList= (List<Caifang>) request.getAttribute("caifangList");
+                List<Appointment> appointmentList= (List<Appointment>) request.getAttribute("appointmentList");
                 int count = 1; // 初始化计数器
-                if (caifangList != null) { // 判断数据是否为空
-                    for (Caifang caifang : caifangList) {
+                if (appointmentList != null) { // 判断数据是否为空
+                    for (Appointment appointment : appointmentList) {
             %>
             <tr >
-                <td><%= caifang.getTitle() %></td>
-                <td><%= caifang.getAuthor() %></td>
-                <td><%= caifang.getISBN() %></td>
-                <td><%= caifang.getReferrer() %></td>
-                <td><%= caifang.getPhoneNum() %></td>
+                <td><%= count++ %></td>
+                <td><%= appointment.getTitle() %></td>
+                <td><%= appointment.getName() %></td>
+                <td><%= appointment.getPhoneNum() %></td>
+                <td><%= appointment.getBookID() %></td>
+                <td><%= appointment.getAppointmentStart() %></td>
+                <td><%= appointment.getAppointmentEnd() %></td>
 
             </tr>
             <%
@@ -349,6 +410,40 @@
 
                 }
             %>
+<%--            <%--%>
+<%--                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");--%>
+<%--                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");--%>
+<%--                List<Yanshou> yanshouList= (List<Yanshou>) request.getAttribute("yanshouList");--%>
+<%--                int count = 1; // 初始化计数器--%>
+<%--                if (yanshouList != null) { // 判断数据是否为空--%>
+<%--                    for (Yanshou yanshou : yanshouList) {--%>
+<%--            %>--%>
+<%--            <tr >--%>
+<%--                <td><%= count++ %></td>--%>
+<%--                <td><%= yanshou.getTitle() %></td>--%>
+<%--                <td><%= yanshou.getISBN() %></td>--%>
+<%--                <td><%= yanshou.getAuthor() %></td>--%>
+<%--                <td><%= yanshou.getPublisher() %></td>--%>
+
+<%--            </tr>--%>
+<%--            <%--%>
+<%--                    }--%>
+
+<%--                }--%>
+<%--            %>--%>
+<%--                <td><%= 1 %></td>--%>
+<%--                <td> 小赫喜欢小润 </td>--%>
+<%--                <td>小赫</td>--%>
+<%--                <td>阿布</td>--%>
+<%--                <td>2012-01-01</td>--%>
+<%--                <td>2014-01-01</td>--%>
+<%--                <td>已还</td>--%>
+                <td>
+                    <form action="${pageContext.request.contextPath}/BorrowBookServlet" method="post">
+<%--                        <input type="hidden" name="bookId" value="${yanshou.bookId}">--%>
+                        <button type="submit">审核</button>
+                    </form>
+                </td>
             </tbody>
             <%--      <tbody>--%>
             <%--      <tr>--%>
@@ -370,14 +465,26 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+<%--                <button>&laquo; 上一页</button>--%>
+<%--                <span>第 1/2 页，每页显示 55 条</span>--%>
+<%--                <button>下一页 &raquo;</button>--%>
             </div>
-
         </div>
+        <script>
+            function showBorrowOptions() {
+                var borrowOptions = document.getElementById('borrowOptions');
+                if (borrowOptions.style.display === 'none') {
+                    borrowOptions.style.display = 'flex';
+                } else {
+                    borrowOptions.style.display = 'none';
+                }
+            }
+        </script>
     </div>
 </div>
 </body>
