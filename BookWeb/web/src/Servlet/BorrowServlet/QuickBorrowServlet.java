@@ -1,14 +1,14 @@
-package Servlet;
+package Servlet.BorrowServlet;
 
 import Entity.Appointment;
-import Entity.Yanshou;
 import Service.AppointmentService;
-import Service.YanshouService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static Servlet.YanshouServlet.PAGE_SIZE;
@@ -19,20 +19,20 @@ public class QuickBorrowServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
-        String path = request.getServletPath();
-        if (path.equals("/QuickBorrowServlet")) {
-//把预约表搞出来
+//        String path = request.getServletPath();
+//        if (path.equals("/QuickBorrowServlet")) {
+            //把预约表搞出来
             String page = request.getParameter("currentPage");
             if (page != null) { // 需要进行上下页切换
                 changePage(request, response);
-            } else { // 遇到新的搜索条件，默认从第1页起。
+            } else { // 遇到新的搜索条件，默认从第1页起
                 searchBook(request, response);
             }
-            request.getRequestDispatcher("/liutong/QuickBorrow.jsp").forward(request, response);
-        }
+
+
+        request.getRequestDispatcher("/liutong/QuickBorrow.jsp").forward(request, response);
+//        }
     }
 
     @Override

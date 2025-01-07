@@ -1,10 +1,13 @@
 package Service;
 
 import Dao.AppointmentDao;
+import Dao.BorrowBookRecordDao;
+import Dao.LiutongDao;
 import Dao.YanshouDao;
 import Entity.Appointment;
 import Entity.Appointment;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,4 +45,41 @@ public class AppointmentService {
         appointmentList.addAll(selectBookList);
         return selectBookList;
     }
+    //返回是否审核修改数据库成功
+    public  int CheckOneAppointment(long apID, LocalDate currentDate){
+        //通过主键String searchField,String searchValue,找到这本书，用了list,其实仅能找到一本
+        AppointmentDao appointmentDao = new AppointmentDao();
+        Appointment appointment= appointmentDao.getOneBookByApID(apID);
+        int  flag=0;//没有找到预约表中的记录
+        if(appointment!=null){
+            //把这条预约的内容写入借阅记录borrowBookRecord,borrowStart=searchValue,
+            //预约记录bookID,后续可以写入appointment的全部，把当前日期写入借书开始,写入借阅清单
+            BorrowBookRecordDao borrowBookRecordDao = new BorrowBookRecordDao();
+
+
+            // 流通库表liutonglist此书的册数减1
+            LiutongDao liutongDao = new LiutongDao();
+            int rtn2=liutongDao.updateLiutongList(appointment.getBookID());//返回值为1表示有书，减1成功
+            if(rtn2==0){
+                flag=1;//流通库表没书了
+                return flag;
+            }
+            boolean issuccess=borrowBookRecordDao.addBorrowRecord(appointment,  currentDate);
+            if(!issuccess){
+                flag=2;//没有写入预约表，操作失误
+                return flag;
+            }
+            //同时删去此条预约内容
+            boolean rtn3=appointmentDao.deleteAppointmentByApID(apID);
+
+            if(!rtn3){
+                flag=3;//预约内容未删去
+                return flag;
+            }
+            flag=4;
+            return flag;
+        }
+        return flag;
+    }
 }
+

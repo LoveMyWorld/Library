@@ -613,15 +613,6 @@
                 return;
             }
             else{
-                // // 弹出成功提示框
-                // successModal.style.display = "block";
-                //
-                // // 提交表单（普通提交，跳转到后端处理URL）
-                // document.getElementById("bookForm").submit();
-                //
-                // // 在点击时向后端请求相关数据
-                // fetchNextData();  // 获取并展示现有数据
-                // alert("编目成功！");
                 var formData = $('#bookForm').serialize();
                 $.ajax({
                     url:'${pageContext.request.contextPath}/CatalogOneBook' ,
@@ -644,13 +635,7 @@
                         }
                     }
                 });
-
-
-
             }
-
-
-
         }
         function fetchNextData() {
             console.log("I an fetchNextData function");
