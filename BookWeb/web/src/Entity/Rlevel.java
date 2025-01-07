@@ -20,6 +20,10 @@ public class Rlevel {
         this.fineEveryday = fineEveryday;
     }
 
+    public Rlevel() {
+
+    }
+
     public ReaderLevelType getReaderLevel() {
         return readerLevel;
     }

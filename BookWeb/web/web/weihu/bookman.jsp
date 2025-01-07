@@ -1,13 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="Dao.ReaderDao" %>
-<%@ page import="Entity.Reader" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="Entity.Bookman" %>
 <%@ page import="java.util.List" %>
+<%@ page import="Entity.BackupInfo" %>
+<%@ page import="Entity.Bookman" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>冠军小队读者信息维护</title>
+    <title>冠军小队维护系统</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,7 +49,7 @@
             margin-bottom: 20px;
             padding: 15px;
 
-            font-size: 23px; /* 编目管理和帮助字体变大 */
+            font-size: 21px; /* 编目管理和帮助字体变大 */
             font-weight: bold;
             font-family: '楷体';
             text-align: center;
@@ -335,9 +340,14 @@
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a  onclick="location.href='${pageContext.request.contextPath}/ReaderServlet'">读者信息维护</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">读者级别维护</a>
-
+        <div class="menu-item">
+            <a  onclick="location.href='${pageContext.request.contextPath}/weihu/backup0.jsp'">备份</a>
+        </div>
+        <a onclick="location.href='${pageContext.request.contextPath}/BookmanServlet'">书商字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">出版社字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">收藏单位字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">印刷厂字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">术语字典</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->
@@ -351,13 +361,13 @@
 <div class="container">
     <!-- 冠军小队系统框 -->
     <div class="system-title-box">
-        冠军小队用户管理系统
+        冠军小队维护系统
     </div>
 
     <!-- 管理列表框 -->
     <div class="content-box">
         <div class="header">
-            读者信息维护列表
+            书商字典维护列表
         </div>
         <div class="toolbar">
             <div class="tools">
@@ -365,34 +375,32 @@
                     <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
-<%--                <button>--%>
-<%--                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
-<%--                    <div class="tooltip">编辑</div>--%>
-<%--                </button>--%>
-<%--                <button>--%>
-<%--                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
-<%--                    <div class="tooltip">删除</div>--%>
-<%--                </button>--%>
-<%--                <button>--%>
-<%--                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">--%>
-<%--                    <div class="tooltip">刷新</div>--%>
-<%--                </button>--%>
-<%--                <button>--%>
-<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
-<%--                    <div class="tooltip">导入</div>--%>
-<%--                </button>--%>
-<%--                <button>--%>
-<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
-<%--                    <div class="tooltip">导出</div>--%>
-<%--                </button>--%>
+                <%--                <button>--%>
+                <%--                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+                <%--                    <div class="tooltip">编辑</div>--%>
+                <%--                </button>--%>
+                <%--                <button>--%>
+                <%--                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+                <%--                    <div class="tooltip">删除</div>--%>
+                <%--                </button>--%>
+                <%--                <button>--%>
+                <%--                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">--%>
+                <%--                    <div class="tooltip">刷新</div>--%>
+                <%--                </button>--%>
+                <%--                <button>--%>
+                <%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+                <%--                    <div class="tooltip">导入</div>--%>
+                <%--                </button>--%>
+                <%--                <button>--%>
+                <%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+                <%--                    <div class="tooltip">导出</div>--%>
+                <%--                </button>--%>
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/ReaderServlet" method="get">
+                <form action="${pageContext.request.contextPath}/BookmanServlet" method="get">
                     <select name="searchField">
-                        <option value="readID">读者编号</option>
-                        <option value="name">姓名</option>
-                        <option value="readerLevel">读者级别</option>
+                        <option value="readID">名称</option>
                     </select>
                     <input type="text" name="searchValue" placeholder="请输入关键词" />
                     <input type="text" name="search" value="" hidden="hidden"/>
@@ -406,11 +414,11 @@
             <thead>
             <tr>
                 <th>序号</th>
-                <th>读者编号</th>
-                <th>姓名</th>
-                <th>性别</th>
+                <th>名称</th>
+                <th>地址</th>
+                <th>联系人</th>
                 <th>电话号码</th>
-                <th>读者级别</th>
+                <th>邮编</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -418,25 +426,25 @@
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Reader> readerList= (List<Reader>) request.getAttribute("readerList");
+                List<Bookman> bookmanList= (List<Bookman>) request.getAttribute("bookmanList");
                 int count = 1; // 初始化计数器
-                if (readerList != null) { // 判断数据是否为空
-                    for (Reader reader : readerList) {
+                if (bookmanList != null) { // 判断数据是否为空
+                    for (Bookman bookman : bookmanList) {
             %>
             <tr >
                 <td><%= count++ %></td>
-                <td><%= reader.getReadID() %></td>
-                <td><%= reader.getName() %></td>
-                <td><%= reader.getGender() %></td>
-                <td><%= reader.getPhoneNum() %></td>
-                <td><%= reader.getReaderLevel() %></td>
+                <td><%= bookman.getName() %></td>
+                <td><%= bookman.getAdd() %></td>
+                <td><%= bookman.getContact() %></td>
+                <td><%= bookman.getPhoneNum() %></td>
+                <td><%= bookman.getPostcode() %></td>
 
                 <td>
                     <div class="tools">
-                        <button id="lookButton">
-                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">
-                            <div class="tooltip">查看</div>
-                        </button>
+<%--                        <button id="lookButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">--%>
+<%--                            <div class="tooltip">查看</div>--%>
+<%--                        </button>--%>
                         <button id="editButton">
                             <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
                             <div class="tooltip">编辑</div>
@@ -464,11 +472,11 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/ReaderServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/ReaderServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
             </div>
 
         </div>
@@ -479,48 +487,26 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            读者信息
+            书商信息
             <span class="close" id="closeModal">&times;</span>
         </div>
-        <form id="readerForm_add">
+        <form id="bookmanForm_add">
             <table class="modal-table">
                 <tr>
-                    <th>读者编号</th>
-                    <td><input type="text" id="readID" name="readID"><span style="color: red;">*</span></td>
-                    <th>姓名</th>
+                    <th>名称</th>
                     <td><input type="text" id="name" name="name"><span style="color: red;">*</span></td>
+                    <th>地址</th>
+                    <td><input type="text" id="add" name="add"><span style="color: red;">*</span></td>
                 </tr>
                 <tr>
-                    <th>性别</th>
-                    <td><select id="gender" name="gender">
-                        <option value="女">女</option>
-                        <option value="男">男</option>
-                    </select><span style="color: red;">*</span></td>
-                    <th>出生日期</th>
-                    <td><input type="date" id="birthDay" name="birthDay"><span style="color: red;">*</span></td> <!-- 更改为日期选择器 -->
-                </tr>
-                <tr>
-                    <th>单位</th>
-                    <td><input type="text" id="unit" name="unit"><span style="color: red;">*</span></td>
-                    <th>家庭地址</th>
-                    <td><input type="text" id="homeAdd" name="homeAdd"><span style="color: red;">*</span></td>
-                </tr>
-                <tr>
+                    <th>联系人</th>
+                    <td><input type="text" id="contact" name="contact"><span style="color: red;">*</span></td>
                     <th>电话号码</th>
                     <td><input type="text" id="phoneNum" name="phoneNum"><span style="color: red;">*</span></td>
-                    <th>电子邮箱</th>
-                    <td><input type="email" id="emailAdd" name="emailAdd"></td> <!-- 使用 email 类型来验证邮箱 -->
                 </tr>
                 <tr>
-                    <th>读者级别名称</th>
-                    <td><select id="readerLevel" name="readerLevel">
-                        <option value="高级读者">高级读者</option>
-                        <option value="中级读者">中级读者</option>
-                        <option value="低级读者">低级读者</option>
-                        <option value="黑名单读者">黑名单读者</option>
-                    </select><span style="color: red;">*</span></td>
-                    <th>信用分</th>
-                    <td><input type="text" id="creditPoint" name="creditPoint"><span style="color: red;">*</span></td>
+                    <th>邮编</th>
+                    <td><input type="text" id="postcode" name="postcode"><span style="color: red;">*</span></td>
                 </tr>
             </table>
             <button type="button" id="submitForm">提交</button>
@@ -528,96 +514,31 @@
     </div>
 </div>
 
-<%--查看框--%>
-<div id="myModal1" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            读者信息
-            <span class="close" id="closeModal1">&times;</span>
-        </div>
-        <form id="readerForm_look">
-            <table class="modal-table">
-                <tr>
-                    <th>读者编号</th>
-                    <td><input type="text" id="readID1" name="readID" readonly></td>
-                    <th>姓名</th>
-                    <td><input type="text" id="name1" name="name" readonly></td>
-                </tr>
-                <tr>
-                    <th>性别</th>
-                    <td><input type="text" id="gender1" name="gender" readonly></td>
-                    <th>出生日期</th>
-                    <td><input type="text" id="birthDay1" name="birthDay" readonly></td>
-                </tr>
-                <tr>
-                    <th>单位</th>
-                    <td><input type="text" id="unit1" name="unit" readonly></td>
-                    <th>家庭地址</th>
-                    <td><input type="text" id="homeAdd1" name="homeAdd" readonly></td>
-                </tr>
-                <tr>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum1" name="phoneNum" readonly></td>
-                    <th>电子邮箱</th>
-                    <td><input type="text" id="emailAdd1" name="emailAdd" readonly></td>
-                </tr>
-                <tr>
-                    <th>读者级别名称</th>
-                    <td><input type="text" id="readerLevel1" name="readerLevel" readonly></td>
-                    <th>信用分</th>
-                    <td><input type="text" id="creditPoint1" name="creditPoint" readonly></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
 
 <%--编辑框--%>
 <div id="myModal2" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            读者信息
+            书商信息
             <span class="close" id="closeModal2">&times;</span>
         </div>
-        <form id="readerForm_edit">
+        <form id="bookmanForm_edit">
             <table class="modal-table">
                 <tr>
-                    <th>读者编号</th>
-                    <td><input type="text" id="readID2" name="readID" readonly></td>
-                    <th>姓名</th>
-                    <td><input type="text" id="name2" name="name"></td>
+                    <th>名称</th>
+                    <td><input type="text" id="name2" name="name" readonly></td>
+                    <th>地址</th>
+                    <td><input type="text" id="add2" name="add"></td>
                 </tr>
                 <tr>
-                    <th>性别</th>
-                    <td><select id="gender2" name="gender">
-                        <option value="女">女</option>
-                        <option value="男">男</option>
-                    </select></td>
-                    <th>出生日期</th>
-                    <td><input type="date" id="birthDay2" name="birthDay"></td>
-                </tr>
-                <tr>
-                    <th>单位</th>
-                    <td><input type="text" id="unit2" name="unit"></td>
-                    <th>家庭地址</th>
-                    <td><input type="text" id="homeAdd2" name="homeAdd"></td>
-                </tr>
-                <tr>
+                    <th>联系人</th>
+                    <td><input type="text" id="contact2" name="contact"></td>
                     <th>电话号码</th>
                     <td><input type="text" id="phoneNum2" name="phoneNum"></td>
-                    <th>电子邮箱</th>
-                    <td><input type="text" id="emailAdd2" name="emailAdd"></td>
                 </tr>
                 <tr>
-                    <th>读者级别名称</th>
-                    <td><select id="readerLevel2" name="readerLevel">
-                        <option value="高级读者">高级读者</option>
-                        <option value="中级读者">中级读者</option>
-                        <option value="低级读者">低级读者</option>
-                        <option value="黑名单读者">黑名单读者</option>
-                    </select></td>
-                    <th>信用分</th>
-                    <td><input type="text" id="creditPoint2" name="creditPoint"></td>
+                    <th>邮编</th>
+                    <td><input type="text" id="postcode2" name="postcode"></td>
                 </tr>
             </table>
             <button type="button" id="submitForm2">提交</button>
@@ -633,17 +554,10 @@
         var closeModal = document.getElementById("closeModal");
 
         // 获取模态框元素
-        var modal1 = document.getElementById("myModal1");
-        var closeModal1 = document.getElementById("closeModal1");
-        // 获取所有的“查看”按钮
-        var lookButtons = document.querySelectorAll("#lookButton");
-
-        // 获取模态框元素
         var modal2 = document.getElementById("myModal2");
         var closeModal2 = document.getElementById("closeModal2");
         // 获取所有的“编辑”按钮
         var editButtons = document.querySelectorAll("#editButton");
-
 
 
         // 打开模态框
@@ -654,27 +568,16 @@
         }
 
 
-        // 遍历所有“查看”按钮并绑定点击事件
-        lookButtons.forEach(function(button) {
-            button.addEventListener("click", function(event) {
-                modal1.style.display = "block";
-                // 获取点击按钮所在行的读者信息
-                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
-
-                // 发送请求获取该读者的详细信息
-                fetchReaderDetails(readID);
-            });
-        });
 
         // 遍历所有“编辑”按钮并绑定点击事件
         editButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 modal2.style.display = "block";
                 // 获取点击按钮所在行的读者信息
-                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchReaderDetails(readID);
+                fetchBookmanDetails(name);
             });
         });
 
@@ -683,9 +586,7 @@
         closeModal.onclick = function () {
             modal.style.display = "none";
         }
-        closeModal1.onclick = function () {
-            modal1.style.display = "none";
-        }
+
         closeModal2.onclick = function () {
             modal2.style.display = "none";
         }
@@ -695,9 +596,7 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-            if (event.target == modal1) {
-                modal1.style.display = "none";
-            }
+
             if (event.target == modal2) {
                 modal2.style.display = "none";
             }
@@ -719,40 +618,15 @@
 
         // 提交表单时验证
         submitForm.onclick = function () {
-            var readID = document.getElementById("readID").value;
             var name = document.getElementById("name").value;
-            var unit = document.getElementById("unit").value;
-            var homeAdd = document.getElementById("homeAdd").value;
+            var add = document.getElementById("add").value;
+            var contact = document.getElementById("contact").value;
             var phoneNum = document.getElementById("phoneNum").value;
-            var emailAdd = document.getElementById("emailAdd").value;
-            var creditPoint = document.getElementById("creditPoint").value;
-            var birthDay = document.getElementById("birthDay").value;
+            var postcode = document.getElementById("postcode").value;
 
             // 检查必填项
-            if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
+            if (!name || !add || !contact || !phoneNum || !postcode ) {
                 alert("所有必填项不能为空！");
-                return;
-            }
-
-            // 验证读者编号（12位数字）
-            if (!/^\d{12}$/.test(readID)) {
-                alert("读者编号必须为12位数字！");
-                return;
-            }
-
-            // 验证姓名（不能超过20个字符）
-            if (name.length > 20) {
-                alert("姓名不能超过20个字符！");
-                return;
-            }
-
-            // 验证单位和家庭地址（不能超过100个字符）
-            if (unit.length > 100) {
-                alert("单位不能超过100个字符！");
-                return;
-            }
-            if (homeAdd.length > 100) {
-                alert("家庭地址不能超过100个字符！");
                 return;
             }
 
@@ -762,42 +636,9 @@
                 return;
             }
 
-            // 验证邮箱格式
-            if (emailAdd && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAdd)) {
-                alert("电子邮箱格式不正确！");
-                return;
-            }
-
-            // 验证信用分（必须为整数）
-            if (!/^\d+$/.test(creditPoint)) {
-                alert("信用分必须是整数！");
-                return;
-            }
-
-            // **出生日期验证**：出生日期不能大于等于今天
-            var today = new Date();
-            var birthDate = new Date(birthDay);
-            if (birthDate >= today) {
-                alert("出生日期不能大于等于今天！");
-                return;
-            }
-
-            // **读者级别与信用分匹配验证**
-            creditPoint = parseInt(creditPoint, 10);
-            if (readerLevel === "高级读者" && (creditPoint < 81 || creditPoint > 100)) {
-                alert("高级读者的信用分必须在81到100之间！");
-                return;
-            } else if (readerLevel === "中级读者" && (creditPoint < 51 || creditPoint > 80)) {
-                alert("中级读者的信用分必须在51到80之间！");
-                return;
-            } else if (readerLevel === "低级读者" && (creditPoint < 11 || creditPoint > 50)) {
-                alert("低级读者的信用分必须在11到50之间！");
-                return;
-            } else if (readerLevel === "黑名单读者" && (creditPoint < 0 || creditPoint > 10)) {
-                alert("黑名单读者的信用分必须在0到10之间！");
-                return;
-            } else if (creditPoint < 0) {
-                alert("信用分不能为负数！");
+            // 验证邮编格式
+            if (!/^\d{6}$/.test(postalCode)) {
+                alert("邮编必须是6位数字！");
                 return;
             }
 
@@ -805,12 +646,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#readerForm_add').serialize();
+                var formData=$('#bookmanForm_add').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/AddReaderServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/AddBookmanServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -836,40 +677,15 @@
 
         // 提交表单2时验证
         submitForm2.onclick = function () {
-            var readID = document.getElementById("readID2").value;
-            var name = document.getElementById("name2").value;
-            var unit = document.getElementById("unit2").value;
-            var homeAdd = document.getElementById("homeAdd2").value;
-            var phoneNum = document.getElementById("phoneNum2").value;
-            var emailAdd = document.getElementById("emailAdd2").value;
-            var creditPoint = document.getElementById("creditPoint2").value;
-            var birthDay = document.getElementById("birthDay2").value;
+            var name = document.getElementById("name").value;
+            var add = document.getElementById("add").value;
+            var contact = document.getElementById("contact").value;
+            var phoneNum = document.getElementById("phoneNum").value;
+            var postcode = document.getElementById("postcode").value;
 
             // 检查必填项
-            if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
+            if (!name || !add || !contact || !phoneNum || !postcode ) {
                 alert("所有必填项不能为空！");
-                return;
-            }
-
-            // 验证读者编号（12位数字）
-            if (!/^\d{12}$/.test(readID)) {
-                alert("读者编号必须为12位数字！");
-                return;
-            }
-
-            // 验证姓名（不能超过20个字符）
-            if (name.length > 20) {
-                alert("姓名不能超过20个字符！");
-                return;
-            }
-
-            // 验证单位和家庭地址（不能超过100个字符）
-            if (unit.length > 100) {
-                alert("单位不能超过100个字符！");
-                return;
-            }
-            if (homeAdd.length > 100) {
-                alert("家庭地址不能超过100个字符！");
                 return;
             }
 
@@ -879,42 +695,9 @@
                 return;
             }
 
-            // 验证邮箱格式
-            if (emailAdd && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAdd)) {
-                alert("电子邮箱格式不正确！");
-                return;
-            }
-
-            // 验证信用分（必须为整数）
-            if (!/^\d+$/.test(creditPoint)) {
-                alert("信用分必须是整数！");
-                return;
-            }
-
-            // **出生日期验证**：出生日期不能大于等于今天
-            var today = new Date();
-            var birthDate = new Date(birthDay);
-            if (birthDate >= today) {
-                alert("出生日期不能大于等于今天！");
-                return;
-            }
-
-            // **读者级别与信用分匹配验证**
-            creditPoint = parseInt(creditPoint, 10);
-            if (readerLevel === "高级读者" && (creditPoint < 81 || creditPoint > 100)) {
-                alert("高级读者的信用分必须在81到100之间！");
-                return;
-            } else if (readerLevel === "中级读者" && (creditPoint < 51 || creditPoint > 80)) {
-                alert("中级读者的信用分必须在51到80之间！");
-                return;
-            } else if (readerLevel === "低级读者" && (creditPoint < 11 || creditPoint > 50)) {
-                alert("低级读者的信用分必须在11到50之间！");
-                return;
-            } else if (readerLevel === "黑名单读者" && (creditPoint < 0 || creditPoint > 10)) {
-                alert("黑名单读者的信用分必须在0到10之间！");
-                return;
-            } else if (creditPoint < 0) {
-                alert("信用分不能为负数！");
+            // 验证邮编格式
+            if (!/^\d{6}$/.test(postalCode)) {
+                alert("邮编必须是6位数字！");
                 return;
             }
 
@@ -922,12 +705,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#readerForm_edit').serialize();
+                var formData=$('#bookmanForm_edit').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/EditReaderServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/EditBookmanServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -953,47 +736,29 @@
     });
 
     // 获取并填充读者详细信息
-    function fetchReaderDetails(readID) {
-        // 假设我们通过后端接口 `/LookReaderServlet` 获取数据
+    function fetchBookmanDetails(name) {
+        // 假设我们通过后端接口 `/LookBookmanServlet` 获取数据
         $.ajax({
-            url: '${pageContext.request.contextPath}/LookReaderServlet', // 你的后端接口
+            url: '${pageContext.request.contextPath}/LookBookmanServlet', // 你的后端接口
             method: 'GET',
-            data: { readID: readID }, // 发送读者编号（或其他唯一标识符）到后端
+            data: { name: name }, // 发送读者编号（或其他唯一标识符）到后端
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    // 将返回的读者信息填充到弹框中的对应字段
-                    document.getElementById("readID1").value = response.data.readID;
-                    document.getElementById("name1").value = response.data.name;
-                    document.getElementById('gender1').value = response.data.gender;
-                    document.getElementById("birthDay1").value = response.data.birthDay;
-                    document.getElementById("unit1").value = response.data.unit;
-                    document.getElementById("homeAdd1").value = response.data.homeAdd;
-                    document.getElementById("phoneNum1").value = response.data.phoneNum;
-                    document.getElementById("emailAdd1").value = response.data.emailAdd;
-                    document.getElementById("readerLevel1").value = response.data.readerLevel;
-                    document.getElementById("creditPoint1").value = response.data.creditPoint;
-
-
-                    document.getElementById("readID2").value = response.data.readID;
                     document.getElementById("name2").value = response.data.name;
-                    document.getElementById('gender2').value = response.data.gender;
-                    document.getElementById("birthDay2").value = response.data.birthDay;
-                    document.getElementById("unit2").value = response.data.unit;
-                    document.getElementById("homeAdd2").value = response.data.homeAdd;
+                    document.getElementById("add2").value = response.data.add;
+                    document.getElementById("contact2").value = response.data.contact;
                     document.getElementById("phoneNum2").value = response.data.phoneNum;
-                    document.getElementById("emailAdd2").value = response.data.emailAdd;
-                    document.getElementById("readerLevel2").value = response.data.readerLevel;
-                    document.getElementById("creditPoint2").value = response.data.creditPoint;
+                    document.getElementById("postcode2").value = response.data.postcode;
 
                     // 显示弹框
                     // modal1.style.display = "block";
                 } else {
-                    alert("无法获取读者信息！");
+                    alert("无法获取书商信息！");
                 }
             },
             error: function(xhr, status, error) {
-                alert("获取读者信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                alert("获取书商信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
             }
         });
     }
@@ -1006,16 +771,16 @@
         deleteButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 // 获取点击按钮所在行的读者信息
-                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 弹出确认框
                 var confirmSubmit = confirm("是否确定删除？");
                 if (confirmSubmit) {
 
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/DeleteReaderServlet',  // 后端接口，用于提交数据
+                        url: '${pageContext.request.contextPath}/DeleteBookmanServlet',  // 后端接口，用于提交数据
                         method: 'POST',
-                        data:  { readID: readID },   // 发送的读者编号
+                        data:  { name: name },   // 发送的读者编号
                         dataType: 'json',  // 期待返回的数据格式
                         success: function(response) {
                             if (response.resultInfo.flag) {

@@ -114,7 +114,7 @@ public class ReaderDao {
             return result > 0;
         } catch (SQLException e) {
 
-            throw new RuntimeException("添加备份信息数据失败", e);
+            throw new RuntimeException("添加读者信息失败", e);
         }
     }
 
@@ -146,7 +146,7 @@ public class ReaderDao {
             dao.AllClose();
             return reader; // 返回查询结果
         } catch (SQLException e) {
-            throw new RuntimeException("查询数据失败", e);
+            throw new RuntimeException("查看数据失败", e);
         }
     }
 

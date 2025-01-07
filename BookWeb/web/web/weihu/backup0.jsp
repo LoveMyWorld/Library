@@ -435,7 +435,7 @@
 <%--                <a href="#">备份更新表</a>--%>
             </div>
         </div>
-        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">书商字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/BookmanServlet'">书商字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">出版社字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">收藏单位字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">印刷厂字典维护</a>
