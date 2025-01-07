@@ -184,13 +184,12 @@
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="http://localhost:8090/web_Web_exploded/wangye/manageannouncement.jsp" onclick="location.href='${pageContext.request.contextPath}/AnnouncementServlet'" >发布公告</a>
+        <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
 
-        <a href="http://localhost:8090/web_Web_exploded/wangye/historymanageannouncement.jsp" onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'" >历史公告</a>
-
-
+        <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
         <a href="javascript:void(0);" onclick="showNoticeForm()">发布通告</a>
-        <a href="http://localhost:8090/web_Web_exploded/wangye/managemessage.jsp" >查看留言</a>
+
+        <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>
     </div>
 </div>
 <div class="container">

@@ -43,4 +43,41 @@ public class MessageDao {
     }
 
 
+    public int getMaxID() {
+        Dao dao = new Dao();
+        String sql = "SELECT MAX(messageID) FROM library.message";
+        int id =0;
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id= rs.getInt(1);
+                dao.AllClose();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        }
+    return id;
+    }
+
+
+    public void addLine(Message message) {
+        String sql = "INSERT INTO library.message (messageID, publisher,messageText) VALUES (?, ?, ?)";
+        Dao dao = new Dao();
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            ps.setInt(1, message.getMessageID());
+            ps.setString(2, message.getPublisher());
+            ps.setString(3, message.getMessageText());
+            ps.executeUpdate();
+            dao.AllClose();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }

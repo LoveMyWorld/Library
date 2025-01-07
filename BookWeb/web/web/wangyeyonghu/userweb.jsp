@@ -107,31 +107,31 @@
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="#">用户个人信息</a>
-        <a href="#">我的借阅记录</a>
+
+        <a href="#">搜索书目</a>
         <a href="http://localhost:8080/Library_war_exploded/web_yuyue.jsp">预约借书</a>
-        <a href="#">留言</a>
-        <a href="#">公告</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
+        <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
         <a href="#">消息</a>
-        <a href="#">帮助</a>
+
     </div>
 </div>
 <div class="container">
     <div class="system-title-box">
         图书馆用户界面
     </div>
-    <div class="content-box">
-        <div class="toolbar">
-            <div class="search">
-                <select id="search-type">
-                    <option value="bookname">书名</option>
-                    <option value="author">作者</option>
-                </select>
-                <input type="text" id="search-input" placeholder="请输入搜索关键词...">
-            </div>
-        </div>
+<%--    <div class="content-box">--%>
+<%--        <div class="toolbar">--%>
+<%--            <div class="search">--%>
+<%--                <select id="search-type">--%>
+<%--                    <option value="bookname">书名</option>--%>
+<%--                    <option value="author">作者</option>--%>
+<%--                </select>--%>
+<%--                <input type="text" id="search-input" placeholder="请输入搜索关键词...">--%>
+<%--            </div>--%>
+<%--        </div>--%>
         <!-- 其他功能的留白区域 -->
-    </div>
-</div>
+<%--    </div>--%>
+<%--</div>--%>
 </body>
 </html>

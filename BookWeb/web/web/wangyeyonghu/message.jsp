@@ -1,20 +1,16 @@
-<%@ page import="Entity.Announcement" %>
-
-
-<%@ page import="java.util.List" %>
-<%@ page import="Entity.Message" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: 19404
+  Date: 2025/1/7
+  Time: 16:24
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-
-
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>管理员网络管理界面</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>图书馆用户界面</title>
   <style>
-
-
     #history-announcement {
       margin-left: 220px; /* 调整左边距以适应侧边栏宽度 */
       width: calc(100% - 220px); /* 容器宽度为屏幕宽度减去侧边栏宽度 */
@@ -208,68 +204,49 @@
 
   </style>
 </head>
-<body>
 
+
+<body>
 <div class="sidebar">
   <div>
     <h3>冠军小队</h3>
-    <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
 
-    <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
-    <a href="javascript:void(0);" onclick="showNoticeForm()">发布通告</a>
-
-    <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>
+    <a href="#">搜索书目</a>
+    <a href="http://localhost:8080/Library_war_exploded/web_yuyue.jsp">预约借书</a>
+    <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
+    <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
+    <a href="#">消息</a>
+    <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
   </div>
 </div>
+
+
+
 <div class="container">
   <div class="system-title-box">
-    管理员网络管理界面
+    图书馆留言界面
   </div>
+<div class="content-box" id="announcement-form">
+  <h4>留言给管理员</h4>
+  <form action="${pageContext.request.contextPath}/UserMessageServlet" method="get">
+    <div class="form-group" style="display: flex; align-items: center;">
+      <div style="margin-right: 10px;">
+        <label for="publisher">姓名</label>
+        <input name="publisher" type="text" id="publisher" value="${sessionScope.username}" style="width: 150px;">
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="announcementContent">留言内容</label>
+      <textarea name="messageText" id="announcementContent" rows="5"></textarea>
+    </div>
+    <button type="submit" class="return-button">发送</button>
+  </form>
+  <!-- 添加历史公告按钮 -->
+
 </div>
-
-
-
-
-<%--    留言--%>
-<form action="${pageContext.request.contextPath}/MessageServlet" method="get">
-  <div id="history-announcement"  class="content-box" >
-    <h4>留言列表</h4>
-    <button id ="messagebutton" type="submit" class="return-button">刷新</button>
-
-    <table>
-      <thead>
-      <tr>
-        <th>序号</th>
-        <th>留言人</th>
-        <th>留言内容</th>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- 假设这里用 Java 在后台动态填充数据 -->
-
-      <%
-        List<Message> messageList= (List<Message>) request.getAttribute("massagelist");
-        if (messageList != null) { // 判断数据是否为空
-          for (Message message : messageList) {
-      %>
-      <tr >
-        <td><%= message.getMessageID() %></td>
-        <td><%= message.getPublisher() %></td>
-        <td><%= message.getMessageText() %></td>
-
-
-      </tr>
-      <%
-          }
-        }
-      %>
-      <!-- 更多数据行 -->
-      </tbody>
-    </table>
-  </div>
-
-</form>
-
+</div>
 
 
 
@@ -281,7 +258,4 @@
 
 
 </body>
-
-
 </html>
-
