@@ -17,7 +17,42 @@
             margin-left: 220px; /* 调整左边距以适应侧边栏宽度 */
             width: calc(100% - 220px); /* 容器宽度为屏幕宽度减去侧边栏宽度 */
         }
-
+        .tools {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px; /* 按钮间距微调 */
+        }
+        .tools button {
+            position: relative;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .tools button img {
+            width: 24px;
+            height: 24px;
+        }
+        .tools button:hover img {
+            filter: brightness(0.8);
+        }
+        .tools button:hover .tooltip {
+            display: block;
+        }
+        .tools .tooltip {
+            display: none;
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
         /* 表格样式 */
         table {
             width: 100%; /* 表格宽度占满其父容器 */
@@ -235,6 +270,7 @@
                 <th>序号</th>
                 <th>发布人</th>
                 <th>主题</th>
+                <th>内容</th>
             </tr>
             </thead>
             <tbody>
@@ -249,7 +285,23 @@
                 <td><%= announcement.getAnnouncementID() %></td>
                 <td><%= announcement.getPublisher() %></td>
                 <td><%= announcement.getAnnouncementKey() %></td>
-
+                <td><%= announcement.getAnnouncementText() %></td>
+<%--                <td>--%>
+<%--                    <div class="tools">--%>
+<%--                        <button id="lookButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">--%>
+<%--                            <div class="tooltip">查看</div>--%>
+<%--                        </button>--%>
+<%--                        <button id="editButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+<%--                            <div class="tooltip">编辑</div>--%>
+<%--                        </button>--%>
+<%--                        <button id="deleteButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+<%--                            <div class="tooltip">删除</div>--%>
+<%--                        </button>--%>
+<%--                    </div>--%>
+<%--                </td>--%>
 
             </tr>
             <%
@@ -261,17 +313,6 @@
         </table>
     </div>
 </form>
-
-
-
-
-
-
-
-
-
-
-
 
 
 </body>

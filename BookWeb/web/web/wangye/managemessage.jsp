@@ -19,7 +19,42 @@
       margin-left: 220px; /* 调整左边距以适应侧边栏宽度 */
       width: calc(100% - 220px); /* 容器宽度为屏幕宽度减去侧边栏宽度 */
     }
-
+    .tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px; /* 按钮间距微调 */
+    }
+    .tools button {
+      position: relative;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .tools button img {
+      width: 24px;
+      height: 24px;
+    }
+    .tools button:hover img {
+      filter: brightness(0.8);
+    }
+    .tools button:hover .tooltip {
+      display: block;
+    }
+    .tools .tooltip {
+      display: none;
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
     /* 表格样式 */
     table {
       width: 100%; /* 表格宽度占满其父容器 */
@@ -239,24 +274,42 @@
     <table>
       <thead>
       <tr>
-        <th>序号</th>
+
         <th>留言人</th>
         <th>留言内容</th>
+<%--        <th>操作</th>--%>
       </tr>
       </thead>
       <tbody>
       <!-- 假设这里用 Java 在后台动态填充数据 -->
 
       <%
+
+
+
         List<Message> messageList= (List<Message>) request.getAttribute("massagelist");
+
+
+
         if (messageList != null) { // 判断数据是否为空
           for (Message message : messageList) {
       %>
       <tr >
-        <td><%= message.getMessageID() %></td>
+
         <td><%= message.getPublisher() %></td>
         <td><%= message.getMessageText() %></td>
 
+
+<%--        <td>--%>
+<%--          <div class="tools">--%>
+<%--            <button id="lookButton">--%>
+<%--              <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">--%>
+<%--              <div class="tooltip">已读</div>--%>
+<%--            </button>--%>
+
+
+<%--          </div>--%>
+<%--        </td>--%>
 
       </tr>
       <%
