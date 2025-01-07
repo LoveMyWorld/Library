@@ -267,7 +267,7 @@
 </div>
 
 <div class="container">
-    <!-- 冠军小队编目系统框 -->
+
     <div class="system-title-box">
         冠军小队采访系统
     </div>

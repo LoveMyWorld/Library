@@ -31,6 +31,9 @@ public class AnnouncementServlet extends HttpServlet {
 
 
 
+        //只展示前10条数据，当有新数据加入时，自动把其他数据往后挤，10之后的数据自动淘汰。
+
+
 
         //取最后一条数据的id，得到当前的id
         AnnouncementService announcementService = new AnnouncementService();
@@ -48,6 +51,9 @@ public class AnnouncementServlet extends HttpServlet {
         announcementService.addLine(announcement);
 
         request.getRequestDispatcher("/wangye/network.jsp").forward(request, response);
+
+        
+
     }
 
     @Override

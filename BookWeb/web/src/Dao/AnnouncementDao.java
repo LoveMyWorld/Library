@@ -1,7 +1,7 @@
 package Dao;
 
 import Entity.Announcement;
-import Entity.User;
+
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -110,9 +110,52 @@ public void addLine(Announcement announcement) {
 
 }
 
+//删除一行
+public void deleteLine(Announcement announcement) {
+    String sql = "DELETE FROM library.Announcement WHERE announcementID = ?";
+    Dao dao = new Dao();
+    try {
+        PreparedStatement ps = dao.conn.prepareStatement(sql);
+        ps.setInt(1, announcement.getAnnouncementID());
+        ps.executeUpdate();
+        dao.AllClose();
 
 
-//查找最大id
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+
+}
+
+//修改
+
+public void updateLine(int id , Announcement announcement) {
+    String sql = "UPDATE library.announcement SET announcementDate = ?,publisher=?,announcementText=?,announcementKey=?  WHERE id = ?";
+    Dao dao = new Dao();
+    try {
+        PreparedStatement ps =dao.conn.prepareStatement(sql);
+
+        ps.setObject(1, announcement.getAnnouncementDate());
+        ps.setString(2, announcement.getPublisher());
+        ps.setString(3, announcement.getAnnouncementText());
+        ps.setString(4, announcement.getAnnouncementKey());
+        ps.setInt(5, id);
+        ps.executeUpdate();
+        dao.AllClose();
+
+
+
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+
+
+}
+
+
+    //查找最大id
 public int findMaxID(){
         String sql = "SELECT MAX(announcementID) FROM library.Announcement";
 
@@ -136,7 +179,39 @@ public int findMaxID(){
 
 
 
+//取最后十条公告
+public List<Announcement>  getLastTenLines(){
+String sql ="SELECT * FROM library.announcement\n" +
+        "ORDER BY    announcementID DESC\n" +
+        "LIMIT 10";
+
+Dao dao = new Dao();
+List<Announcement> dataList = new ArrayList<>();
+try{
+    PreparedStatement ps =dao.conn.prepareStatement(sql);
+    ResultSet rs = ps.executeQuery();
+
+    while (rs.next()) {
+
+        Announcement announcement = new Announcement();
+        announcement.setAnnouncementID(rs.getInt("announcementID"));
+        announcement.setAnnouncementDate(rs.getObject("announcementDate",LocalDate.class));
+        announcement.setPublisher(rs.getString("publisher"));
+        announcement.setAnnouncementText(rs.getString("announcementText"));
+        announcement.setAnnouncementKey(rs.getString("announcementKey"));
+        dataList.add(announcement);
+
+    }
+
+    dao.AllClose();
+    return dataList;
 
 
+
+} catch (SQLException e) {
+    throw new RuntimeException(e);
+}
+
+}
 
 }

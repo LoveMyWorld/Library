@@ -1,9 +1,15 @@
+<%@ page import="Entity.Announcement" %>
+
+
+<%@ page import="java.util.List" %>
+<%@ page import="Entity.Message" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>管理员网络管理界面</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -136,15 +142,55 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse; /* 合并边框 */
+        }
+        th, td {
+            border: 1px solid #ccc; /* 设置边框颜色 */
+            padding: 8px; /* 设置单元格内边距 */
+            text-align: left; /* 文本左对齐 */
+        }
+        th {
+            background-color: #f4f4f4; /* 表头背景颜色 */
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* 偶数行背景颜色 */
+        }
+        tr:hover {
+            background-color: #fffbcc; /* 鼠标悬停时的背景颜色 */
+        }
+
+        .return-button {
+            padding: 10px 15px;
+            margin-top: 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: '楷体';
+        }
+        .return-button:hover {
+            background-color: #2980b9;
+        }
+
+
     </style>
 </head>
 <body>
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="javascript:void(0);" onclick="showAnnouncementForm()">发布公告</a>
+        <a href="http://localhost:8090/web_Web_exploded/wangye/manageannouncement.jsp" onclick="location.href='${pageContext.request.contextPath}/AnnouncementServlet'" >发布公告</a>
+
+        <a href="http://localhost:8090/web_Web_exploded/wangye/historymanageannouncement.jsp" onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'" >历史公告</a>
+
+
         <a href="javascript:void(0);" onclick="showNoticeForm()">发布通告</a>
-        <a href="javascript:void(0);" onclick="showMessagesForm()">查看留言</a>
+        <a href="http://localhost:8090/web_Web_exploded/wangye/managemessage.jsp" >查看留言</a>
     </div>
 </div>
 <div class="container">
@@ -154,30 +200,77 @@
 
 
 <%--    发布公告--%>
-    <div class="content-box" id="announcement-form">
-        <h4>发布公告</h4>
-        <form action="${pageContext.request.contextPath}/AnnouncementServlet" method="get">
-            <div class="form-group" style="display: flex; align-items: center;">
-                <div style="margin-right: 10px;">
-                    <label for="publisher">发布人</label>
-                    <input name="publisher" type="text" id="publisher" value="${sessionScope.username}" style="width: 150px;">
-                </div>
-                <div>
-                    <label for="publishDate">发布日期</label>
-                    <input name="announcementDate" type="date" id="publishDate" style="width: 150px;">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="announcementTitle">公告主题</label>
-                <input name="announcementKey" type="text" id="announcementTitle">
-            </div>
-            <div class="form-group">
-                <label for="announcementContent">公告内容</label>
-                <textarea name="announcementText" id="announcementContent" rows="5"></textarea>
-            </div>
-            <button type="submit">发布</button>
-        </form>
-    </div>
+<%--    <div class="content-box" id="announcement-form">--%>
+<%--        <h4>发布公告</h4>--%>
+<%--        <form action="${pageContext.request.contextPath}/AnnouncementServlet" method="get">--%>
+<%--            <div class="form-group" style="display: flex; align-items: center;">--%>
+<%--                <div style="margin-right: 10px;">--%>
+<%--                    <label for="publisher">发布人</label>--%>
+<%--                    <input name="publisher" type="text" id="publisher" value="${sessionScope.username}" style="width: 150px;">--%>
+<%--                </div>--%>
+<%--                <div>--%>
+<%--                    <label for="publishDate">发布日期</label>--%>
+<%--                    <input name="announcementDate" type="date" id="publishDate" style="width: 150px;">--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--            <div class="form-group">--%>
+<%--                <label for="announcementTitle">公告主题</label>--%>
+<%--                <input name="announcementKey" type="text" id="announcementTitle">--%>
+<%--            </div>--%>
+<%--            <div class="form-group">--%>
+<%--                <label for="announcementContent">公告内容</label>--%>
+<%--                <textarea name="announcementText" id="announcementContent" rows="5"></textarea>--%>
+<%--            </div>--%>
+<%--            <button type="submit" class="return-button">发布</button>--%>
+<%--        </form>--%>
+<%--        <!-- 添加历史公告按钮 -->--%>
+<%--        <button id="showHistoryButton" class="return-button"  onclick="showHistoryAnnouncement()"  style="position: absolute; bottom: 700px; right: 10px;">历史公告</button>--%>
+<%--    </div>--%>
+
+    <!-- 历史公告界面 -->
+
+
+
+
+<%--    <form action="${pageContext.request.contextPath}/HistoryAnnouncementServlet" method="get">--%>
+<%--    <div id="history-announcement" class="content-box" style="display: none;">--%>
+<%--        <h4>历史公告</h4>--%>
+<%--        <button type="submit" class="return-button">导入</button>--%>
+
+<%--        <table>--%>
+<%--            <thead>--%>
+<%--            <tr>--%>
+<%--                <th>序号</th>--%>
+<%--                <th>发布人</th>--%>
+<%--                <th>主题</th>--%>
+<%--            </tr>--%>
+<%--            </thead>--%>
+<%--            <tbody>--%>
+<%--            <!-- 假设这里用 Java 在后台动态填充数据 -->--%>
+
+<%--            <%--%>
+<%--            List<Announcement> announcementList= (List<Announcement>) request.getAttribute("list");--%>
+<%--            if (announcementList != null) { // 判断数据是否为空--%>
+<%--            for (Announcement announcement : announcementList) {--%>
+<%--            %>--%>
+<%--            <tr >--%>
+<%--                <td><%= announcement.getAnnouncementID() %></td>--%>
+<%--                <td><%= announcement.getPublisher() %></td>--%>
+<%--                <td><%= announcement.getAnnouncementKey() %></td>--%>
+
+
+<%--            </tr>--%>
+<%--                <%--%>
+<%--                }--%>
+<%--                    }--%>
+<%--                %>--%>
+<%--            <!-- 更多数据行 -->--%>
+<%--            </tbody>--%>
+<%--        </table>--%>
+<%--    </div>--%>
+<%--</form>--%>
+
+
 
 
 
@@ -208,25 +301,45 @@
 
 
 
-<%--    留言--%>
-    <div class="content-box" id="messages-form">
-        <h4>查看留言</h4>
-        <form>
-            <div class="form-group">
-                <label for="messageSearch">搜索留言</label>
-                <input type="text" id="messageSearch" placeholder="请输入关键词">
-            </div>
-            <button type="submit">搜索</button>
-        </form>
-        <div class="form-group">
-            <label for="messageList">留言列表</label>
-            <textarea id="messageList" rows="10" readonly></textarea>
-        </div>
-    </div>
-</div>
+<%--&lt;%&ndash;    留言&ndash;%&gt;--%>
+<%--    <form action="${pageContext.request.contextPath}/MessageServlet" method="get">--%>
+<%--        <div id="messages-form" class="content-box" style="display: none;">--%>
+<%--            <h4>留言列表</h4>--%>
+<%--       <button id ="messagebutton" type="submit" class="return-button">导入</button>--%>
+
+<%--            <table>--%>
+<%--                <thead>--%>
+<%--                <tr>--%>
+<%--                    <th>序号</th>--%>
+<%--                    <th>留言人</th>--%>
+<%--                    <th>留言内容</th>--%>
+<%--                </tr>--%>
+<%--                </thead>--%>
+<%--                <tbody>--%>
+<%--                <!-- 假设这里用 Java 在后台动态填充数据 -->--%>
+
+<%--                <%--%>
+<%--                   List<Message> messageList= (List<Message>) request.getAttribute("massagelist");--%>
+<%--                    if (messageList != null) { // 判断数据是否为空--%>
+<%--                        for (Message message : messageList) {--%>
+<%--                %>--%>
+<%--                <tr >--%>
+<%--                    <td><%= message.getMessageID() %></td>--%>
+<%--                    <td><%= message.getPublisher() %></td>--%>
+<%--                    <td><%= message.getMessageText() %></td>--%>
 
 
+<%--                </tr>--%>
+<%--                <%--%>
+<%--                        }--%>
+<%--                    }--%>
+<%--                %>--%>
+<%--                <!-- 更多数据行 -->--%>
+<%--                </tbody>--%>
+<%--            </table>--%>
+<%--        </div>--%>
 
+<%--    </form>--%>
 
 <script>
     function showAnnouncementForm() {
@@ -251,7 +364,38 @@
         });
     }
 
-    // 默认显示发布公告表单
+    function  showHistoryAnnouncement(){
+        hideAllForms();
+        document.getElementById('history-announcement').style.display = 'block';
+        <%--// 获取数据--%>
+        <%--var text = document.getElementById('hhh');--%>
+        <%--var formData = $('#bookForm').serialize();--%>
+
+        <%--// 形成Ajax数据包--%>
+        <%--$.ajax({--%>
+        <%--      url: '${pageContext.request.contextPath}/initBookForm',--%>
+        <%--        data:formData,--%>
+        <%--        dataType:json,--%>
+        <%--        method:GET,--%>
+        <%--        success:function(response){--%>
+        <%--            if(response.resultInfo.flag){--%>
+        <%--                var username = response.username;--%>
+        <%--                var book = response.resultInfo.data;--%>
+        <%--                var bookname = response.resultInfo.data.bookname;--%>
+        <%--                // 数据回填到界面中--%>
+        <%--                $('#username').val(username);--%>
+        <%--                $('#username').prop('readonly' , true);--%>
+        <%--            }--%>
+        <%--            else{--%>
+        <%--                alter(response.resultInfo.errorMsg);--%>
+        <%--            }--%>
+        <%--        },--%>
+        <%--        error:function (response){--%>
+        <%--          --%>
+        <%--        }--%>
+        <%--});--%>
+    }
+
     window.onload = function() {
         hideAllForms();
     };
