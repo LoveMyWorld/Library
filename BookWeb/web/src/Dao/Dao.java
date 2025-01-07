@@ -7,13 +7,13 @@ public class Dao {
     PreparedStatement pst; // 数据库命令传送接口
     ResultSet rs; // 数据读取接口
 
-    private static final String dburl = "jdbc:mysql://127.0.0.1:3306/library?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String username = "Hcc";
-    private static final String password = "123456";
-
-//    private static final String dburl = "jdbc:mysql://127.0.0.1:3306/library?useSSL=false&serverTimezone=UTC";
-//    private static final String username = "root1";
+//    private static final String dburl = "jdbc:mysql://127.0.0.1:3306/library?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+//    private static final String username = "Hcc";
 //    private static final String password = "123456";
+
+    private static final String dburl = "jdbc:mysql://127.0.0.1:3306/library?useSSL=false&serverTimezone=UTC";
+    private static final String username = "root1";
+    private static final String password = "123456";
 
     public Dao() {
         dbconn();

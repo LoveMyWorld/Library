@@ -21,7 +21,7 @@
         }
         .sidebar {
             width: 200px;
-            background-color: #015999;
+            background-color: #07598a;
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
@@ -58,7 +58,7 @@
         .sidebar-submenu {
             display: none;
             position: relative;
-            background-color: #015999;
+            background-color: #07598a;
             color: #ecf0f1;
             width: 200px;
             padding-left: 20px;
@@ -83,7 +83,7 @@
         }
         .sidebar-footer {
             text-align: center;
-            padding: 160px 0;
+            padding: 350px 0;
         }
         .sidebar-footer .divider {
             height: 2px;
@@ -116,7 +116,7 @@
             width: calc(100% - 260px);
         }
         .system-title-box {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 15px;
             text-align: left;
@@ -155,7 +155,7 @@
             resize: vertical; /* 允许高度调整 */
         }
         .content-box1 button {
-            background-color: #015999;
+            background-color: #3498db;
             color: #fff;
             padding: 10px 20px;
             font-size: 18px;
@@ -168,7 +168,7 @@
         }
 
         .content-box {
-            border: 1px solid #015999;
+            border: 1px solid #3498db;
             background-color: white;
             /*padding: 15px;*/
             padding: 0px 0px 10px 0px;
@@ -179,7 +179,7 @@
         }
 
         .header {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 10px;
             font-size: 18px;
@@ -517,7 +517,7 @@
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/BackupCycleServletServlet" method="get">
+                <form action="${pageContext.request.contextPath}/BackupCycleServlet" method="get">
                     <select name="searchField">
                         <option value="backupName">备份表名</option>
                     </select>
@@ -604,7 +604,7 @@
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/BackupInfoServletServlet" method="get">
+                <form action="${pageContext.request.contextPath}/BackupInfoServlet" method="get">
                     <select name="searchField">
                         <option value="backupName">备份表名</option>
                         <option value="backupName">备份编号</option>

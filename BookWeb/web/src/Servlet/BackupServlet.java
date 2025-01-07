@@ -81,18 +81,7 @@ public class BackupServlet extends HttpServlet {
         }
     }
 
-    //    private String getRealTableName(String tableName) {
-//        switch (tableName) {
-//            case "图书流通库表":
-//                return "liutonglist";
-//            case "读者信息表":
-//                return "reader";
-//            case "读者级别规则表":
-//                return "rlevel_rule";
-//            default:
-//                return ""; // 不支持的表
-//        }
-//    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 获取 Web 应用的绝对路径

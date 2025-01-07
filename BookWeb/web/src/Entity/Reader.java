@@ -1,12 +1,12 @@
 package Entity;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public class Reader {
     private String readID;
     private String name;
     private Gender gender;
-    private LocalDate birthDay;
+    private Date birthDay;
     private String unit;
     private String homeAdd;
     private String phoneNum;
@@ -14,7 +14,7 @@ public class Reader {
     private ReaderLevelType readerLevel;
     private int creditPoint;
 
-    public Reader(String readID, String name, Gender gender, LocalDate birthDay, String unit, String homeAdd, String phoneNum, String emailAdd, ReaderLevelType readerLevel, int creditPoint) {
+    public Reader(String readID, String name, Gender gender, Date birthDay, String unit, String homeAdd, String phoneNum, String emailAdd, ReaderLevelType readerLevel, int creditPoint) {
         this.readID = readID;
         this.name = name;
         this.gender = gender;
@@ -53,11 +53,11 @@ public class Reader {
         this.gender = gender;
     }
 
-    public LocalDate getBirthDay() {
+    public Date getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(LocalDate birthDay) {
+    public void setBirthDay(Date birthDay) {
         this.birthDay = birthDay;
     }
 
