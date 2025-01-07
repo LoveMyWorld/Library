@@ -133,6 +133,35 @@ public class AppointmentDao {
             throw new RuntimeException("删除预约记录失败", e);
         }
     }
+    //通过图书编号找到册数
+    public int Ap_FindBookNumByBookID(String bookID) {
+        Dao dao = new Dao();
+        int totalBookNum = 0; // 初始化总数为0
+        String sql = "SELECT bookNum FROM library.appointmentlist WHERE bookID = ?";
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行查询操作
+            ResultSet rs = ps.executeQuery();
+
+            // 遍历结果集，将所有行的 bookNum 相加
+            while (rs.next()) {
+                totalBookNum += rs.getInt("bookNum");
+            }
+
+            // 关闭资源
+            dao.AllClose();
+            return totalBookNum; // 返回总数
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("查找数据失败", e);
+        }
+    }
 
 }
 
