@@ -12,8 +12,17 @@ public class MessageService {
      MessageDao dao = new MessageDao();
      return dao.getAllData();
 
+ }
 
+    public int maxID() {
 
+     MessageDao dao = new MessageDao();
+     return dao.getMaxID();
+    }
+
+    public void addLine(Message message) {
+        MessageDao dao = new MessageDao();
+        dao.addLine(message);
 
 
  }

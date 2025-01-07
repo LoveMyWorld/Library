@@ -1,17 +1,19 @@
 <%@ page import="Entity.Announcement" %>
+<%@ page import="java.util.List" %><%--
 
 
-<%@ page import="java.util.List" %>
-<%@ page import="Entity.Message" %>
+
+  Created by IntelliJ IDEA.
+  User: 19404
+  Date: 2025/1/7
+  Time: 15:23
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-
-
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>管理员网络管理界面</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>图书馆用户界面</title>
     <style>
         #history-announcement {
             margin-left: 220px; /* 调整左边距以适应侧边栏宽度 */
@@ -206,25 +208,34 @@
 
     </style>
 </head>
+
+
+
+
 <body>
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
 
-        <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
-        <a href="javascript:void(0);" onclick="showNoticeForm()">发布通告</a>
-
-        <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>
+        <a href="#">搜索书目</a>
+        <a href="http://localhost:8080/Library_war_exploded/web_yuyue.jsp">预约借书</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
+        <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
+        <a href="#">消息</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
     </div>
 </div>
+
+
 <div class="container">
     <div class="system-title-box">
-        管理员网络管理界面
+        图书馆用户界面
     </div>
 </div>
 
-    <form action="${pageContext.request.contextPath}/HistoryAnnouncementServlet" method="get">
+
+
+<form action="${pageContext.request.contextPath}/UserAnnouncementServlet" method="get">
     <div id="history-announcement" class="content-box" >
         <h4>历史公告</h4>
         <button type="submit" class="return-button">刷新</button>
@@ -265,17 +276,5 @@
 
 
 
-
-
-
-
-
-
-
-
-
 </body>
-
-
 </html>
-

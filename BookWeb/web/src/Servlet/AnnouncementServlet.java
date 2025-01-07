@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 
 @WebServlet( name = "AnnouncementServlet" , value = "/AnnouncementServlet")
-public class AnnouncementServlet extends HttpServlet {
+    public class AnnouncementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -31,7 +31,7 @@ public class AnnouncementServlet extends HttpServlet {
 
 
 
-        //只展示前10条数据，当有新数据加入时，自动把其他数据往后挤，10之后的数据自动淘汰。
+
 
 
 
@@ -52,7 +52,7 @@ public class AnnouncementServlet extends HttpServlet {
 
         request.getRequestDispatcher("/wangye/network.jsp").forward(request, response);
 
-        
+
 
     }
 
