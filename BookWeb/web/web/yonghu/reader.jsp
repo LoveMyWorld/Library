@@ -6,6 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>冠军小队读者信息维护</title>
     <style>
         body {
@@ -18,7 +19,7 @@
         .sidebar {
 
             width: 200px;
-            background-color: #015999;
+            background-color: #07598a;
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
@@ -59,7 +60,7 @@
         /*改*/
         .sidebar-footer {
             text-align: center;
-            padding: 280px 0;
+            padding: 350px 0;
         }
 
         .sidebar-footer .divider {
@@ -96,7 +97,7 @@
             width: calc(100% - 260px);
         }
         .system-title-box {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 15px;
             text-align: left;
@@ -110,7 +111,7 @@
             margin-left: 1%; /* 中心对齐，微微露出边框 */
         }
         .content-box {
-            border: 1px solid #015999;
+            border: 1px solid #3498db;
             background-color: white;
             /*padding: 15px;*/
             padding: 0px 0px 10px 0px;
@@ -120,7 +121,7 @@
             position: relative;
         }
         .header {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 10px;
             font-size: 18px;
@@ -137,7 +138,7 @@
             margin-bottom: 10px;
         }
         .tools {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px; /* 按钮间距微调 */
         }
@@ -170,6 +171,7 @@
             border-radius: 5px;
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
         .search {
             padding: 0px 7px 0px 0px;
@@ -202,6 +204,7 @@
             background-color: #ddd;
         }
         table {
+            table-layout: fixed;
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -220,6 +223,9 @@
         tr:hover {
             background-color: #fffbcc; /* 悬停效果 */
         }
+        /*td:last-child {*/
+        /*    width: 100px; !* 设置操作列宽度，确保只占用必要的空间 *!*/
+        /*}*/
         .pagination {
             text-align: center;
             padding: 10px;
@@ -235,49 +241,92 @@
             background-color: #ddd;
         }
 
-        /* 自定义弹窗样式 */
-        .modal-dialog {
+        /* 弹框 */
+        .modal {
+            display: none; /* 默认不显示 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0); /* 背景半透明 */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
             max-width: 800px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: none; /* 移除阴影 */
+            cursor: move; /* 让鼠标呈现可以拖动的状态 */
         }
 
         .modal-header {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .modal-body {
-            font-size: 16px;
-        }
-
-        .modal-footer {
-            justify-content: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-        }
-
-        .form-group label {
+            color: white;
+            padding: 10px;
+            font-size: 18px;
             font-weight: bold;
+            text-align: center;
+            background-color: #3498db;
+            border-radius: 5px;
+            position: relative;
         }
 
-        .tooltip {
-            display: none;
+        .close {
             position: absolute;
-            top: 100%;  /* 紧贴图标下方 */
-            left: 50%;
-            transform: translateX(-50%);  /* 水平居中 */
-            background-color: rgba(0, 0, 0, 0.75);
-            color: #fff;
-            padding: 5px;
-            border-radius: 3px;
-            z-index: 10;  /* 确保提示信息在其他元素之上 */
-            white-space: nowrap;
+            top: 5px;
+            right: 5px;
+            font-size: 30px;
+            color: #e74c3c; /* 红色，突出 */
+            cursor: pointer;
+            z-index: 100;
         }
 
-        .icon-container:hover .tooltip {
-            display: block;
+        .close:hover {
+            color: #c0392b; /* 更深的红色 */
         }
+
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .modal-table th, .modal-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .modal-table th {
+            background-color: #f4f4f4;
+        }
+
+        .modal-table td {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-table td input, .modal-table td select {
+            width: 48%; /* 使输入框/选择框分布在一行中 */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-table td select {
+            height: 30px;
+        }
+
+        .modal-table td input[type="text"] {
+            width: 50%; /* 调整输入框宽度 */
+        }
+
     </style>
 
 
@@ -312,7 +361,7 @@
         </div>
         <div class="toolbar">
             <div class="tools">
-                <button>
+                <button id="addButton">
                     <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
@@ -362,6 +411,7 @@
                 <th>性别</th>
                 <th>电话号码</th>
                 <th>读者级别</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -380,6 +430,23 @@
                 <td><%= reader.getGender() %></td>
                 <td><%= reader.getPhoneNum() %></td>
                 <td><%= reader.getReaderLevel() %></td>
+
+                <td>
+                    <div class="tools">
+                        <button id="lookButton">
+                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">
+                            <div class="tooltip">查看</div>
+                        </button>
+                        <button id="editButton">
+                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                            <div class="tooltip">编辑</div>
+                        </button>
+                        <button id="deleteButton">
+                            <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
+                            <div class="tooltip">删除</div>
+                        </button>
+                    </div>
+                </td>
 
             </tr>
             <%
@@ -407,5 +474,573 @@
         </div>
     </div>
 </div>
+
+<%--添加框--%>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            读者信息
+            <span class="close" id="closeModal">&times;</span>
+        </div>
+        <form id="readerForm_add">
+            <table class="modal-table">
+                <tr>
+                    <th>读者编号</th>
+                    <td><input type="text" id="readID" name="readID"><span style="color: red;">*</span></td>
+                    <th>姓名</th>
+                    <td><input type="text" id="name" name="name"><span style="color: red;">*</span></td>
+                </tr>
+                <tr>
+                    <th>性别</th>
+                    <td><select id="gender" name="gender">
+                        <option value="女">女</option>
+                        <option value="男">男</option>
+                    </select><span style="color: red;">*</span></td>
+                    <th>出生日期</th>
+                    <td><input type="date" id="birthDay" name="birthDay"><span style="color: red;">*</span></td> <!-- 更改为日期选择器 -->
+                </tr>
+                <tr>
+                    <th>单位</th>
+                    <td><input type="text" id="unit" name="unit"><span style="color: red;">*</span></td>
+                    <th>家庭地址</th>
+                    <td><input type="text" id="homeAdd" name="homeAdd"><span style="color: red;">*</span></td>
+                </tr>
+                <tr>
+                    <th>电话号码</th>
+                    <td><input type="text" id="phoneNum" name="phoneNum"><span style="color: red;">*</span></td>
+                    <th>电子邮箱</th>
+                    <td><input type="email" id="emailAdd" name="emailAdd"></td> <!-- 使用 email 类型来验证邮箱 -->
+                </tr>
+                <tr>
+                    <th>读者级别名称</th>
+                    <td><select id="readerLevel" name="readerLevel">
+                        <option value="高级读者">高级读者</option>
+                        <option value="中级读者">中级读者</option>
+                        <option value="低级读者">低级读者</option>
+                        <option value="黑名单读者">黑名单读者</option>
+                    </select><span style="color: red;">*</span></td>
+                    <th>信用分</th>
+                    <td><input type="text" id="creditPoint" name="creditPoint"><span style="color: red;">*</span></td>
+                </tr>
+            </table>
+            <button type="button" id="submitForm">提交</button>
+        </form>
+    </div>
+</div>
+
+<%--查看框--%>
+<div id="myModal1" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            读者信息
+            <span class="close" id="closeModal1">&times;</span>
+        </div>
+        <form id="readerForm_look">
+            <table class="modal-table">
+                <tr>
+                    <th>读者编号</th>
+                    <td><input type="text" id="readID1" name="readID" readonly></td>
+                    <th>姓名</th>
+                    <td><input type="text" id="name1" name="name" readonly></td>
+                </tr>
+                <tr>
+                    <th>性别</th>
+                    <td><input type="text" id="gender1" name="gender" readonly></td>
+                    <th>出生日期</th>
+                    <td><input type="text" id="birthDay1" name="birthDay" readonly></td>
+                </tr>
+                <tr>
+                    <th>单位</th>
+                    <td><input type="text" id="unit1" name="unit" readonly></td>
+                    <th>家庭地址</th>
+                    <td><input type="text" id="homeAdd1" name="homeAdd" readonly></td>
+                </tr>
+                <tr>
+                    <th>电话号码</th>
+                    <td><input type="text" id="phoneNum1" name="phoneNum" readonly></td>
+                    <th>电子邮箱</th>
+                    <td><input type="text" id="emailAdd1" name="emailAdd" readonly></td>
+                </tr>
+                <tr>
+                    <th>读者级别名称</th>
+                    <td><input type="text" id="readerLevel1" name="readerLevel" readonly></td>
+                    <th>信用分</th>
+                    <td><input type="text" id="creditPoint1" name="creditPoint" readonly></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<%--编辑框--%>
+<div id="myModal2" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            读者信息
+            <span class="close" id="closeModal2">&times;</span>
+        </div>
+        <form id="readerForm_edit">
+            <table class="modal-table">
+                <tr>
+                    <th>读者编号</th>
+                    <td><input type="text" id="readID2" name="readID" readonly></td>
+                    <th>姓名</th>
+                    <td><input type="text" id="name2" name="name"></td>
+                </tr>
+                <tr>
+                    <th>性别</th>
+                    <td><select id="gender2" name="gender">
+                        <option value="女">女</option>
+                        <option value="男">男</option>
+                    </select></td>
+                    <th>出生日期</th>
+                    <td><input type="date" id="birthDay2" name="birthDay"></td>
+                </tr>
+                <tr>
+                    <th>单位</th>
+                    <td><input type="text" id="unit2" name="unit"></td>
+                    <th>家庭地址</th>
+                    <td><input type="text" id="homeAdd2" name="homeAdd"></td>
+                </tr>
+                <tr>
+                    <th>电话号码</th>
+                    <td><input type="text" id="phoneNum2" name="phoneNum"></td>
+                    <th>电子邮箱</th>
+                    <td><input type="text" id="emailAdd2" name="emailAdd"></td>
+                </tr>
+                <tr>
+                    <th>读者级别名称</th>
+                    <td><select id="readerLevel2" name="readerLevel">
+                        <option value="高级读者">高级读者</option>
+                        <option value="中级读者">中级读者</option>
+                        <option value="低级读者">低级读者</option>
+                        <option value="黑名单读者">黑名单读者</option>
+                    </select></td>
+                    <th>信用分</th>
+                    <td><input type="text" id="creditPoint2" name="creditPoint"></td>
+                </tr>
+            </table>
+            <button type="button" id="submitForm2">提交</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var modal = document.getElementById("myModal");
+        var addButton = document.getElementById("addButton");
+        var closeModal = document.getElementById("closeModal");
+
+        // 获取模态框元素
+        var modal1 = document.getElementById("myModal1");
+        var closeModal1 = document.getElementById("closeModal1");
+        // 获取所有的“查看”按钮
+        var lookButtons = document.querySelectorAll("#lookButton");
+
+        // 获取模态框元素
+        var modal2 = document.getElementById("myModal2");
+        var closeModal2 = document.getElementById("closeModal2");
+        // 获取所有的“编辑”按钮
+        var editButtons = document.querySelectorAll("#editButton");
+
+
+
+        // 打开模态框
+        addButton.onclick = function () {
+            modal.style.display = "block";
+            // 在点击时向后端请求相关数据
+            // fetchInitData();  // 获取并展示现有数据
+        }
+
+
+        // 遍历所有“查看”按钮并绑定点击事件
+        lookButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                modal1.style.display = "block";
+                // 获取点击按钮所在行的读者信息
+                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+
+                // 发送请求获取该读者的详细信息
+                fetchReaderDetails(readID);
+            });
+        });
+
+        // 遍历所有“编辑”按钮并绑定点击事件
+        editButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                modal2.style.display = "block";
+                // 获取点击按钮所在行的读者信息
+                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+
+                // 发送请求获取该读者的详细信息
+                fetchReaderDetails(readID);
+            });
+        });
+
+
+        // 关闭模态框
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        }
+        closeModal1.onclick = function () {
+            modal1.style.display = "none";
+        }
+        closeModal2.onclick = function () {
+            modal2.style.display = "none";
+        }
+
+        // 点击模态框外部关闭模态框
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            if (event.target == modal1) {
+                modal1.style.display = "none";
+            }
+            if (event.target == modal1) {
+                modal2.style.display = "none";
+            }
+        }
+
+
+        // 关闭弹框
+        $('.close').click(function() {
+            $('#myModal').hide();
+        });
+
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var submitForm = document.getElementById("submitForm");
+        var submitForm2 = document.getElementById("submitForm2");
+
+        // 提交表单时验证
+        submitForm.onclick = function () {
+            var readID = document.getElementById("readID").value;
+            var name = document.getElementById("name").value;
+            var unit = document.getElementById("unit").value;
+            var homeAdd = document.getElementById("homeAdd").value;
+            var phoneNum = document.getElementById("phoneNum").value;
+            var emailAdd = document.getElementById("emailAdd").value;
+            var creditPoint = document.getElementById("creditPoint").value;
+            var birthDay = document.getElementById("birthDay").value;
+
+            // 检查必填项
+            if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
+                alert("所有必填项不能为空！");
+                return;
+            }
+
+            // 验证读者编号（12位数字）
+            if (!/^\d{12}$/.test(readID)) {
+                alert("读者编号必须为12位数字！");
+                return;
+            }
+
+            // 验证姓名（不能超过20个字符）
+            if (name.length > 20) {
+                alert("姓名不能超过20个字符！");
+                return;
+            }
+
+            // 验证单位和家庭地址（不能超过100个字符）
+            if (unit.length > 100) {
+                alert("单位不能超过100个字符！");
+                return;
+            }
+            if (homeAdd.length > 100) {
+                alert("家庭地址不能超过100个字符！");
+                return;
+            }
+
+            // 验证电话号码（必须为11位且以1开头）
+            if (!/^1\d{10}$/.test(phoneNum)) {
+                alert("电话号码必须是11位且以1开头！");
+                return;
+            }
+
+            // 验证邮箱格式
+            if (emailAdd && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAdd)) {
+                alert("电子邮箱格式不正确！");
+                return;
+            }
+
+            // 验证信用分（必须为整数）
+            if (!/^\d+$/.test(creditPoint)) {
+                alert("信用分必须是整数！");
+                return;
+            }
+
+            // **出生日期验证**：出生日期不能大于等于今天
+            var today = new Date();
+            var birthDate = new Date(birthDay);
+            if (birthDate >= today) {
+                alert("出生日期不能大于等于今天！");
+                return;
+            }
+
+            // **读者级别与信用分匹配验证**
+            creditPoint = parseInt(creditPoint, 10);
+            if (readerLevel === "高级读者" && (creditPoint < 81 || creditPoint > 100)) {
+                alert("高级读者的信用分必须在81到100之间！");
+                return;
+            } else if (readerLevel === "中级读者" && (creditPoint < 51 || creditPoint > 80)) {
+                alert("中级读者的信用分必须在51到80之间！");
+                return;
+            } else if (readerLevel === "低级读者" && (creditPoint < 11 || creditPoint > 50)) {
+                alert("低级读者的信用分必须在11到50之间！");
+                return;
+            } else if (readerLevel === "黑名单读者" && (creditPoint < 0 || creditPoint > 10)) {
+                alert("黑名单读者的信用分必须在0到10之间！");
+                return;
+            } else if (creditPoint < 0) {
+                alert("信用分不能为负数！");
+                return;
+            }
+
+            // 弹出确认框
+            var confirmSubmit = confirm("是否确定提交？");
+            if (confirmSubmit) {
+
+                var formData=$('#readerForm_add').serialize();
+                // console.log("即将开始Ajax");
+                // console.log(formData );
+                // 使用 AJAX 发送数据到后端
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/AddReaderServlet',  // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: formData,  // 发送的表单数据
+                    dataType: 'json',  // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            alert("提交成功！");
+                            $('#myModal').hide();  // 关闭弹窗
+                            location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("提交失败，错误信息: " + response.resultInfo.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+
+            } else {
+                // 如果用户点击"否"，则不提交
+                alert("提交已取消！");
+            }
+        }
+
+        // 提交表单2时验证
+        submitForm2.onclick = function () {
+            var readID = document.getElementById("readID2").value;
+            var name = document.getElementById("name2").value;
+            var unit = document.getElementById("unit2").value;
+            var homeAdd = document.getElementById("homeAdd2").value;
+            var phoneNum = document.getElementById("phoneNum2").value;
+            var emailAdd = document.getElementById("emailAdd2").value;
+            var creditPoint = document.getElementById("creditPoint2").value;
+            var birthDay = document.getElementById("birthDay2").value;
+
+            // 检查必填项
+            if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
+                alert("所有必填项不能为空！");
+                return;
+            }
+
+            // 验证读者编号（12位数字）
+            if (!/^\d{12}$/.test(readID)) {
+                alert("读者编号必须为12位数字！");
+                return;
+            }
+
+            // 验证姓名（不能超过20个字符）
+            if (name.length > 20) {
+                alert("姓名不能超过20个字符！");
+                return;
+            }
+
+            // 验证单位和家庭地址（不能超过100个字符）
+            if (unit.length > 100) {
+                alert("单位不能超过100个字符！");
+                return;
+            }
+            if (homeAdd.length > 100) {
+                alert("家庭地址不能超过100个字符！");
+                return;
+            }
+
+            // 验证电话号码（必须为11位且以1开头）
+            if (!/^1\d{10}$/.test(phoneNum)) {
+                alert("电话号码必须是11位且以1开头！");
+                return;
+            }
+
+            // 验证邮箱格式
+            if (emailAdd && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAdd)) {
+                alert("电子邮箱格式不正确！");
+                return;
+            }
+
+            // 验证信用分（必须为整数）
+            if (!/^\d+$/.test(creditPoint)) {
+                alert("信用分必须是整数！");
+                return;
+            }
+
+            // **出生日期验证**：出生日期不能大于等于今天
+            var today = new Date();
+            var birthDate = new Date(birthDay);
+            if (birthDate >= today) {
+                alert("出生日期不能大于等于今天！");
+                return;
+            }
+
+            // **读者级别与信用分匹配验证**
+            creditPoint = parseInt(creditPoint, 10);
+            if (readerLevel === "高级读者" && (creditPoint < 81 || creditPoint > 100)) {
+                alert("高级读者的信用分必须在81到100之间！");
+                return;
+            } else if (readerLevel === "中级读者" && (creditPoint < 51 || creditPoint > 80)) {
+                alert("中级读者的信用分必须在51到80之间！");
+                return;
+            } else if (readerLevel === "低级读者" && (creditPoint < 11 || creditPoint > 50)) {
+                alert("低级读者的信用分必须在11到50之间！");
+                return;
+            } else if (readerLevel === "黑名单读者" && (creditPoint < 0 || creditPoint > 10)) {
+                alert("黑名单读者的信用分必须在0到10之间！");
+                return;
+            } else if (creditPoint < 0) {
+                alert("信用分不能为负数！");
+                return;
+            }
+
+            // 弹出确认框
+            var confirmSubmit = confirm("是否确定提交？");
+            if (confirmSubmit) {
+
+                var formData=$('#readerForm_edit').serialize();
+                // console.log("即将开始Ajax");
+                // console.log(formData );
+                // 使用 AJAX 发送数据到后端
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/EditReaderServlet',  // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: formData,  // 发送的表单数据
+                    dataType: 'json',  // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            alert("提交成功！");
+                            $('#myModal').hide();  // 关闭弹窗
+                            location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("提交失败，错误信息: " + response.resultInfo.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+
+            } else {
+                // 如果用户点击"否"，则不提交
+                alert("提交已取消！");
+            }
+        }
+    });
+
+    // 获取并填充读者详细信息
+    function fetchReaderDetails(readID) {
+        // 假设我们通过后端接口 `/LookReaderServlet` 获取数据
+        $.ajax({
+            url: '${pageContext.request.contextPath}/LookReaderServlet', // 你的后端接口
+            method: 'GET',
+            data: { readID: readID }, // 发送读者编号（或其他唯一标识符）到后端
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // 将返回的读者信息填充到弹框中的对应字段
+                    document.getElementById("readID1").value = response.data.readID;
+                    document.getElementById("name1").value = response.data.name;
+                    document.getElementById('gender1').value = response.data.gender;
+                    document.getElementById("birthDay1").value = response.data.birthDay;
+                    document.getElementById("unit1").value = response.data.unit;
+                    document.getElementById("homeAdd1").value = response.data.homeAdd;
+                    document.getElementById("phoneNum1").value = response.data.phoneNum;
+                    document.getElementById("emailAdd1").value = response.data.emailAdd;
+                    document.getElementById("readerLevel1").value = response.data.readerLevel;
+                    document.getElementById("creditPoint1").value = response.data.creditPoint;
+
+
+                    document.getElementById("readID2").value = response.data.readID;
+                    document.getElementById("name2").value = response.data.name;
+                    document.getElementById('gender2').value = response.data.gender;
+                    document.getElementById("birthDay2").value = response.data.birthDay;
+                    document.getElementById("unit2").value = response.data.unit;
+                    document.getElementById("homeAdd2").value = response.data.homeAdd;
+                    document.getElementById("phoneNum2").value = response.data.phoneNum;
+                    document.getElementById("emailAdd2").value = response.data.emailAdd;
+                    document.getElementById("readerLevel2").value = response.data.readerLevel;
+                    document.getElementById("creditPoint2").value = response.data.creditPoint;
+
+                    // 显示弹框
+                    // modal1.style.display = "block";
+                } else {
+                    alert("无法获取读者信息！");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("获取读者信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var deleteButtons = document.querySelectorAll("#deleteButton");
+
+        // 遍历所有“删除”按钮并绑定点击事件
+        deleteButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                // 获取点击按钮所在行的读者信息
+                var readID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+
+                // 弹出确认框
+                var confirmSubmit = confirm("是否确定删除？");
+                if (confirmSubmit) {
+
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/DeleteReaderServlet',  // 后端接口，用于提交数据
+                        method: 'POST',
+                        data:  { readID: readID },   // 发送的读者编号
+                        dataType: 'json',  // 期待返回的数据格式
+                        success: function(response) {
+                            if (response.resultInfo.flag) {
+                                alert("删除成功！");
+                                $('#myModal').hide();  // 关闭弹窗
+                                location.reload(true);  // 刷新页面，显示新数据
+                            } else {
+                                alert("删除失败，错误信息: " + response.resultInfo.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert("删除失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                        }
+                    });
+
+                } else {
+                    // 如果用户点击"否"，则不提交
+                    alert("删除已取消！");
+                }
+            });
+        });
+
+    });
+</script>
+
+
 </body>
 </html>

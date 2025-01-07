@@ -18,7 +18,7 @@
         .sidebar {
 
             width: 200px;
-            background-color: #015999;
+            background-color: #07598a;
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
@@ -59,7 +59,7 @@
         /*改*/
         .sidebar-footer {
             text-align: center;
-            padding: 280px 0;
+            padding: 350px 0;
         }
 
         .sidebar-footer .divider {
@@ -96,7 +96,7 @@
             width: calc(100% - 260px);
         }
         .system-title-box {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 15px;
             text-align: left;
@@ -110,7 +110,7 @@
             margin-left: 1%; /* 中心对齐，微微露出边框 */
         }
         .content-box {
-            border: 1px solid #015999;
+            border: 1px solid #3498db;
             background-color: white;
             /*padding: 15px;*/
             padding: 0px 0px 10px 0px;
@@ -120,7 +120,7 @@
             position: relative;
         }
         .header {
-            background-color: #015999;
+            background-color: #3498db;
             color: white;
             padding: 10px;
 
