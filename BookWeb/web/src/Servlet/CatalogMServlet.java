@@ -2,6 +2,7 @@ package Servlet;
 
 import Dao.YanshouDao;
 import Entity.Cataloglist;
+import Entity.DocumentType;
 import Entity.ResultInfo;
 import Entity.Yanshou;
 import Service.CatalogMService;
@@ -13,13 +14,16 @@ import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 @WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"}) public class CatalogMServlet extends HttpServlet {
-    static final int PAGE_SIZE = 16;
+//    static final int PAGE_SIZE = 16;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置响应类型为 JSON
@@ -45,10 +49,33 @@ import java.util.Map;
                 //说明已经编目
                 if (request.getParameter("bookID") != null && !request.getParameter("bookID").equals("")) {
                     //把已经编目的全部信息写入
-                    CatalogMService catalogMService = new CatalogMService();
-                    boolean iswriteDB= catalogMService.dirWriteCatalogList();
-                    ResultInfo resultInfo = new ResultInfo();
                     String bookID = request.getParameter("bookID");
+                    String title = request.getParameter("title");
+                    String author = request.getParameter("author");
+                    String ISBN = request.getParameter("isbn");
+                    LocalDate publicationDate = LocalDate.parse(request.getParameter("publicationDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String publisher = request.getParameter("publisher");
+                    String edition = request.getParameter("edition");
+                    String supplier = request.getParameter("supplier");
+                    String tcurrencyID = request.getParameter("currencyID")==null? "1" : request.getParameter("currencyID");
+                    int currencyID = Integer.parseInt(tcurrencyID);
+                    double price = Double.valueOf(request.getParameter("price"));
+                    int bookNum = Integer.parseInt(request.getParameter("bookNum"));
+                    DocumentType documentType = (DocumentType.valueOf(request.getParameter("documentType")));
+                    String categoryName = request.getParameter("categoryName");
+                    String orderPerson = request.getParameter("orderPerson");
+
+                    Cataloglist cataloglist = new Cataloglist(
+                            bookID,title , author,ISBN,publicationDate,publisher,edition,supplier,
+                            currencyID,price,orderPerson,bookNum,documentType,categoryName
+                    );
+
+                    CatalogMService catalogMService = new CatalogMService();
+                    boolean iswriteDB= catalogMService.dirWriteCatalogList(cataloglist);
+                    ResultInfo resultInfo = new ResultInfo();
+                    if(bookID==null || bookID.equals("")){
+                        bookID = request.getParameter("BianmuBookID");
+                    }
                     resultInfo.setData(bookID);
                     if(!iswriteDB){
                         resultInfo.setFlag(false);
@@ -60,7 +87,7 @@ import java.util.Map;
                     }
                     HashMap<String , Object> map = new HashMap<>();
                     map.put("resultInfo", resultInfo);
-                    map.put("bookID", bookID);
+                    map.put("BianmuBookID", bookID);
                     ObjectMapper objectMapper = new ObjectMapper();
                     String json = objectMapper.writeValueAsString(map);
                     PrintWriter out = response.getWriter();
@@ -101,6 +128,8 @@ import java.util.Map;
 //            doGet(request, response);
     }
     public void processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
         CatalogMService catalogMService = new CatalogMService();
         Cataloglist cataloglist = catalogMService.getCatalogInfoWithFallback();
 
@@ -114,14 +143,16 @@ import java.util.Map;
             } else {
                 resultInfo.setErrorMsg("unBianmu");
             }
+
+            // 放入requst
+
+            session.setAttribute("readyBMBook", cataloglist);
         } else {
             resultInfo.setFlag(false);
-            resultInfo.setErrorMsg("all is ready");
+            resultInfo.setErrorMsg("书籍已经全部编目，无待编目书籍");
         }
 
-        // 放入requst
-        HttpSession session = request.getSession();
-        session.setAttribute("readyBMBook", cataloglist);
+
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
@@ -143,13 +174,14 @@ import java.util.Map;
         out.flush();
         out.close();
     }
+
     public void changePage(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException{
         // 分页处理
-        YanshouService yanshouService = new YanshouService();
+        CatalogMService catalogMService = new CatalogMService();
         // 当前页面
         int currentPage = request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage"));
         // 获取总记录数
-        int totalbook = yanshouService.getCurrentListBookNum();
+        int totalbook = catalogMService.getCurrentListBookNum();
         int totalPage = (int)Math.ceil(totalbook / (double)PAGE_SIZE);
         // 边界检测
         if (currentPage > totalPage)

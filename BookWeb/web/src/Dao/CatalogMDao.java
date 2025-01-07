@@ -32,12 +32,12 @@ class CatalogMDao
             {
                 // 假设编目号存储在 "categoryID" 字段中
                 cataloglist=new Cataloglist();
+                cataloglist.setBookID(rs.getString("BookID"));
                 cataloglist.setISBN(isbn);
                 cataloglist.setSupplier(rs.getString("supplier"));                                // 书商
                 cataloglist.setTitle(rs.getString("title"));                                      // 书名
                 cataloglist.setPublisher(rs.getString("publisher"));                              // 出版社
-                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                cataloglist.setReceiver(rs.getString("receiver"));                                // 验收人
+                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
                 cataloglist.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 cataloglist.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
@@ -108,6 +108,7 @@ class CatalogMDao
             dao.dbcmd(updatePs2);
 
             dao.AllClose();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace(); // 打印异常信息
         }
@@ -131,8 +132,7 @@ class CatalogMDao
                 cataloglist.setSupplier(rs.getString("supplier"));                                // 书商
                 cataloglist.setTitle(rs.getString("title"));                                      // 书名
                 cataloglist.setPublisher(rs.getString("publisher"));                              // 出版社
-                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                cataloglist.setReceiver(rs.getString("receiver"));                                // 验收人
+                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
                 cataloglist.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 cataloglist.setCurrencyID(rs.getInt("currencyID"));
@@ -156,16 +156,16 @@ class CatalogMDao
         List<Cataloglist> dataList = new ArrayList<>();
         String sql="";
         if(searchField.equals("isbn")) {
-            sql="select * from Library.Yanshou where ISBN like ?";
+            sql="select * from Library.cataloglist where ISBN like ?";
         }
         else if(searchField.equals("author")) {
-            sql="select * from Library.Yanshou where author like ?";
+            sql="select * from Library.cataloglist where author like ?";
         }
         else if(searchField.equals("title")) {
-            sql="select * from Library.Yanshou where title like ?";
+            sql="select * from Library.cataloglist where title like ?";
         }
         else if(searchField.equals("publisher")){
-            sql="select * from Library.Yanshou where publisher like ?";
+            sql="select * from Library.cataloglist where publisher like ?";
         }
         try {
             PreparedStatement ps = dao.conn.prepareStatement(sql);
@@ -179,8 +179,7 @@ class CatalogMDao
                 cataloglist.setSupplier(rs.getString("supplier"));                                // 书商
                 cataloglist.setTitle(rs.getString("title"));                                      // 书名
                 cataloglist.setPublisher(rs.getString("publisher"));                              // 出版社
-                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                cataloglist.setReceiver(rs.getString("receiver"));                                // 验收人
+                cataloglist.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
                 cataloglist.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 cataloglist.setCurrencyID(rs.getInt("currencyID"));

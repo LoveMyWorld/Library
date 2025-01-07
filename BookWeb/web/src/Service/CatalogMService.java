@@ -114,8 +114,7 @@ public class CatalogMService {
 
         return cataloglistnew;
     }
-    public boolean dirWriteCatalogList(){
-        Cataloglist  cataloglist = cataloglistnew;
+    public boolean dirWriteCatalogList(Cataloglist cataloglist){
         CatalogMDao catalogMDao = new CatalogMDao();
         boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
         return issuceed;//是否在数据库成功写入
