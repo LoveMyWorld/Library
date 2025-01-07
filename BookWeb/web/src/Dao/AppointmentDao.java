@@ -89,4 +89,51 @@ public class AppointmentDao {
             throw new RuntimeException("查询数据失败", e);
         }
     }
+    public Appointment getOneBookByApID(long apID){
+        Dao dao = new Dao();
+        Appointment appointment = null;
+        String sql="select * from Library.appointmentlist where apID like ?";
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setLong(1, apID);
+            ResultSet rs = ps.executeQuery();
+
+            // 遍历结果集，将每一行转换为 Appointment 对象并添加到列表
+            while (rs.next()) {
+                appointment = new Appointment();
+                appointment.setApID(rs.getLong("apID"));
+                appointment.setReadID(rs.getString("readID"));
+                appointment.setName(rs.getString("name"));
+                appointment.setPhoneNum(rs.getString("phoneNum"));
+                appointment.setBookID(rs.getString("bookID"));
+                appointment.setTitle(rs.getString("title"));
+                appointment.setAppointmentStart(rs.getObject("appointmentStart", LocalDate.class));
+                appointment.setAppointmentEnd(rs.getObject("appointmentEnd", LocalDate.class));
+
+            }
+            dao.AllClose();
+            return appointment; // 返回查询结果
+        } catch (SQLException e) {
+            throw new RuntimeException("查询数据失败", e);
+        }
+    }
+    //删除预约表的此条记录
+    public boolean deleteAppointmentByApID(long apID) {
+        Dao dao = new Dao();
+        String sql = "DELETE FROM Library.appointmentlist WHERE apID = ?";
+
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setLong(1, apID); // 设置要删除的预约记录的 apID
+            int rowsAffected = ps.executeUpdate(); // 执行删除操作
+
+            dao.AllClose(); // 关闭资源
+            return rowsAffected > 0; // 如果影响的行数大于0，表示删除成功
+        } catch (SQLException e) {
+            throw new RuntimeException("删除预约记录失败", e);
+        }
+    }
+
 }
+
+
