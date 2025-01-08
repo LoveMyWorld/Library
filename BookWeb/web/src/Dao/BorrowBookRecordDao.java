@@ -77,6 +77,7 @@ public class BorrowBookRecordDao {
 
             dao.AllClose(); // 关闭资源，假设这个方法关闭了 PreparedStatement 和 Connection
         } catch (SQLException e) {
+//            return e.toString();
             throw new RuntimeException("插入数据失败", e);
         }
 
@@ -85,10 +86,18 @@ public class BorrowBookRecordDao {
     //从reader中通过读者编号找到读者的name和phoneNum,通过bookID找到书的title,borrowStart=currentDate,borrowEnd=currentDate+borrowDay,borrowStatus="借阅中"
     public boolean mIntoBorrowBookRecord(String readID,String bookID,LocalDate currentDate ){
         ReaderDao readerDao = new ReaderDao();
-        Reader reader = readerDao.getReaderByID(bookID);
+        Reader reader = null;
+        Reader tmpReader = readerDao.getReaderByID(readID);
+        if(tmpReader.getReadID()!=null){
+            reader = tmpReader;
+        };
         if(reader != null){
             LiutongDao liutongDao = new LiutongDao();
-            Liutong liutong=liutongDao.FindLiutongByBookID(bookID);
+            Liutong liutong = null;
+            Liutong tmpLiutong = liutongDao.FindLiutongByBookID(bookID);
+            if(tmpLiutong.getBookID()!=null){
+                liutong = tmpLiutong;
+            };
             if(liutong != null){
                 Appointment appointment = new Appointment();
                 appointment.setReadID(readID);

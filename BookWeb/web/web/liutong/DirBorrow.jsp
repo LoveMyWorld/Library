@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>管理员网络管理界面</title>
+    <title>流通部借书登记</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -236,6 +236,20 @@
         .return-button:hover {
             background-color: #2980b9;
         }
+        .display-button{
+            padding: 10px 15px;
+            margin-top: 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: '楷体';
+        }
+        .display-button:hover {
+            background-color: #2980b9;
+        }
 
 
     </style>
@@ -263,18 +277,18 @@
         <a href="#" class="about-btn">帮助</a>
     </div>
 </div>
-</div>
+
 <div class="container">
     <div class="system-title-box">
         冠军小队流通系统
     </div>
     <div class="content-box">
-    <div class="header">
-    读者借书登记
-    </div>
+        <div class="header">
+        读者借书登记
+        </div>
 
 
-    <%--    借书登记--%>
+        <%--    借书登记--%>
         <div id="DirBorrow-form">
             <form action="${pageContext.request.contextPath}/DirBorrowServlet" method="get" onsubmit="return validateForm()">
                 <div class="form-group" style="display: flex; align-items: center;">
@@ -289,7 +303,7 @@
                 </div>
                 <div class="form-group">
                     <label for="name">读者姓名</label>
-                    <input name="name" type="text" id="name">
+                    <input name="name" type="text" id="name" readonly>
                 </div>
                 <div class="form-group">
                     <label for="gender">读者性别</label>
@@ -311,70 +325,115 @@
                     <label for="edition">版次</label>
                     <input name="edition" type="text" id="edition">
                 </div>
-                <button type="submit" class="return-button">确定</button>
+                <button id="display-button" name="display-button" type="submit" class="display-button">展示</button>
+                <button id="return-button" name="return-button" type="submit" class="return-button">确定</button>
+
             </form>
         </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 获取提交按钮
-            var submitButton = document.querySelector(".return-button");
 
-            // 为提交按钮绑定点击事件
-            submitButton.addEventListener("click", function(event) {
-                event.preventDefault(); // 阻止表单默认提交行为
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // 获取提交按钮
+                var submitButton = document.getElementById("return-button");
+                var displayButton = document.getElementById("display-button");
 
-                // 获取表单数据
+                // 为提交按钮绑定点击事件
+                submitButton.addEventListener("click", function(event) {
+                    // event.preventDefault(); // 阻止表单默认提交行为
+
+                    // 获取表单数据
+                    var readID = document.getElementById("readID").value;
+                    var bookID = document.getElementById("bookID").value;
+
+                    // 发送 AJAX 请求到后端进行处理
+                    directBorrow(readID, bookID);
+                });
+                displayButton.addEventListener("click", function(event) {
+                    event.preventDefault(); // 阻止表单默认提交行为
+
+                    // 获取表单数据
+                    var readID = document.getElementById("readID").value;
+                    var bookID = document.getElementById("bookID").value;
+
+                    // 发送 AJAX 请求到后端进行处理
+                    displayMsg(readID, bookID);
+                });
+
+            });
+
+            function directBorrow(readID, bookID) {
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/DirBorrowServlet', // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: { readID: readID, bookID: bookID }, // 发送的表单数据
+                    dataType: 'json', // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            // 填充表单中的其他字段
+                            // document.getElementById("name").value = response.name;
+                            // document.getElementById("gender").value = response.gender;
+                            // document.getElementById("phoneNum").value = response.phoneNum;
+                            // document.getElementById("title").value = response.title;
+                            // document.getElementById("author").value = response.author;
+                            // document.getElementById("edition").value = response.edition;
+
+                            alert("借阅成功！");
+                            location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("借阅失败，错误信息: " + response.resultInfo.errorMsg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("借阅失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+            }
+            function displayMsg(readID, bookID) {
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/DisplayMsgServlet', // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: { readID: readID, bookID: bookID }, // 发送的表单数据
+                    dataType: 'json', // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            // 填充表单中的其他字段
+                            document.getElementById("name").value = response.name;
+                            document.getElementById("gender").value = response.gender;
+                            document.getElementById("phoneNum").value = response.phoneNum;
+                            document.getElementById("title").value = response.title;
+                            document.getElementById("author").value = response.author;
+                            document.getElementById("edition").value = response.edition;
+
+                            alert("展示成功，请现场核对读者和书籍信息！");
+                           // location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("错误信息: " + response.resultInfo.errorMsg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("查询信息失败: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+            }
+
+            function validateForm() {
                 var readID = document.getElementById("readID").value;
                 var bookID = document.getElementById("bookID").value;
 
-                // 发送 AJAX 请求到后端进行处理
-                directBorrow(readID, bookID);
-            });
-        });
-
-        function directBorrow(readID, bookID) {
-            $.ajax({
-                url: '${pageContext.request.contextPath}/DirBorrowServlet', // 后端接口，用于提交数据
-                method: 'POST',
-                data: { readID: readID, bookID: bookID }, // 发送的表单数据
-                dataType: 'json', // 期待返回的数据格式
-                success: function(response) {
-                    if (response.resultInfo.flag) {
-                        // 填充表单中的其他字段
-                        document.getElementById("name").value = response.name;
-                        document.getElementById("gender").value = response.gender;
-                        document.getElementById("phoneNum").value = response.phoneNum;
-                        document.getElementById("title").value = response.title;
-                        document.getElementById("author").value = response.author;
-                        document.getElementById("edition").value = response.edition;
-
-                        alert("借阅成功！");
-                    } else {
-                        alert("借阅失败，错误信息: " + response.resultInfo.errorMsg);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("借阅失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                if (readID === ""||readID.empty()) {
+                    alert("读者编号不能为空");
+                    return false;
                 }
-            });
-        }
+                if (bookID === ""||bookID.empty()) {
+                    alert("图书编号不能为空");
+                    return false;
+                }
 
-        function validateForm() {
-            var readID = document.getElementById("readID").value;
-            var bookID = document.getElementById("bookID").value;
-
-            if (readID === ""||readID.empty()) {
-                alert("读者编号不能为空");
-                return false;
+                return true;
             }
-            if (bookID === ""||bookID.empty()) {
-                alert("图书编号不能为空");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-
+        </script>
+    </div>
+</div>
 </body>
+
 </html>
