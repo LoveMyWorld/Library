@@ -2,7 +2,7 @@ package Servlet.BorrowServlet;
 
 import Entity.DisplayBorrowBookMsg;
 import Entity.ResultInfo;
-import Service.DirBorrowSevice;
+import Service.Borrow.DirBorrowSevice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

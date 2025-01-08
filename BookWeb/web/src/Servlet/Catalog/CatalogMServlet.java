@@ -1,12 +1,9 @@
-package Servlet;
+package Servlet.Catalog;
 
-import Dao.YanshouDao;
 import Entity.Cataloglist;
 import Entity.DocumentType;
 import Entity.ResultInfo;
-import Entity.Yanshou;
-import Service.CatalogMService;
-import Service.YanshouService;
+import Service.Catalog.CatalogMService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -20,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 @WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"}) public class CatalogMServlet extends HttpServlet {
 //    static final int PAGE_SIZE = 16;

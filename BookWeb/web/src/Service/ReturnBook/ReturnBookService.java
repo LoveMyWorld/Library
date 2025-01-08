@@ -1,4 +1,4 @@
-package Service;
+package Service.ReturnBook;
 
 import Dao.BorrowBookRecordDao;
 import Entity.BorrowBookRecord;
@@ -6,7 +6,7 @@ import Entity.BorrowBookRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 public class ReturnBookService {
     // 相当于 当前搜索条件下的缓存
@@ -14,7 +14,7 @@ public class ReturnBookService {
 
     public ReturnBookService() {
 
-    }
+    };
 
     public int getTotalBookNum(){
         BorrowBookRecordDao BorrowBookRecordDao = new BorrowBookRecordDao();

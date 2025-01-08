@@ -1,18 +1,16 @@
 package Servlet.BorrowServlet;
 
 import Entity.ResultInfo;
-import Service.AppointmentService;
+import Service.Borrow.AppointmentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 //快速通道需要用到的地方，预约表要处理

@@ -1,4 +1,4 @@
-package Service;
+package Service.Borrow;
 
 import Dao.AppointmentDao;
 import Dao.BorrowBookRecordDao;
@@ -43,7 +43,7 @@ public class DirBorrowSevice {
         //什么条件都满足，太棒了，可以愉快地借书了
         //流通库表书目减一
         LiutongDao liutongDao = new LiutongDao();
-        int isUpdate=liutongDao.updateLiutongList(bookID);
+        int isUpdate=liutongDao.subOneBookNuminLiutongList(bookID);
         if(isUpdate!=1){
             return 3;//此时是：有书可以借出，但是流通库表没有更新成功或者流通
         }
@@ -60,11 +60,24 @@ public class DirBorrowSevice {
     }
     public DisplayBorrowBookMsg dispalyBorrowBook(String readID, String bookID) {
         ReaderDao readerDao = new ReaderDao();
-        Reader reader = readerDao.getReaderByID(readID);
+        Reader readertmp = readerDao.getReaderByID(readID);
+        Reader reader = null;
         DisplayBorrowBookMsg displayBorrowBookMsg = new DisplayBorrowBookMsg();
+        if(readertmp != null){
+            if(readertmp.getReadID()!=null){
+                reader=readertmp;
+            }
+        }
         if (reader != null) {
             LiutongDao liutongDao = new LiutongDao();
-            Liutong liutong = liutongDao.FindLiutongByBookID(bookID);
+            Liutong liutongtmp=liutongDao.FindLiutongByBookID(bookID);
+            Liutong liutong = null;
+            if(liutongtmp!=null){
+                if( liutongtmp.getBookID()!=null){
+                    liutong=liutongtmp;
+                }
+            }
+
             if (liutong != null) {
 
                 displayBorrowBookMsg.setReadID(reader.getReadID());

@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 @WebServlet(
         name = "PrinteryServlet",

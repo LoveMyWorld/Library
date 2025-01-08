@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.time.temporal.ChronoUnit;
 
 public class BorrowBookRecordDao {
     //通过readID找天数
@@ -155,17 +157,20 @@ public class BorrowBookRecordDao {
         Dao dao = new Dao();
         List<BorrowBookRecord> dataList = new ArrayList<>();
         String sql="";
-        if(searchField.equals("isbn")) {
-            sql="select * from Library.BorrowBookRecord where ISBN like ?";
+        if(searchField.equals("bbrID")) {
+            sql="select * from Library.BorrowBookRecord where bbrID like ?";
         }
-        else if(searchField.equals("author")) {
-            sql="select * from Library.BorrowBookRecord where author like ?";
+        else if(searchField.equals("bookID")) {
+            sql="select * from Library.BorrowBookRecord where bookID like ?";
+        }
+        else if(searchField.equals("readID")) {
+            sql="select * from Library.BorrowBookRecord where readID like ?";
         }
         else if(searchField.equals("title")) {
             sql="select * from Library.BorrowBookRecord where title like ?";
         }
-        else if(searchField.equals("publisher")){
-            sql="select * from Library.BorrowBookRecord where publisher like ?";
+        else if(searchField.equals("name")){
+            sql="select * from Library.BorrowBookRecord where name like ?";
         }
         try {
             PreparedStatement ps = dao.conn.prepareStatement(sql);
@@ -195,5 +200,79 @@ public class BorrowBookRecordDao {
             throw new RuntimeException("查询数据失败", e);
         }
     }
+//通过bbrID找到此条记录，如果currentDate比borrowStart要晚就将overDays设置为currentDate-borrowStart
+    public int FindOverDaysByBbrID(Long bbrID, LocalDate currentDate) {
+        Dao dao = new Dao();
+        int overDays = 0;
 
+        String sql = "SELECT * FROM library.borrowbookrecord WHERE bbrID = ? LIMIT 1";
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setLong(1, bbrID);
+            ResultSet rs = ps.executeQuery();
+            LocalDate borrowEnd=currentDate.plusDays(1);
+            while (rs.next()) {
+                // 从ResultSet中获取数据
+                borrowEnd=rs.getDate("borrowEnd").toLocalDate();
+                // 计算超期天数
+                if (currentDate.isAfter(borrowEnd)) {
+                    return (int) ChronoUnit.DAYS.between(borrowEnd, currentDate);
+                }
+            }
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("查询借阅记录失败", e);
+        }
+
+        return overDays;
+    }
+
+ //通过借阅号修改记录
+    public BorrowBookRecord EditEndStatusByID(long bbrID, LocalDate currentDate) {
+        Dao dao = new Dao();
+        BorrowBookRecord borrowRecord = null;
+
+        // 首先更新borrowStatus和borrowStart
+        String updateSql = "UPDATE library.borrowbookrecord SET borrowStatus = ?, borrowEnd = \'" + currentDate.toString() + "\' WHERE bbrID = ?";
+        try {
+            PreparedStatement updatePs = dao.conn.prepareStatement(updateSql);
+            updatePs.setString(1, "已还");
+            var p = java.sql.Date.valueOf(currentDate);
+            Date q = new Date();
+
+//            updatePs.setDate(2, q);
+            updatePs.setLong(2, bbrID);
+            int rowsAffected = updatePs.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // 如果更新成功，重新查询更新后的记录
+                String selectSql = "SELECT * FROM library.borrowbookrecord WHERE bbrID = ? ";
+                PreparedStatement selectPs = dao.conn.prepareStatement(selectSql);
+                selectPs.setLong(1, bbrID);
+                ResultSet rs = selectPs.executeQuery();
+
+                if (rs.next()) {
+                    // 从ResultSet中获取数据
+                    borrowRecord = new BorrowBookRecord();
+                    borrowRecord.setBbrID(rs.getLong("bbrID"));
+                    borrowRecord.setReadID(rs.getString("readID"));
+                    borrowRecord.setName(rs.getString("name"));
+                    borrowRecord.setPhoneNum(rs.getString("phoneNum"));
+                    borrowRecord.setBookID(rs.getString("bookID"));
+                    borrowRecord.setTitle(rs.getString("title"));
+                    borrowRecord.setBorrowStart(rs.getDate("borrowStart").toLocalDate());
+                    borrowRecord.setBorrowEnd(rs.getDate("borrowEnd").toLocalDate());
+                    String t = rs.getString("borrowStatus");
+                    borrowRecord.setBorrowStatus (BorrowStatus.fromDescription(t));
+                }
+            }
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("更新借阅记录失败", e);
+        }
+
+        return borrowRecord; // 返回更新后的BorrowBookRecord对象
+    }
 }

@@ -1,7 +1,7 @@
 package Servlet.ReturnServlet;
 
 import Entity.BorrowBookRecord;
-import Service.ReturnBookService;
+import Service.ReturnBook.ReturnBookService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 
 @WebServlet(name = "ReturnBookServlet", value = "/ReturnBookServlet")

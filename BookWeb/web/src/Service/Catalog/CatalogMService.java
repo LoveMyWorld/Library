@@ -1,4 +1,4 @@
-package Service;
+package Service.Catalog;
 
 import Dao.CatalogMDao;
 import Dao.LiutongDao;
@@ -10,7 +10,7 @@ import Entity.Yanshou;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 public class CatalogMService {
     //得到编目书籍的所有信息，如果能找到就传回编目清单或流通库的书籍，如果没有找到，就把验收清单此本书传回

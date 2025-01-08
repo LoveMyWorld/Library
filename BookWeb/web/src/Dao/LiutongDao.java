@@ -1,7 +1,5 @@
 package Dao;
 
-import Entity.Appointment;
-import Entity.Cataloglist;
 import Entity.DocumentType;
 import Entity.Liutong;
 
@@ -10,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LiutongDao {
     //通过ISBN找流通的书籍全部信息
@@ -60,7 +56,7 @@ public class LiutongDao {
         return null; // 如果没有找到对应的编目号，返回 null
     }
     //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
-    public int updateLiutongList(String bookID) {
+    public int subOneBookNuminLiutongList(String bookID) {
         Dao dao = new Dao();
         String sql = "UPDATE library.liutonglist SET bookNum = bookNum - 1 WHERE bookID = ? AND bookNum > 0";
 
@@ -160,4 +156,31 @@ public class LiutongDao {
             throw new RuntimeException("查找数据失败", e);
         }
     }
+
+    //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
+    public int addOneBookNuminLiutongList(String bookID) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.liutonglist SET bookNum = bookNum + 1 WHERE bookID = ? ";
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行更新操作
+            int rowsAffected = ps.executeUpdate();
+
+            // 关闭资源
+            dao.AllClose();
+
+            // 如果影响的行数大于0，表示更新成功
+            return rowsAffected > 0 ? 1 : 0;
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("更新数据失败", e);
+        }
+    }
+
 }

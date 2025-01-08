@@ -1,7 +1,7 @@
-package Servlet.BorrowServlet;
+package Servlet.ReturnServlet;
 
 import Entity.ResultInfo;
-import Service.Borrow.DirBorrowSevice;
+import Service.ReturnBook.CheckRetBookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -12,9 +12,9 @@ import java.io.Writer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-//读者亲自来借书的确认按钮，触发审核
-@WebServlet(name = "DirBorrowServlet", value = {"/DirBorrowServlet"})
-public class DirBorrowServlet extends HttpServlet {
+
+@WebServlet(name = "CheckRetBookServlet", value = "/CheckRetBookServlet")
+public class CheckRetBookServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
@@ -22,46 +22,41 @@ public class DirBorrowServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
-
-        String path = request.getContextPath();
-        if(path.equals("/DirBorrowServlet")){
-
+// 从请求中获取参数
+        long bbrID=0;
+        String bbrIDString = request.getParameter("bbrID");
+        if (bbrIDString != null && !bbrIDString.isEmpty()) {
+            bbrID = Long.parseLong(bbrIDString);
         }
-        else if(path.equals("/DirBorrowInitServlet")){
-            request.getRequestDispatcher("/liutong/DirBorrow.jsp").forward(request, response);
-            return ;
-        }
-
-        // 从请求中获取参数
-        String readID = request.getParameter("readID");
-        String bookID = request.getParameter("bookID");
+        String isDamaged = request.getParameter("isDamaged");
+        String isPaid = request.getParameter("isPaid");
         LocalDateTime now = LocalDateTime.now();
         LocalDate currentDate = now.toLocalDate();
+
+        // 将字符串参数转换为布尔值
+        boolean isDamagedBool = Boolean.parseBoolean(isDamaged);
+        boolean isPaidBool = Boolean.parseBoolean(isPaid);
         int msg=0;
-        DirBorrowSevice dirBorrowSevice = new DirBorrowSevice();
-        msg=dirBorrowSevice.checkDirBorrow(readID,bookID,currentDate);
+        CheckRetBookService checkRetBookService = new CheckRetBookService();
+        msg=checkRetBookService.checkRetBook(bbrID,isDamagedBool,isPaidBool,currentDate);
 
         // 创建 ResultInfo 对象并设置响应内容
         ResultInfo resultInfo = new ResultInfo();
-        resultInfo.setFlag(msg == 5 ); // 假设 msg 为xxxxxx表示成功，此时flag=true
+        resultInfo.setFlag(msg == 4); // 假设 msg 为xxxxxx表示成功，此时flag=true
         if (resultInfo.isFlag()) {
-            resultInfo.setErrorMsg("借书成功");
+            resultInfo.setErrorMsg("还书成功");
         } else {
             if(msg==1){
-                resultInfo.setErrorMsg("读者不存在或者读者是黑名单用户");
+                resultInfo.setErrorMsg("借阅记录没有修改成功");
             }
             if(msg==2){
-                resultInfo.setErrorMsg("没有多余的可借书");
+                resultInfo.setErrorMsg("读者信息没有找到");
             }
             if(msg==3){
-                resultInfo.setErrorMsg("有书可借给读者，但流通库表没有更新成功");
-            }
-            if(msg==4){
-                resultInfo.setErrorMsg("该借阅登记未正常写入借阅记录");
+                resultInfo.setErrorMsg("书籍信息没有找到");
             }
 
         }

@@ -290,7 +290,7 @@
 
         <%--    借书登记--%>
         <div id="DirBorrow-form">
-            <form action="${pageContext.request.contextPath}/DirBorrowServlet" method="get" onsubmit="return validateForm()">
+            <form action="" method="get" >
                 <div class="form-group" style="display: flex; align-items: center;">
                     <div style="margin-right: 10px;">
                         <label for="readID">读者编号*</label>
@@ -307,23 +307,23 @@
                 </div>
                 <div class="form-group">
                     <label for="gender">读者性别</label>
-                    <input name="gender" type="text" id="gender">
+                    <input name="gender" type="text" id="gender" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="phoneNum">读者电话</label>
-                    <input name="phoneNum" type="text" id="phoneNum">
+                    <label for="phoneNum">读者电话</label >
+                    <input name="phoneNum" type="text" id="phoneNum" readonly>
                 </div>
                 <div class="form-group">
                     <label for="title">书名</label>
-                    <input name="title" type="text" id="title">
+                    <input name="title" type="text" id="title" readonly>
                 </div>
                 <div class="form-group">
                     <label for="author">作者</label>
-                    <input name="author" type="text" id="author">
+                    <input name="author" type="text" id="author" readonly>
                 </div>
                 <div class="form-group">
                     <label for="edition">版次</label>
-                    <input name="edition" type="text" id="edition">
+                    <input name="edition" type="text" id="edition" readonly>
                 </div>
                 <button id="display-button" name="display-button" type="button" class="display-button">展示</button>
                 <button id="return-button" name="return-button" type="button" class="return-button">确定</button>
@@ -362,6 +362,7 @@
             });
 
             function directBorrow(readID, bookID) {
+                validateForm();
                 $.ajax({
                     url: '${pageContext.request.contextPath}/DirBorrowServlet', // 后端接口，用于提交数据
                     method: 'POST',
@@ -389,42 +390,46 @@
                 });
             }
             function displayMsg(readID, bookID) {
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/DisplayMsgServlet', // 后端接口，用于提交数据
-                    method: 'POST',
-                    data: { readID: readID, bookID: bookID }, // 发送的表单数据
-                    dataType: 'json', // 期待返回的数据格式
-                    success: function(response) {
-                        if (response.resultInfo.flag) {
-                            // 填充表单中的其他字段
-                            document.getElementById("name").value = response.name;
-                            document.getElementById("gender").value = response.gender;
-                            document.getElementById("phoneNum").value = response.phoneNum;
-                            document.getElementById("title").value = response.title;
-                            document.getElementById("author").value = response.author;
-                            document.getElementById("edition").value = response.edition;
+                var flag=validateForm();
+                if(flag){
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/DisplayMsgServlet', // 后端接口，用于提交数据
+                        method: 'POST',
+                        data: { readID: readID, bookID: bookID }, // 发送的表单数据
+                        dataType: 'json', // 期待返回的数据格式
+                        success: function(response) {
+                            if (response.resultInfo.flag) {
+                                // 填充表单中的其他字段
+                                document.getElementById("name").value = response.name;
+                                document.getElementById("gender").value = response.gender;
+                                document.getElementById("phoneNum").value = response.phoneNum;
+                                document.getElementById("title").value = response.title;
+                                document.getElementById("author").value = response.author;
+                                document.getElementById("edition").value = response.edition;
 
-                            alert("展示成功，请现场核对读者和书籍信息！");
-                           // location.reload(true);  // 刷新页面，显示新数据
-                        } else {
-                            alert("错误信息: " + response.resultInfo.errorMsg);
+                                alert("展示成功，请现场核对读者和书籍信息！");
+                                // location.reload(true);  // 刷新页面，显示新数据
+                            } else {
+                                alert("错误信息: " + response.resultInfo.errorMsg);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert("查询信息失败: " + xhr.status + "\n" + xhr.statusText);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("查询信息失败: " + xhr.status + "\n" + xhr.statusText);
-                    }
-                });
+                    });
+                }
+
             }
 
             function validateForm() {
                 var readID = document.getElementById("readID").value;
                 var bookID = document.getElementById("bookID").value;
 
-                if (readID === ""||readID.empty()) {
+                if (readID === "" || readID.length === 0) {
                     alert("读者编号不能为空");
                     return false;
                 }
-                if (bookID === ""||bookID.empty()) {
+                if (bookID === "" || bookID.length === 0) {
                     alert("图书编号不能为空");
                     return false;
                 }

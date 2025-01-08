@@ -1,17 +1,15 @@
-package Service;
+package Service.Borrow;
 
 import Dao.AppointmentDao;
 import Dao.BorrowBookRecordDao;
 import Dao.LiutongDao;
-import Dao.YanshouDao;
-import Entity.Appointment;
 import Entity.Appointment;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 public class AppointmentService {
     public static List<Appointment> appointmentList = new ArrayList<>();
@@ -59,7 +57,7 @@ public class AppointmentService {
 
             // 流通库表liutonglist此书的册数减1
             LiutongDao liutongDao = new LiutongDao();
-            int rtn2=liutongDao.updateLiutongList(appointment.getBookID());//返回值为1表示有书，减1成功
+            int rtn2=liutongDao.subOneBookNuminLiutongList(appointment.getBookID());//返回值为1表示有书，减1成功
             if(rtn2==0){
                 flag=1;//流通库表没书了
                 return flag;

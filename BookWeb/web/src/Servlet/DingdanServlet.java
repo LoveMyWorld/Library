@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 @WebServlet(name = "DingdanServlet", value = "/DingdanServlet") public class DingdanServlet extends HttpServlet
 {

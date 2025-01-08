@@ -1,7 +1,7 @@
 <%@ page import="Dao.YanshouDao" %>
 <%@ page import="Entity.Yanshou" %>
 <%@ page import="java.util.List" %>
-<%@ page import="static Servlet.YanshouServlet.PAGE_SIZE" %>
+<%@ page import="static Servlet.Catalog.YanshouServlet.PAGE_SIZE" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

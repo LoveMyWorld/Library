@@ -1,17 +1,15 @@
 package Servlet.BorrowServlet;
 
 import Entity.Appointment;
-import Service.AppointmentService;
+import Service.Borrow.AppointmentService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 @WebServlet(name = "QuickBorrowServlet", value = "/QuickBorrowServlet")
 public class QuickBorrowServlet extends HttpServlet {

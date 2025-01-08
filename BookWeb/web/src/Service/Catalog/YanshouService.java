@@ -1,13 +1,11 @@
-package Service;
-import Dao.UserDao;
+package Service.Catalog;
 import Dao.YanshouDao;
 import Entity.Yanshou;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import static Servlet.YanshouServlet.PAGE_SIZE;
+import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
 public class YanshouService {
 

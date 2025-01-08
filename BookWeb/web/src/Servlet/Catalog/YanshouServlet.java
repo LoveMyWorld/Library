@@ -1,7 +1,6 @@
-package Servlet;
-import Dao.YanshouDao;
+package Servlet.Catalog;
 import Entity.Yanshou;
-import Service.YanshouService;
+import Service.Catalog.YanshouService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;

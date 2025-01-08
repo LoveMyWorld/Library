@@ -414,7 +414,7 @@
         <h3>冠军小队</h3>
 
         <%--        <a  onclick="location.href='${pageContext.request.contextPath}/BorrowBookServlet'">借书</a>--%>
-        <a href="${pageContext.request.contextPath}/QuickBorrowServlet">借书</a>
+        <a onclick="showBorrowOptions()">借书</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/ReturnBookServlet'">还书</a>
         <%--        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">罚款</a>--%>
     </div>
@@ -450,20 +450,6 @@
                 <p>书籍是否损坏？</p>
                 <button id="confirmDamaged">已损坏</button>
                 <button id="confirmNotDamaged">未损坏</button>
-            </div>
-        </div>
-    </div>
-    <!-- 模态框：书籍损坏后的罚款状态确认 -->
-    <div id="fineModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                罚款状态确认
-            </div>
-            <div class="modal-body">
-                <p>读者是否已经缴纳罚款？</p>
-                <button id="paidFine">已缴费</button>
-                <button id="notPaidFine">未缴费</button>
             </div>
         </div>
     </div>
@@ -567,94 +553,108 @@
         <script>
 
             document.addEventListener("DOMContentLoaded", function() {
-                var confirmModal = document.getElementById("confirmModal");
-                var fineModal = document.getElementById("fineModal");
-                var closeButton = document.querySelector(".close");
-                var confirmDamagedButton = document.getElementById("confirmDamaged");
-                var confirmNotDamagedButton = document.getElementById("confirmNotDamaged");
-                var paidFineButton = document.getElementById("paidFine");
-                var notPaidFineButton = document.getElementById("notPaidFine");
-
-                // 审核按钮点击事件
+                // 获取所有的“审核”按钮
                 var reviewButtons = document.querySelectorAll(".reviewButton");
+
+                // 遍历所有“审核”按钮并绑定点击事件
                 reviewButtons.forEach(function(button) {
                     button.addEventListener("click", function(event) {
-                        event.preventDefault();
+                        event.preventDefault(); // 阻止按钮的默认行为
                         var bbrID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
-                        confirmModal.dataset.bbrID = bbrID;
-                        confirmModal.style.display = "block";
+                        // 显示模态框
+                        document.getElementById("confirmModal").style.display = "block";
+                        // 保存当前的bbrID以便后续使用
+                        document.getElementById("confirmModal").dataset.bbrID = bbrID;
                     });
                 });
 
-                // 关闭确认模态框
-                closeButton.onclick = function() {
-                    confirmModal.style.display = "none";
-                    fineModal.style.display = "none"; // 确保罚款模态框也关闭
-                }
+                // 获取模态框关闭按钮
+                var closeButton = document.querySelector(".close");
+                closeButton.addEventListener("click", function() {
+                    document.getElementById("confirmModal").style.display = "none";
+                });
 
-                // 点击模态框外部区域关闭模态框
-                window.onclick = function(event) {
-                    if (event.target == confirmModal) {
-                        closeButton.click();
-                    }
-                }
+                // 获取“已损坏”按钮
+                var confirmDamagedButton = document.getElementById("confirmDamaged");
+                confirmDamagedButton.addEventListener("click", function() {
+                    var bbrID = document.getElementById("confirmModal").dataset.bbrID;
+                    sendReviewData(bbrID, true);
+                });
 
-                // 已损坏按钮点击事件
-                confirmDamagedButton.onclick = function() {
-                    fineModal.style.display = "block"; // 显示罚款状态模态框
-                    confirmModal.style.display = "none"; // 关闭确认模态框
-                }
-
-                // 未损坏按钮点击事件
-                confirmNotDamagedButton.onclick = function() {
-                    sendReviewData(confirmModal.dataset.bbrID, false);
-                }
-
-                // 已缴费按钮点击事件
-                paidFineButton.onclick = function() {
-                    sendReviewData(confirmModal.dataset.bbrID, true, true); // 传递已缴费状态
-                    fineModal.style.display = "none"; // 关闭罚款状态模态框
-                }
-
-                // 未缴费按钮点击事件
-                notPaidFineButton.onclick = function() {
-                    sendReviewData(confirmModal.dataset.bbrID, true, false); // 传递未缴费状态
-                    fineModal.style.display = "none"; // 关闭罚款状态模态框
-                }
+                // 获取“未损坏”按钮
+                var confirmNotDamagedButton = document.getElementById("confirmNotDamaged");
+                confirmNotDamagedButton.addEventListener("click", function() {
+                    var bbrID = document.getElementById("confirmModal").dataset.bbrID;
+                    sendReviewData(bbrID, false);
+                });
             });
 
-            // function sendReviewData(bbrID, isDamaged, isPaid) {
-            //     // 发送AJAX请求的逻辑
-            //     console.log("bbrID:", bbrID, "isDamaged:", isDamaged, "isPaid:", isPaid);
-            //     // 这里可以添加AJAX请求代码
-            // }
-            function sendReviewData(bbrID, isDamaged, isPaid) {
+            function sendReviewData(bbrID, isDamaged) {
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/CheckRetBookServlet',
+                    url: '${pageContext.request.contextPath}/CheckRetBookServlet',  // 后端接口
                     method: 'POST',
                     data: {
                         bbrID: bbrID,
-                        isDamaged: isDamaged,
-                        isPaid: isPaid
+                        isDamaged: isDamaged
                     },
                     dataType: 'json',
                     success: function(response) {
                         if (response.resultInfo.flag) {
-                            alert("还书成功！");
-                            // 可能需要刷新页面或者更新列表
-                            // location.reload(); // 或者使用其他方法更新页面
-                            window.location.href = '${pageContext.request.contextPath}/ReturnBookServlet';
+                            alert("审核成功！");
+                            location.reload(true);  // 刷新页面，显示新数据
                         } else {
-                            // alert("还书失败：" + response.message);
-                            alert("借阅失败，错误信息: " + response.resultInfo.errorMsg);
+                            alert("提交失败，错误信息: " + response.resultInfo.errorMsg);
                         }
                     },
                     error: function(xhr, status, error) {
-                        alert("请求失败，错误代码 " + xhr.status + "\n" + xhr.statusText);
+                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
                     }
                 });
-                document.getElementById("fineModal").style.display = "none"; // 关闭模态框
+                // 关闭模态框
+                document.getElementById("confirmModal").style.display = "none";
             }
+            document.addEventListener("DOMContentLoaded", function() {
+                var modal = document.getElementById("confirmModal");
+                var closeButton = document.querySelector(".close");
+                var confirmDamagedButton = document.getElementById("confirmDamaged");
+                var confirmNotDamagedButton = document.getElementById("confirmNotDamaged");
+
+                // 显示模态框
+                function openModal() {
+                    modal.style.display = "block";
+                }
+
+                // 隐藏模态框
+                closeButton.onclick = function() {
+                    modal.style.display = "none";
+                }
+
+                // 处理已损坏按钮点击事件
+                confirmDamagedButton.onclick = function() {
+                    // 在这里添加处理逻辑，例如发送AJAX请求
+                    alert("书籍已损坏");
+                    closeModal();
+                }
+
+                // 处理未损坏按钮点击事件
+                confirmNotDamagedButton.onclick = function() {
+                    // 在这里添加处理逻辑，例如发送AJAX请求
+                    alert("书籍未损坏");
+                    closeModal();
+                }
+
+                // 关闭模态框的辅助函数
+                function closeModal() {
+                    modal.style.display = "none";
+                }
+
+                // 点击模态框外部区域关闭模态框
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        closeModal();
+                    }
+                }
+            });
         </script>
     </div>
 </div>
