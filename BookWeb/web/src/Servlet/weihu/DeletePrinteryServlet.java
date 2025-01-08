@@ -1,8 +1,9 @@
 package Servlet.weihu;
 
 
-import Dao.BookmanDao;
-import Entity.Bookman;
+import Dao.PrinteryDao;
+
+import Entity.Printery;
 import Entity.ResultInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -16,8 +17,8 @@ import java.io.Writer;
 import java.sql.Date;
 import java.util.HashMap;
 
-@WebServlet("/EditBookmanServlet")
-public class EditBookmanServlet extends HttpServlet {
+@WebServlet("/DeletePrinteryServlet")
+public class DeletePrinteryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -25,22 +26,20 @@ public class EditBookmanServlet extends HttpServlet {
 
         // 从请求中获取参数
         String name = request.getParameter("name");
-        String addr = request.getParameter("addr");
-        String contact = request.getParameter("contact");
-        String phoneNum = request.getParameter("phoneNum");
-        String postcode = request.getParameter("postcode");
 
-        // 创建 Bookman 对象
-        Bookman newBookman = new Bookman(name, addr, contact, phoneNum, postcode);
-        // 使用 BookmanDao 保存数据
-        BookmanDao bookmanDao = new BookmanDao();
-        boolean success = bookmanDao.updateBookman(newBookman);
+        if (name == null || name.isEmpty()) {
+            // 如果没有提供readID，返回错误页面
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "名称不能为空");
+            return;
+        }
+        // 使用 PrinteryDao 保存数据
+        PrinteryDao printeryDao = new PrinteryDao();
+        boolean success = printeryDao.deletePrintery(name);
 
         if (success) {
             ResultInfo resultInfo = new ResultInfo();
             resultInfo.setFlag(true);
-            resultInfo.setErrorMsg("提交成功！");
-            resultInfo.setData(newBookman);
+            resultInfo.setErrorMsg("删除成功！");
             HashMap<String,Object> map = new HashMap<>();
             map.put("resultInfo",resultInfo);
 

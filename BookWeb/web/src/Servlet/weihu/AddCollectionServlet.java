@@ -1,8 +1,8 @@
 package Servlet.weihu;
 
 
-import Dao.BookmanDao;
-import Entity.Bookman;
+import Dao.CollectionDao;
+import Entity.Collection;
 import Entity.ResultInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -13,11 +13,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.Date;
 import java.util.HashMap;
 
-@WebServlet("/EditBookmanServlet")
-public class EditBookmanServlet extends HttpServlet {
+@WebServlet("/AddCollectionServlet")
+public class AddCollectionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -30,17 +29,18 @@ public class EditBookmanServlet extends HttpServlet {
         String phoneNum = request.getParameter("phoneNum");
         String postcode = request.getParameter("postcode");
 
-        // 创建 Bookman 对象
-        Bookman newBookman = new Bookman(name, addr, contact, phoneNum, postcode);
-        // 使用 BookmanDao 保存数据
-        BookmanDao bookmanDao = new BookmanDao();
-        boolean success = bookmanDao.updateBookman(newBookman);
+        // 创建 Collection 对象
+        Collection newCollection = new Collection(name, addr, contact, phoneNum, postcode);
+
+        // 使用 CollectionDao 保存数据
+        CollectionDao collectionDao = new CollectionDao();
+        boolean success = collectionDao.addCollection(newCollection);
 
         if (success) {
             ResultInfo resultInfo = new ResultInfo();
             resultInfo.setFlag(true);
             resultInfo.setErrorMsg("提交成功！");
-            resultInfo.setData(newBookman);
+            resultInfo.setData(newCollection);
             HashMap<String,Object> map = new HashMap<>();
             map.put("resultInfo",resultInfo);
 

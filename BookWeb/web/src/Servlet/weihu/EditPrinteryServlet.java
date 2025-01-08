@@ -1,8 +1,8 @@
 package Servlet.weihu;
 
 
-import Dao.BookmanDao;
-import Entity.Bookman;
+import Dao.PrinteryDao;
+import Entity.Printery;
 import Entity.ResultInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,8 @@ import java.io.Writer;
 import java.sql.Date;
 import java.util.HashMap;
 
-@WebServlet("/EditBookmanServlet")
-public class EditBookmanServlet extends HttpServlet {
+@WebServlet("/EditPrinteryServlet")
+public class EditPrinteryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -26,21 +26,19 @@ public class EditBookmanServlet extends HttpServlet {
         // 从请求中获取参数
         String name = request.getParameter("name");
         String addr = request.getParameter("addr");
-        String contact = request.getParameter("contact");
-        String phoneNum = request.getParameter("phoneNum");
-        String postcode = request.getParameter("postcode");
+        String place = request.getParameter("place");
 
-        // 创建 Bookman 对象
-        Bookman newBookman = new Bookman(name, addr, contact, phoneNum, postcode);
-        // 使用 BookmanDao 保存数据
-        BookmanDao bookmanDao = new BookmanDao();
-        boolean success = bookmanDao.updateBookman(newBookman);
+        // 创建 Printery 对象
+        Printery newPrintery = new Printery(name, addr, place);
+        // 使用 PrinteryDao 保存数据
+        PrinteryDao printeryDao = new PrinteryDao();
+        boolean success = printeryDao.updatePrintery(newPrintery);
 
         if (success) {
             ResultInfo resultInfo = new ResultInfo();
             resultInfo.setFlag(true);
             resultInfo.setErrorMsg("提交成功！");
-            resultInfo.setData(newBookman);
+            resultInfo.setData(newPrintery);
             HashMap<String,Object> map = new HashMap<>();
             map.put("resultInfo",resultInfo);
 

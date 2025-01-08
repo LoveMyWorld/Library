@@ -2,15 +2,15 @@ package Entity;
 
 public class Printery {
     private String name;
-    private String add;
+    private String addr;
     private String place;
 
     public Printery() {
     }
 
-    public Printery(String name, String add, String place) {
+    public Printery(String name, String addr, String place) {
         this.name = name;
-        this.add = add;
+        this.addr = addr;
         this.place = place;
     }
 
@@ -22,12 +22,12 @@ public class Printery {
         this.name = name;
     }
 
-    public String getAdd() {
-        return add;
+    public String getAddr() {
+        return addr;
     }
 
-    public void setAdd(String add) {
-        this.add = add;
+    public void setAddr(String addr) {
+        this.addr = addr;
     }
 
     public String getPlace() {

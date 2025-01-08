@@ -3,10 +3,10 @@
 
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.Printery" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Entity.BackupInfo" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.Printery" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -370,7 +370,7 @@
     <!-- 管理列表框 -->
     <div class="content-box">
         <div class="header">
-            书商字典维护列表
+            印刷厂字典维护列表
         </div>
         <div class="toolbar">
             <div class="tools">
@@ -401,7 +401,7 @@
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/BookmanServlet" method="get">
+                <form action="${pageContext.request.contextPath}/PrinteryServlet" method="get">
                     <select name="searchField">
                         <option value="name">名称</option>
                         <option value="addr">地址</option>
@@ -420,9 +420,7 @@
                 <th style="width: 50px;">序号</th>
                 <th>名称</th>
                 <th>地址</th>
-                <th>联系人</th>
-                <th>电话号码</th>
-                <th>邮编</th>
+                <th>印刷地</th>
                 <th style="width: 80px;">操作</th>
             </tr>
             </thead>
@@ -430,18 +428,16 @@
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Bookman> bookmanList= (List<Bookman>) request.getAttribute("bookmanList");
+                List<Printery> printeryList= (List<Printery>) request.getAttribute("printeryList");
                 int count = 1; // 初始化计数器
-                if (bookmanList != null) { // 判断数据是否为空
-                    for (Bookman bookman : bookmanList) {
+                if (printeryList != null) { // 判断数据是否为空
+                    for (Printery printery : printeryList) {
             %>
             <tr >
                 <td><%= count++ %></td>
-                <td><%= bookman.getName() %></td>
-                <td><%= bookman.getAddr() %></td>
-                <td><%= bookman.getContact() %></td>
-                <td><%= bookman.getPhoneNum() %></td>
-                <td><%= bookman.getPostcode() %></td>
+                <td><%= printery.getName() %></td>
+                <td><%= printery.getAddr() %></td>
+                <td><%= printery.getPlace() %></td>
 
                 <td>
                     <div class="tools">
@@ -476,11 +472,11 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/PrinteryServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/PrinteryServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
             </div>
 
         </div>
@@ -491,10 +487,10 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            印刷厂信息
             <span class="close" id="closeModal">&times;</span>
         </div>
-        <form id="bookmanForm_add">
+        <form id="printeryForm_add">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -503,14 +499,8 @@
                     <td><input type="text" id="addr" name="addr"><span style="color: red;">*</span></td>
                 </tr>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact" name="contact"><span style="color: red;">*</span></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum" name="phoneNum"><span style="color: red;">*</span></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode" name="postcode"><span style="color: red;">*</span></td>
+                    <th>印刷地</th>
+                    <td><input type="text" id="place" name="place"><span style="color: red;">*</span></td>
                 </tr>
             </table>
             <button type="button" id="submitForm">提交</button>
@@ -523,10 +513,10 @@
 <div id="myModal1" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            印刷厂信息
             <span class="close" id="closeModal1">&times;</span>
         </div>
-        <form id="bookmanForm_look">
+        <form id="printeryForm_look">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -535,14 +525,8 @@
                     <td><input type="text" id="addr1" name="addr" readonly></td>
                 </tr>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact1" name="contact" readonly></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum1" name="phoneNum" readonly></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode1" name="postcode" readonly></td>
+                    <th>印刷地</th>
+                    <td><input type="text" id="place1" name="place" readonly></td>
                 </tr>
             </table>
         </form>
@@ -554,10 +538,10 @@
 <div id="myModal2" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            印刷厂信息
             <span class="close" id="closeModal2">&times;</span>
         </div>
-        <form id="bookmanForm_edit">
+        <form id="printeryForm_edit">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -566,14 +550,8 @@
                     <td><input type="text" id="addr2" name="addr"></td>
                 </tr>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact2" name="contact"></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum2" name="phoneNum"></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode2" name="postcode"></td>
+                    <th>印刷地</th>
+                    <td><input type="text" id="place2" name="place"></td>
                 </tr>
             </table>
             <button type="button" id="submitForm2">提交</button>
@@ -616,7 +594,7 @@
                 var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchPrinteryDetails(name);
             });
         });
 
@@ -628,7 +606,7 @@
                 var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchPrinteryDetails(name);
             });
         });
 
@@ -675,38 +653,25 @@
         submitForm.onclick = function () {
             var name = document.getElementById("name").value;
             var addr = document.getElementById("addr").value;
-            var contact = document.getElementById("contact").value;
-            var phoneNum = document.getElementById("phoneNum").value;
-            var postcode = document.getElementById("postcode").value;
+            var place = document.getElementById("place").value;
 
             // 检查必填项
-            if (!name || !addr || !contact || !phoneNum || !postcode ) {
+            if (!name || !addr || !place) {
                 alert("所有必填项不能为空！");
                 return;
             }
 
-            // 验证电话号码（必须为11位且以1开头）
-            if (!/^1\d{10}$/.test(phoneNum)) {
-                alert("电话号码必须是11位且以1开头！");
-                return;
-            }
-
-            // 验证邮编格式
-            if (!/^\d{6}$/.test(postcode)) {
-                alert("邮编必须是6位数字！");
-                return;
-            }
 
             // 弹出确认框
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_add').serialize();
+                var formData=$('#printeryForm_add').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/AddBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/AddPrinteryServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -734,38 +699,25 @@
         submitForm2.onclick = function () {
             var name = document.getElementById("name2").value;
             var addr = document.getElementById("addr2").value;
-            var contact = document.getElementById("contact2").value;
-            var phoneNum = document.getElementById("phoneNum2").value;
-            var postcode = document.getElementById("postcode2").value;
+            var place = document.getElementById("place2").value;
 
             // 检查必填项
-            if (!name || !addr || !contact || !phoneNum || !postcode ) {
+            if (!name || !addr || !place) {
                 alert("所有必填项不能为空！");
                 return;
             }
 
-            // 验证电话号码（必须为11位且以1开头）
-            if (!/^1\d{10}$/.test(phoneNum)) {
-                alert("电话号码必须是11位且以1开头！");
-                return;
-            }
-
-            // 验证邮编格式
-            if (!/^\d{6}$/.test(postcode)) {
-                alert("邮编必须是6位数字！");
-                return;
-            }
 
             // 弹出确认框
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_edit').serialize();
+                var formData=$('#printeryForm_edit').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/EditBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/EditPrinteryServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -791,10 +743,10 @@
     });
 
     // 获取并填充读者详细信息
-    function fetchBookmanDetails(name) {
-        // 假设我们通过后端接口 `/LookBookmanServlet` 获取数据
+    function fetchPrinteryDetails(name) {
+        // 假设我们通过后端接口 `/LookPrinteryServlet` 获取数据
         $.ajax({
-            url: '${pageContext.request.contextPath}/LookBookmanServlet', // 你的后端接口
+            url: '${pageContext.request.contextPath}/LookPrinteryServlet', // 你的后端接口
             method: 'GET',
             data: { name: name }, // 发送读者编号（或其他唯一标识符）到后端
             dataType: 'json',
@@ -802,24 +754,20 @@
                 if (response.success) {
                     document.getElementById("name1").value = response.data.name;
                     document.getElementById("addr1").value = response.data.addr;
-                    document.getElementById("contact1").value = response.data.contact;
-                    document.getElementById("phoneNum1").value = response.data.phoneNum;
-                    document.getElementById("postcode1").value = response.data.postcode;
+                    document.getElementById("place1").value = response.data.place;
 
                     document.getElementById("name2").value = response.data.name;
                     document.getElementById("addr2").value = response.data.addr;
-                    document.getElementById("contact2").value = response.data.contact;
-                    document.getElementById("phoneNum2").value = response.data.phoneNum;
-                    document.getElementById("postcode2").value = response.data.postcode;
+                    document.getElementById("place2").value = response.data.place;
 
                     // 显示弹框
                     // modal1.style.display = "block";
                 } else {
-                    alert("无法获取书商信息！");
+                    alert("无法获取印刷厂信息！");
                 }
             },
             error: function(xhr, status, error) {
-                alert("获取书商信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                alert("获取印刷厂信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
             }
         });
     }
@@ -839,7 +787,7 @@
                 if (confirmSubmit) {
 
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/DeleteBookmanServlet',  // 后端接口，用于提交数据
+                        url: '${pageContext.request.contextPath}/DeletePrinteryServlet',  // 后端接口，用于提交数据
                         method: 'POST',
                         data:  { name: name },   // 发送的读者编号
                         dataType: 'json',  // 期待返回的数据格式

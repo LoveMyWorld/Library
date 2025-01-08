@@ -204,7 +204,7 @@
             background-color: #ddd;
         }
         table {
-            table-layout: fixed;
+            table-layout: auto;
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -405,13 +405,13 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>读者编号</th>
                 <th>姓名</th>
                 <th>性别</th>
                 <th>电话号码</th>
                 <th>读者级别</th>
-                <th>操作</th>
+                <th style="width: 80px;">操作</th>
             </tr>
             </thead>
             <tbody>

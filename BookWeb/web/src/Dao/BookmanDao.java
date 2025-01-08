@@ -2,7 +2,6 @@ package Dao;
 
 import Entity.*;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +23,7 @@ public class BookmanDao {
             while (rs.next()) {
                 Bookman bookman = new Bookman();
                 bookman.setName(rs.getString("name"));
-                bookman.setAdd(rs.getString("add"));
+                bookman.setAddr(rs.getString("addr"));
                 bookman.setContact(rs.getString("contact"));
                 bookman.setPhoneNum(rs.getString("PhoneNum"));
                 bookman.setPostcode(rs.getString("postcode"));
@@ -46,6 +45,8 @@ public class BookmanDao {
         // 根据 searchField 决定查询条件
         if (searchField.equals("name")) {
             sql = "SELECT * FROM library.bookman WHERE name LIKE ?";
+        }else if (searchField.equals("addr")) {
+            sql = "SELECT * FROM library.bookman WHERE addr LIKE ?";
         }
 
         try {
@@ -57,7 +58,7 @@ public class BookmanDao {
             while (rs.next()) {
                 Bookman bookman = new Bookman();
                 bookman.setName(rs.getString("name"));
-                bookman.setAdd(rs.getString("add"));
+                bookman.setAddr(rs.getString("addr"));
                 bookman.setContact(rs.getString("contact"));
                 bookman.setPhoneNum(rs.getString("PhoneNum"));
                 bookman.setPostcode(rs.getString("postcode"));
@@ -74,15 +75,16 @@ public class BookmanDao {
     // 添加
     public boolean addBookman(Bookman bookman) {
         Dao dao = new Dao();
-        String sql = "INSERT INTO library.bookman (name, add, contact, phoneNum, postcode) " +
+        String sql = "INSERT INTO library.bookman (name, addr, contact, phoneNum, postcode) " +
                 "VALUES (?, ?, ?, ?, ?)";
         try (
                 PreparedStatement ps = dao.conn.prepareStatement(sql)) {
 
             ps.setString(1, bookman.getName());
-            ps.setString(2, bookman.getAdd());
-            ps.setString(4, bookman.getContact());
-            ps.setString(8, bookman.getPostcode());
+            ps.setString(2, bookman.getAddr());
+            ps.setString(3, bookman.getContact());
+            ps.setString(4, bookman.getPhoneNum());
+            ps.setString(5, bookman.getPostcode());
 
             int result = ps.executeUpdate();
             dao.AllClose();
@@ -105,7 +107,7 @@ public class BookmanDao {
 
             while (rs.next()) {
                 bookman.setName(rs.getString("name"));
-                bookman.setAdd(rs.getString("add"));
+                bookman.setAddr(rs.getString("addr"));
                 bookman.setContact(rs.getString("contact"));
                 bookman.setPhoneNum(rs.getString("phoneNum"));
                 bookman.setPostcode(rs.getString("postcode"));
@@ -122,11 +124,11 @@ public class BookmanDao {
     public boolean updateBookman(Bookman bookman) {
         Dao dao = new Dao();
         String sql = "UPDATE library.bookman SET " +
-                "add = ?, contact = ?, phoneNum = ?, postcode = ? " +
+                "addr = ?, contact = ?, phoneNum = ?, postcode = ? " +
                 "WHERE name = ?";
         try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
 
-            ps.setString(1, bookman.getAdd());
+            ps.setString(1, bookman.getAddr());
             ps.setString(2, bookman.getContact());
             ps.setString(3, bookman.getPhoneNum());
             ps.setString(4, bookman.getPostcode());

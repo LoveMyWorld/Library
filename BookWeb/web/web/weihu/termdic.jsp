@@ -3,10 +3,10 @@
 
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.TermDic" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Entity.BackupInfo" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.TermDic" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -370,7 +370,7 @@
     <!-- 管理列表框 -->
     <div class="content-box">
         <div class="header">
-            书商字典维护列表
+            术语字典维护列表
         </div>
         <div class="toolbar">
             <div class="tools">
@@ -401,10 +401,9 @@
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/BookmanServlet" method="get">
+                <form action="${pageContext.request.contextPath}/TermDicServlet" method="get">
                     <select name="searchField">
-                        <option value="name">名称</option>
-                        <option value="addr">地址</option>
+                        <option value="term">术语名</option>
                     </select>
                     <input type="text" name="searchValue" placeholder="请输入关键词" />
                     <input type="text" name="search" value="" hidden="hidden"/>
@@ -418,11 +417,8 @@
             <thead>
             <tr>
                 <th style="width: 50px;">序号</th>
-                <th>名称</th>
-                <th>地址</th>
-                <th>联系人</th>
-                <th>电话号码</th>
-                <th>邮编</th>
+                <th>术语名</th>
+                <th>定义</th>
                 <th style="width: 80px;">操作</th>
             </tr>
             </thead>
@@ -430,19 +426,16 @@
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Bookman> bookmanList= (List<Bookman>) request.getAttribute("bookmanList");
+                List<TermDic> termDicList= (List<TermDic>) request.getAttribute("termDicList");
                 int count = 1; // 初始化计数器
-                if (bookmanList != null) { // 判断数据是否为空
-                    for (Bookman bookman : bookmanList) {
+                if (termDicList != null) { // 判断数据是否为空
+                    for (TermDic termDic : termDicList) {
             %>
             <tr >
                 <td><%= count++ %></td>
-                <td><%= bookman.getName() %></td>
-                <td><%= bookman.getAddr() %></td>
-                <td><%= bookman.getContact() %></td>
-                <td><%= bookman.getPhoneNum() %></td>
-                <td><%= bookman.getPostcode() %></td>
-
+                <td><%= termDic.getTerm() %></td>
+                <td><%= termDic.getDef() %></td>
+               
                 <td>
                     <div class="tools">
                         <button id="lookButton">
@@ -476,11 +469,11 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/TermDicServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/TermDicServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
             </div>
 
         </div>
@@ -491,26 +484,17 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            术语信息
             <span class="close" id="closeModal">&times;</span>
         </div>
-        <form id="bookmanForm_add">
+        <form id="termDicForm_add">
             <table class="modal-table">
                 <tr>
-                    <th>名称</th>
-                    <td><input type="text" id="name" name="name"><span style="color: red;">*</span></td>
-                    <th>地址</th>
-                    <td><input type="text" id="addr" name="addr"><span style="color: red;">*</span></td>
-                </tr>
+                    <th>术语名</th>
+                    <td><input type="text" id="term" name="term"><span style="color: red;">*</span></td>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact" name="contact"><span style="color: red;">*</span></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum" name="phoneNum"><span style="color: red;">*</span></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode" name="postcode"><span style="color: red;">*</span></td>
+                    <th>定义</th>
+                    <td><textarea id="def" name="def"  rows="3" cols="50"></textarea><span style="color: red;">*</span></td>
                 </tr>
             </table>
             <button type="button" id="submitForm">提交</button>
@@ -523,26 +507,17 @@
 <div id="myModal1" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            术语信息
             <span class="close" id="closeModal1">&times;</span>
         </div>
-        <form id="bookmanForm_look">
+        <form id="termDicForm_look">
             <table class="modal-table">
                 <tr>
-                    <th>名称</th>
-                    <td><input type="text" id="name1" name="name" readonly></td>
-                    <th>地址</th>
-                    <td><input type="text" id="addr1" name="addr" readonly></td>
-                </tr>
+                    <th>术语名</th>
+                    <td><input type="text" id="term1" name="term" readonly></td>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact1" name="contact" readonly></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum1" name="phoneNum" readonly></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode1" name="postcode" readonly></td>
+                    <th>定义</th>
+                    <td><textarea id="def1" name="def"  rows="3" cols="50" readonly></textarea></td>
                 </tr>
             </table>
         </form>
@@ -554,26 +529,17 @@
 <div id="myModal2" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            术语信息
             <span class="close" id="closeModal2">&times;</span>
         </div>
-        <form id="bookmanForm_edit">
+        <form id="termDicForm_edit">
             <table class="modal-table">
                 <tr>
-                    <th>名称</th>
-                    <td><input type="text" id="name2" name="name" readonly></td>
-                    <th>地址</th>
-                    <td><input type="text" id="addr2" name="addr"></td>
-                </tr>
+                    <th>术语名</th>
+                    <td><input type="text" id="term2" name="term" readonly></td>
                 <tr>
-                    <th>联系人</th>
-                    <td><input type="text" id="contact2" name="contact"></td>
-                    <th>电话号码</th>
-                    <td><input type="text" id="phoneNum2" name="phoneNum"></td>
-                </tr>
-                <tr>
-                    <th>邮编</th>
-                    <td><input type="text" id="postcode2" name="postcode"></td>
+                    <th>定义</th>
+                    <td><textarea id="def2" name="def"  rows="3" cols="50"></textarea></td>
                 </tr>
             </table>
             <button type="button" id="submitForm2">提交</button>
@@ -613,10 +579,10 @@
             button.addEventListener("click", function(event) {
                 modal1.style.display = "block";
                 // 获取点击按钮所在行的读者信息
-                var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var term = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchTermDicDetails(term);
             });
         });
 
@@ -625,10 +591,10 @@
             button.addEventListener("click", function(event) {
                 modal2.style.display = "block";
                 // 获取点击按钮所在行的读者信息
-                var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var term = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchTermDicDetails(term);
             });
         });
 
@@ -673,27 +639,12 @@
 
         // 提交表单时验证
         submitForm.onclick = function () {
-            var name = document.getElementById("name").value;
-            var addr = document.getElementById("addr").value;
-            var contact = document.getElementById("contact").value;
-            var phoneNum = document.getElementById("phoneNum").value;
-            var postcode = document.getElementById("postcode").value;
+            var term = document.getElementById("term").value;
+            var def = document.getElementById("def").value;
 
             // 检查必填项
-            if (!name || !addr || !contact || !phoneNum || !postcode ) {
+            if (!term || !def ) {
                 alert("所有必填项不能为空！");
-                return;
-            }
-
-            // 验证电话号码（必须为11位且以1开头）
-            if (!/^1\d{10}$/.test(phoneNum)) {
-                alert("电话号码必须是11位且以1开头！");
-                return;
-            }
-
-            // 验证邮编格式
-            if (!/^\d{6}$/.test(postcode)) {
-                alert("邮编必须是6位数字！");
                 return;
             }
 
@@ -701,12 +652,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_add').serialize();
+                var formData=$('#termDicForm_add').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/AddBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/AddTermDicServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -732,27 +683,12 @@
 
         // 提交表单2时验证
         submitForm2.onclick = function () {
-            var name = document.getElementById("name2").value;
-            var addr = document.getElementById("addr2").value;
-            var contact = document.getElementById("contact2").value;
-            var phoneNum = document.getElementById("phoneNum2").value;
-            var postcode = document.getElementById("postcode2").value;
+            var term = document.getElementById("term2").value;
+            var def = document.getElementById("def2").value;
 
             // 检查必填项
-            if (!name || !addr || !contact || !phoneNum || !postcode ) {
+            if (!term || !def ) {
                 alert("所有必填项不能为空！");
-                return;
-            }
-
-            // 验证电话号码（必须为11位且以1开头）
-            if (!/^1\d{10}$/.test(phoneNum)) {
-                alert("电话号码必须是11位且以1开头！");
-                return;
-            }
-
-            // 验证邮编格式
-            if (!/^\d{6}$/.test(postcode)) {
-                alert("邮编必须是6位数字！");
                 return;
             }
 
@@ -760,12 +696,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_edit').serialize();
+                var formData=$('#termDicForm_edit').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/EditBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/EditTermDicServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -791,35 +727,29 @@
     });
 
     // 获取并填充读者详细信息
-    function fetchBookmanDetails(name) {
-        // 假设我们通过后端接口 `/LookBookmanServlet` 获取数据
+    function fetchTermDicDetails(term) {
+        // 假设我们通过后端接口 `/LookTermDicServlet` 获取数据
         $.ajax({
-            url: '${pageContext.request.contextPath}/LookBookmanServlet', // 你的后端接口
+            url: '${pageContext.request.contextPath}/LookTermDicServlet', // 你的后端接口
             method: 'GET',
-            data: { name: name }, // 发送读者编号（或其他唯一标识符）到后端
+            data: { term: term }, // 发送读者编号（或其他唯一标识符）到后端
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    document.getElementById("name1").value = response.data.name;
-                    document.getElementById("addr1").value = response.data.addr;
-                    document.getElementById("contact1").value = response.data.contact;
-                    document.getElementById("phoneNum1").value = response.data.phoneNum;
-                    document.getElementById("postcode1").value = response.data.postcode;
+                    document.getElementById("term1").value = response.data.term;
+                    document.getElementById("def1").value = response.data.def;
 
-                    document.getElementById("name2").value = response.data.name;
-                    document.getElementById("addr2").value = response.data.addr;
-                    document.getElementById("contact2").value = response.data.contact;
-                    document.getElementById("phoneNum2").value = response.data.phoneNum;
-                    document.getElementById("postcode2").value = response.data.postcode;
+                    document.getElementById("term2").value = response.data.term;
+                    document.getElementById("def2").value = response.data.def;
 
                     // 显示弹框
                     // modal1.style.display = "block";
                 } else {
-                    alert("无法获取书商信息！");
+                    alert("无法获取术语信息！");
                 }
             },
             error: function(xhr, status, error) {
-                alert("获取书商信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                alert("获取术语信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
             }
         });
     }
@@ -832,16 +762,16 @@
         deleteButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 // 获取点击按钮所在行的读者信息
-                var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var term = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 弹出确认框
                 var confirmSubmit = confirm("是否确定删除？");
                 if (confirmSubmit) {
 
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/DeleteBookmanServlet',  // 后端接口，用于提交数据
+                        url: '${pageContext.request.contextPath}/DeleteTermDicServlet',  // 后端接口，用于提交数据
                         method: 'POST',
-                        data:  { name: name },   // 发送的读者编号
+                        data:  { term: term },   // 发送的读者编号
                         dataType: 'json',  // 期待返回的数据格式
                         success: function(response) {
                             if (response.resultInfo.flag) {
