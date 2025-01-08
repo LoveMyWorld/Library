@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(
-        name = "DingdanServlet",
-        value = {"/DingdanServlet"}
+        name = "CYanshouDervlet",
+        value = {"/CYanshouServlet"}
 )
-public class DingdanServlet extends HttpServlet {
+public class CYanshouServlet extends HttpServlet {
     public static final int PAGE_SIZE = 16;  // 每页显示的读者数
 
-    public DingdanServlet() {
+    public CYanshouServlet() {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,12 +26,12 @@ public class DingdanServlet extends HttpServlet {
         if (page != null) {
             this.changePage(request, response);
         }// 分页查询
-         else {
+        else {
             this.searchDingdan(request, response);  // 搜索功能
         }
 
 
-        request.getRequestDispatcher("/caifang/dingdan.jsp").forward(request, response);
+        request.getRequestDispatcher("/caifang/cyanshou.jsp").forward(request, response);
     }
 
 

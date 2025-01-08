@@ -2,6 +2,7 @@
 <%@ page import="Dao.DingdanDao" %>
 <%@ page import="Entity.Dingdan" %>
 <%@ page import="java.util.List" %>
+<%@ page import="Entity.Tuihuo" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -359,64 +360,58 @@
         <div class="header">
             订单信息表
         </div>
-        <div class="toolbar">
-            <div class="tools">
-                <button id="addButton">
-                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
-                    <div class="tooltip">添加</div>
-                </button>
+<%--        <div class="toolbar">--%>
+<%--            <div class="tools">--%>
+<%--                <button id="addButton">--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">--%>
+<%--                    <div class="tooltip">添加</div>--%>
+<%--                </button>--%>
 
-            </div>
+<%--            </div>--%>
 
 
-        </div>
+<%--        </div>--%>
 
 
         <table>
             <thead>
             <tr>
-                <th>订单号</th>
+                <th>序号</th>
                 <th>书名</th>
                 <th>作者</th>
-                <th>定价</th>
-                <th>书商</th>
-                <th>册数</th>
-                <th>操作</th>
+
             </tr>
             </thead>
             <tbody>
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Dingdan> dingdanList= (List<Dingdan>) request.getAttribute("dingdanList");
+                List<Tuihuo> tuihuoList = (List<Tuihuo>) request.getAttribute("tuihuoList");
                 int count = 1; // 初始化计数器
-                if (dingdanList != null) { // 判断数据是否为空
-                    for (Dingdan dingdan : dingdanList) {
+                if (tuihuoList != null) { // 判断数据是否为空
+                    for (Tuihuo tuihuo : tuihuoList) {
             %>
             <tr >
-                <td><%= dingdan.getOrderName() %></td>
-                <td><%= dingdan.getTitle() %></td>
-                <td><%= dingdan.getAuthor() %></td>
-                <td><%= dingdan.getPrice() %></td>
-                <td><%= dingdan.getSupplier() %></td>
-                <td><%= dingdan.getSubscribeNum() %></td>
+                <td><%= count++ %></td>
+                <td><%= tuihuo.getTitle() %></td>
+                <td><%= tuihuo.getAuthor() %></td>
 
-                <td>
-                    <div class="tools">
-                        <button id="lookButton">
-                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">
-                            <div class="tooltip">查看</div>
-                        </button>
-                        <button id="editButton">
-                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                            <div class="tooltip">编辑</div>
-                        </button>
-                        <button id="deleteButton">
-                            <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
-                            <div class="tooltip">删除</div>
-                        </button>
-                    </div>
-                </td>
+<%--                <td>--%>
+<%--                    <div class="tools">--%>
+<%--                        <button id="lookButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/look-icon.png" alt="查看">--%>
+<%--                            <div class="tooltip">查看</div>--%>
+<%--                        </button>--%>
+<%--                        <button id="editButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+<%--                            <div class="tooltip">编辑</div>--%>
+<%--                        </button>--%>
+<%--                        <button id="deleteButton">--%>
+<%--                            <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+<%--                            <div class="tooltip">删除</div>--%>
+<%--                        </button>--%>
+<%--                    </div>--%>
+<%--                </td>--%>
 
             </tr>
             <%

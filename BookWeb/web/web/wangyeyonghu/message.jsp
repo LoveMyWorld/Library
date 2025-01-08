@@ -215,7 +215,7 @@
     <a href="http://localhost:8080/Library_war_exploded/web_yuyue.jsp">预约借书</a>
     <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
     <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
-    <a href="#">消息</a>
+    <a href="${pageContext.request.contextPath}/UserTongbaoServlet">消息</a>
     <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
   </div>
 </div>

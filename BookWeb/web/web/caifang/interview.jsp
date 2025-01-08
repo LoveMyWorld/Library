@@ -254,8 +254,8 @@
         <h3>冠军小队</h3>
 
         <a  onclick="location.href='${pageContext.request.contextPath}/DingdanServlet'">订单管理</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">退货</a>
+        <a  onclick="location.href='${pageContext.request.contextPath}/CYanshouServlet'">验收</a>
+        <a  onclick="location.href='${pageContext.request.contextPath}/TuihuoServlet'">退货清单</a>
     </div>
     <%--      改--%>
     <!-- 底部横杠和关于我们按钮 -->
@@ -272,113 +272,113 @@
         冠军小队采访系统
     </div>
 
-    <!-- 编目管理列表框 -->
-    <div class="content-box">
-        <div class="header">
-            采访清单
-        </div>
-        <div class="toolbar">
-            <div class="tools">
+<%--    <!-- 编目管理列表框 -->--%>
+<%--    <div class="content-box">--%>
+<%--        <div class="header">--%>
+<%--            采访清单--%>
+<%--        </div>--%>
+<%--        <div class="toolbar">--%>
+<%--            <div class="tools">--%>
 
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
-                    <div class="tooltip">导入</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
-                    <div class="tooltip">导出</div>
-                </button>
-            </div>
-            <%--      <div class="search">--%>
-            <%--        <select>--%>
-            <%--&lt;%&ndash;          后端需要传回日期，在下拉框显示&ndash;%&gt;--%>
-            <%--          <option value="isbn">ISBN</option>--%>
-            <%--          <option value="title">书名</option>--%>
-            <%--          <option value="author">作者</option>--%>
-            <%--          <option value="classification">分类号</option>--%>
-            <%--        </select>--%>
-            <%--        <input type="text" placeholder="请输入书名">--%>
-            <%--        <button>搜索</button>--%>
-            <%--      </div>--%>
-            <div class="search">
-                <form action="${pageContext.request.contextPath}/DingdanServlet" method="get">
-                    <select name="searchField">
-                        <option value="isbn">ISBN</option>
-                        <option value="author">作者</option>
-                        <option value="title">书名</option>
-                        <option value="referrer">推荐人</option>
-                    </select>
-                    <input type="text" name="searchValue" placeholder="请输入关键词" />
-                    <input type="text" name="seach" value="" hidden="hidden"/>
-                    <button type="submit">搜索</button>
-                </form>
-            </div>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+<%--                    <div class="tooltip">导入</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+<%--                    <div class="tooltip">导出</div>--%>
+<%--                </button>--%>
+<%--            </div>--%>
+<%--            &lt;%&ndash;      <div class="search">&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <select>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;&lt;%&ndash;          后端需要传回日期，在下拉框显示&ndash;%&gt;&ndash;%&gt;--%>
+<%--            &lt;%&ndash;          <option value="isbn">ISBN</option>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;          <option value="title">书名</option>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;          <option value="author">作者</option>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;          <option value="classification">分类号</option>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        </select>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <input type="text" placeholder="请输入书名">&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <button>搜索</button>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      </div>&ndash;%&gt;--%>
+<%--            <div class="search">--%>
+<%--                <form action="${pageContext.request.contextPath}/DingdanServlet" method="get">--%>
+<%--                    <select name="searchField">--%>
+<%--                        <option value="isbn">ISBN</option>--%>
+<%--                        <option value="author">作者</option>--%>
+<%--                        <option value="title">书名</option>--%>
+<%--                        <option value="referrer">推荐人</option>--%>
+<%--                    </select>--%>
+<%--                    <input type="text" name="searchValue" placeholder="请输入关键词" />--%>
+<%--                    <input type="text" name="seach" value="" hidden="hidden"/>--%>
+<%--                    <button type="submit">搜索</button>--%>
+<%--                </form>--%>
+<%--            </div>--%>
 
-        </div>
-        <table>
-            <thead>
-            <tr>
-                <th>书名</th>
-                <th>作者</th>
-                <th>ISBN</th>
-                <th>推荐人</th>
-                <th>电话</th>
-                <%--        <th>编著者</th>--%>
-                <%--        <th>分类号</th>--%>
-            </tr>
-            </thead>
-            <tbody>
-            <%
-                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
-                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Caifang> caifangList= (List<Caifang>) request.getAttribute("caifangList");
-                int count = 1; // 初始化计数器
-                if (caifangList != null) { // 判断数据是否为空
-                    for (Caifang caifang : caifangList) {
-            %>
-            <tr >
-                <td><%= caifang.getTitle() %></td>
-                <td><%= caifang.getAuthor() %></td>
-                <td><%= caifang.getISBN() %></td>
-                <td><%= caifang.getReferrer() %></td>
-                <td><%= caifang.getPhoneNum() %></td>
+<%--        </div>--%>
+<%--        <table>--%>
+<%--            <thead>--%>
+<%--            <tr>--%>
+<%--                <th>书名</th>--%>
+<%--                <th>作者</th>--%>
+<%--                <th>ISBN</th>--%>
+<%--                <th>推荐人</th>--%>
+<%--                <th>电话</th>--%>
+<%--                &lt;%&ndash;        <th>编著者</th>&ndash;%&gt;--%>
+<%--                &lt;%&ndash;        <th>分类号</th>&ndash;%&gt;--%>
+<%--            </tr>--%>
+<%--            </thead>--%>
+<%--            <tbody>--%>
+<%--            <%--%>
+<%--                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");--%>
+<%--                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");--%>
+<%--                List<Caifang> caifangList= (List<Caifang>) request.getAttribute("caifangList");--%>
+<%--                int count = 1; // 初始化计数器--%>
+<%--                if (caifangList != null) { // 判断数据是否为空--%>
+<%--                    for (Caifang caifang : caifangList) {--%>
+<%--            %>--%>
+<%--            <tr >--%>
+<%--                <td><%= caifang.getTitle() %></td>--%>
+<%--                <td><%= caifang.getAuthor() %></td>--%>
+<%--                <td><%= caifang.getISBN() %></td>--%>
+<%--                <td><%= caifang.getReferrer() %></td>--%>
+<%--                <td><%= caifang.getPhoneNum() %></td>--%>
 
-            </tr>
-            <%
-                    }
+<%--            </tr>--%>
+<%--            <%--%>
+<%--                    }--%>
 
-                }
-            %>
-            </tbody>
-            <%--      <tbody>--%>
-            <%--      <tr>--%>
-            <%--        <td>1</td>--%>
-            <%--        <td>销售如何说...</td>--%>
-            <%--        <td>9787545606681</td>--%>
-            <%--        <td>陆汝香</td>--%>
-            <%--        <td>新华书店</td>--%>
-            <%--      </tr>--%>
-            <%--      <tr>--%>
-            <%--        <td>2</td>--%>
-            <%--        <td>蔡康永的说...</td>--%>
-            <%--        <td>9787544143158</td>--%>
-            <%--        <td>蔡康永</td>--%>
-            <%--        <td>xinhau</td>--%>
-            <%--      </tr>--%>
-            <%--      </tbody>--%>
-        </table>
-        <div class="pagination">
-            <div class="pagination">
-                <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
-                <!-- 当前页信息 -->
-                <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
-                <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
-            </div>
+<%--                }--%>
+<%--            %>--%>
+<%--            </tbody>--%>
+<%--            &lt;%&ndash;      <tbody>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      <tr>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>1</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>销售如何说...</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>9787545606681</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>陆汝香</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>新华书店</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      </tr>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      <tr>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>2</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>蔡康永的说...</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>9787544143158</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>蔡康永</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;        <td>xinhau</td>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      </tr>&ndash;%&gt;--%>
+<%--            &lt;%&ndash;      </tbody>&ndash;%&gt;--%>
+<%--        </table>--%>
+<%--        <div class="pagination">--%>
+<%--            <div class="pagination">--%>
+<%--                <!-- 上一页 -->--%>
+<%--                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>--%>
+<%--                <!-- 当前页信息 -->--%>
+<%--                <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>--%>
+<%--                <!-- 下一页 -->--%>
+<%--                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>--%>
+<%--            </div>--%>
 
-        </div>
-    </div>
+<%--        </div>--%>
+<%--    </div>--%>
 </div>
 </body>
 </html>
