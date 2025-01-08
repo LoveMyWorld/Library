@@ -1,5 +1,6 @@
 package Dao;
 
+import Entity.Dingdan;
 import Entity.DocumentType;
 import Entity.Yanshou;
 
@@ -173,6 +174,41 @@ class YanshouDao {
             return yanshou; // 返回查询结果
         } catch (SQLException e) {
             throw new RuntimeException("查询数据失败", e);
+        }
+    }
+
+    public boolean addYanshou(Dingdan dingdan) {
+        Dao dao = new Dao();
+        dingdan.setBianmu(false);
+        String sql = "INSERT INTO library.yanshou (orderName, supplier, title, publisher, orderPerson, ISBN, documentType, currencyID, price,edition,printingHouse,author) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+            ps.setString(1, dingdan.getOrderName());
+            ps.setString(2, dingdan.getSupplier());
+            ps.setString(3, dingdan.getTitle());
+            ps.setString(4, dingdan.getPublisher());
+            ps.setString(5, dingdan.getOrderPerson());
+
+            ps.setString(6, dingdan.getISBN());
+            ps.setString(7,dingdan.getDocumentType().getDescription());
+            ps.setInt(8, dingdan.getCurrencyID());
+            ps.setDouble(9, dingdan.getPrice());
+            ps.setString(10, dingdan.getEdition());
+            ps.setString(11, dingdan.getPrintingHouse());
+
+
+            ps.setString(12,dingdan.getAuthor());
+
+
+
+
+            int result = ps.executeUpdate();
+            dao.AllClose();
+            return result > 0;
+        } catch (SQLException e) {
+
+            throw new RuntimeException("添加备份信息数据失败", e);
         }
     }
 }
