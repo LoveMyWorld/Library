@@ -408,6 +408,8 @@
                 <th>ISBN</th>
                 <th>作者</th>
                 <th>出版社</th>
+                <th>操作</th>
+
             </tr>
             </thead>
             <tbody>
@@ -425,7 +427,10 @@
                 <td><%= catalog.getISBN() %></td>
                 <td><%= catalog.getAuthor() %></td>
                 <td><%= catalog.getPublisher() %></td>
-
+                <td><button>
+                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                    <div class="tooltip">编辑</div>
+                </button></td>
             </tr>
             <%
                     }

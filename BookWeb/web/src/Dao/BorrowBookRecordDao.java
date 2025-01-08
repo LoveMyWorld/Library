@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowBookRecordDao {
     //通过readID找天数
@@ -111,6 +113,87 @@ public class BorrowBookRecordDao {
         }
         return false;
 
+    }
+
+    // 查询表中的所有数据并返回
+    public List<BorrowBookRecord> getAllData() {
+        Dao dao = new Dao();
+        List<BorrowBookRecord> dataList = new ArrayList<>();     // 用于存储查询结果
+        String sql = "SELECT * FROM   library.borrowbookrecord"; // 查询表中的所有数据
+
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            // 遍历结果集，将每一行转换为 BorrowBookRecord 对象并添加到列表
+            while (rs.next()) {
+                BorrowBookRecord borrowBookRecord = new BorrowBookRecord();
+                borrowBookRecord.setBbrID(rs.getLong("bbrID"));
+                borrowBookRecord.setReadID(rs.getString("readID"));
+                borrowBookRecord.setName(rs.getString("name"));
+                borrowBookRecord.setPhoneNum(rs.getString("phoneNum"));
+                borrowBookRecord.setBookID(rs.getString("bookID"));
+                borrowBookRecord.setTitle(rs.getString("title"));
+                borrowBookRecord.setBorrowStart(rs.getDate("borrowStart").toLocalDate());
+                borrowBookRecord.setBorrowEnd(rs.getDate("borrowEnd").toLocalDate());
+                String statusDescription = rs.getString("borrowStatus");
+                borrowBookRecord.setBorrowStatus(BorrowStatus.fromDescription(statusDescription));
+
+
+
+                // 根据 BorrowBookRecord 类的字段继续添加赋值逻辑
+                dataList.add(borrowBookRecord); // 将对象添加到列表
+            }
+            dao.AllClose();
+            return dataList; // 返回查询结果
+        } catch (SQLException e) {
+            throw new RuntimeException("查询数据失败", e);
+        }
+    }
+    public List<BorrowBookRecord> findBooksBySearch(String searchField,String searchValue) {
+        Dao dao = new Dao();
+        List<BorrowBookRecord> dataList = new ArrayList<>();
+        String sql="";
+        if(searchField.equals("isbn")) {
+            sql="select * from Library.BorrowBookRecord where ISBN like ?";
+        }
+        else if(searchField.equals("author")) {
+            sql="select * from Library.BorrowBookRecord where author like ?";
+        }
+        else if(searchField.equals("title")) {
+            sql="select * from Library.BorrowBookRecord where title like ?";
+        }
+        else if(searchField.equals("publisher")){
+            sql="select * from Library.BorrowBookRecord where publisher like ?";
+        }
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setString(1, "%"+searchValue+"%");
+            ResultSet rs = ps.executeQuery();
+
+            // 遍历结果集，将每一行转换为 BorrowBookRecord 对象并添加到列表
+            while (rs.next()) {
+                BorrowBookRecord borrowBookRecord = new BorrowBookRecord();
+                borrowBookRecord.setBbrID(rs.getLong("bbrID"));
+                borrowBookRecord.setReadID(rs.getString("readID"));
+                borrowBookRecord.setName(rs.getString("name"));
+                borrowBookRecord.setPhoneNum(rs.getString("phoneNum"));
+                borrowBookRecord.setBookID(rs.getString("bookID"));
+                borrowBookRecord.setTitle(rs.getString("title"));
+                borrowBookRecord.setBorrowStart(rs.getDate("borrowStart").toLocalDate());
+                borrowBookRecord.setBorrowEnd(rs.getDate("borrowEnd").toLocalDate());
+                String statusDescription = rs.getString("borrowStatus");
+                borrowBookRecord.setBorrowStatus(BorrowStatus.fromDescription(statusDescription));
+
+                // 根据 BorrowBookRecord 类的字段继续添加赋值逻辑
+                dataList.add(borrowBookRecord); // 将对象添加到列表
+            }
+            dao.AllClose();
+            return dataList; // 返回查询结果
+        } catch (SQLException e) {
+            throw new RuntimeException("查询数据失败", e);
+        }
     }
 
 }

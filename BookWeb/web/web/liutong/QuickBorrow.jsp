@@ -362,6 +362,7 @@
     .borrow-option:active {
       transform: translateY(0); /* 按钮按下时的位置 */
     }
+
   </style>
 </head>
 <body>
@@ -390,6 +391,7 @@
   </div>
 </div>
 
+
 <div class="container">
   <!-- 冠军小队编目系统框 -->
   <div class="system-title-box">
@@ -413,17 +415,7 @@
           <div class="tooltip">导出</div>
         </button>
       </div>
-      <%--      <div class="search">--%>
-      <%--        <select>--%>
-      <%--&lt;%&ndash;          后端需要传回日期，在下拉框显示&ndash;%&gt;--%>
-      <%--          <option value="isbn">ISBN</option>--%>
-      <%--          <option value="title">书名</option>--%>
-      <%--          <option value="author">作者</option>--%>
-      <%--          <option value="classification">分类号</option>--%>
-      <%--        </select>--%>
-      <%--        <input type="text" placeholder="请输入书名">--%>
-      <%--        <button>搜索</button>--%>
-      <%--      </div>--%>
+
       <div class="search">
         <form action="${pageContext.request.contextPath}/QuickBorrowServlet" method="get">
           <select name="searchField">
@@ -453,8 +445,6 @@
         <th>预约结束时间</th>
         <th>操作</th>
 
-        <%--        <th>编著者</th>--%>
-        <%--        <th>分类号</th>--%>
       </tr>
       </thead>
       <tbody>
@@ -477,30 +467,11 @@
         <td><%= appointment.getAppointmentEnd() %></td>
         <td>
 
-          <%--                    <form id="reviewForm" action="${pageContext.request.contextPath}/CheckAppointmentServlet" method="post">--%>
-          <%--                        <input type="hidden" name="apID" value="<%= appointment.getApID() %>">--%>
-          <%--                        <input type="hidden" id="currentDate" name="currentDate">--%>
-          <%--                        <button type="button" onclick="submitReview()">审核</button>--%>
-          <%--                    </form>--%>
-          <%--                    <button id="reviewForm">--%>
-          <%--                        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核">--%>
-          <%--                        <div class="tooltip">审核</div>--%>
-          <%--                    </button>--%>
-          <%--                    <button id="reviewButton" name="reviewButton">--%>
-          <%--                        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核">--%>
-          <%--                        <div class="tooltip">审核</div>--%>
-          <%--                    </button>--%>
           <button class="reviewButton">
             <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核" class="review-icon">
             <div class="tooltip">审核</div>
           </button>
 
-
-
-          <%--    <button>--%>
-          <%--        <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
-          <%--        <div class="tooltip">编辑</div>--%>
-          <%--    </button>--%>
 
         </td>
       </tr>
@@ -509,57 +480,10 @@
 
         }
       %>
-      <%--            <%--%>
-      <%--                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");--%>
-      <%--                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");--%>
-      <%--                List<Yanshou> yanshouList= (List<Yanshou>) request.getAttribute("yanshouList");--%>
-      <%--                int count = 1; // 初始化计数器--%>
-      <%--                if (yanshouList != null) { // 判断数据是否为空--%>
-      <%--                    for (Yanshou yanshou : yanshouList) {--%>
-      <%--            %>--%>
-      <%--            <tr >--%>
-      <%--                <td><%= count++ %></td>--%>
-      <%--                <td><%= yanshou.getTitle() %></td>--%>
-      <%--                <td><%= yanshou.getISBN() %></td>--%>
-      <%--                <td><%= yanshou.getAuthor() %></td>--%>
-      <%--                <td><%= yanshou.getPublisher() %></td>--%>
 
-      <%--            </tr>--%>
-      <%--            <%--%>
-      <%--                    }--%>
 
-      <%--                }--%>
-      <%--            %>--%>
-      <%--                <td><%= 1 %></td>--%>
-      <%--                <td> 小赫喜欢小润 </td>--%>
-      <%--                <td>小赫</td>--%>
-      <%--                <td>阿布</td>--%>
-      <%--                <td>2012-01-01</td>--%>
-      <%--                <td>2014-01-01</td>--%>
-      <%--                <td>已还</td>--%>
-      <%--                <td>--%>
-      <%--                    <form action="${pageContext.request.contextPath}/BorrowBookServlet" method="post">--%>
-      <%--&lt;%&ndash;                        <input type="hidden" name="bookId" value="${yanshou.bookId}">&ndash;%&gt;--%>
-      <%--                        <button type="submit">审核</button>--%>
-      <%--                    </form>--%>
-      <%--                </td>--%>
       </tbody>
-      <%--      <tbody>--%>
-      <%--      <tr>--%>
-      <%--        <td>1</td>--%>
-      <%--        <td>销售如何说...</td>--%>
-      <%--        <td>9787545606681</td>--%>
-      <%--        <td>陆汝香</td>--%>
-      <%--        <td>新华书店</td>--%>
-      <%--      </tr>--%>
-      <%--      <tr>--%>
-      <%--        <td>2</td>--%>
-      <%--        <td>蔡康永的说...</td>--%>
-      <%--        <td>9787544143158</td>--%>
-      <%--        <td>蔡康永</td>--%>
-      <%--        <td>xinhau</td>--%>
-      <%--      </tr>--%>
-      <%--      </tbody>--%>
+
     </table>
     <div class="pagination">
       <div class="pagination">
@@ -569,9 +493,7 @@
         <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
         <!-- 下一页 -->
         <button onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
-        <%--                <button>&laquo; 上一页</button>--%>
-        <%--                <span>第 1/2 页，每页显示 55 条</span>--%>
-        <%--                <button>下一页 &raquo;</button>--%>
+
       </div>
     </div>
     <script>
@@ -611,14 +533,6 @@
         });
       }
 
-      // function showBorrowOptions() {
-      //   var borrowOptions = document.getElementById("borrowOptions");
-      //   if (borrowOptions.style.display === "none") {
-      //     borrowOptions.style.display = "block";
-      //   } else {
-      //     borrowOptions.style.display = "none";
-      //   }
-      // }
       function showBorrowOptions() {
         var borrowOptions = document.getElementById("borrowOptions");
         if (borrowOptions.style.display === "none") {

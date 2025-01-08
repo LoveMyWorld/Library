@@ -325,8 +325,8 @@
                     <label for="edition">版次</label>
                     <input name="edition" type="text" id="edition">
                 </div>
-                <button id="display-button" name="display-button" type="submit" class="display-button">展示</button>
-                <button id="return-button" name="return-button" type="submit" class="return-button">确定</button>
+                <button id="display-button" name="display-button" type="button" class="display-button">展示</button>
+                <button id="return-button" name="return-button" type="button" class="return-button">确定</button>
 
             </form>
         </div>

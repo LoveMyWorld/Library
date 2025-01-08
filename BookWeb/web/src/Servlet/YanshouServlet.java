@@ -12,10 +12,9 @@ import java.util.List;
 @WebServlet(name = "YanshouServlet", value = "/YanshouServlet") public class YanshouServlet extends HttpServlet
 {
     public
-    static final int PAGE_SIZE = 16;
+    static final int PAGE_SIZE = 10;
     @Override protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-
         String page = request.getParameter("currentPage");
         if(page != null ){ // 需要进行上下页切换
             changePage(request, response);
@@ -28,7 +27,7 @@ import java.util.List;
 
     @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-       
+       doGet(request, response);
     }
 
     public void changePage(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException{
