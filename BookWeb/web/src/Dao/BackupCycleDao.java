@@ -1,8 +1,8 @@
 package Dao;
 
-import Entity.BackupCycle;
-import Entity.BackupNameType;
+import Entity.*;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,60 +74,50 @@ public class BackupCycleDao {
         }
     }
 
-    // 添加备份周期
-    public void addBackupCycle(BackupCycle backupCycle) {
+    // 查看
+    public BackupCycle getBackupCycleByName(String backupName) {
         Dao dao = new Dao();
-        String sql = "INSERT INTO library.backup_cycle (backupName, backupCycle, backupLoc, operator) VALUES (?, ?, ?, ?)";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
-            ps.setString(1, backupCycle.getBackupName().toString());
-            ps.setInt(2, backupCycle.getBackupCycle());
-            ps.setString(3, backupCycle.getBackupLoc());
-            ps.setString(4, backupCycle.getOperator());
-
-            ps.executeUpdate();
-            dao.AllClose();
-        } catch (SQLException e) {
-            throw new RuntimeException("添加备份周期数据失败", e);
-        }
-    }
-
-    // 更新备份周期
-    public void updateBackupCycle(BackupCycle backupCycle) {
-        Dao dao = new Dao();
-        String sql = "UPDATE library.backup_cycle SET backupCycle = ?, backupLoc = ?, operator = ? WHERE backupName = ?";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
-            ps.setInt(1, backupCycle.getBackupCycle());
-            ps.setString(2, backupCycle.getBackupLoc());
-            ps.setString(3, backupCycle.getOperator());
-            ps.setString(4, backupCycle.getBackupName().toString());
-
-            ps.executeUpdate();
-            dao.AllClose();
-        } catch (SQLException e) {
-            throw new RuntimeException("更新备份周期数据失败", e);
-        }
-    }
-
-    // 删除备份周期
-    public void deleteBackupCycle(String backupName) {
-        Dao dao = new Dao();
-        String sql = "DELETE FROM library.backup_cycle WHERE backupName = ?";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
+        BackupCycle backupCycle1 = new BackupCycle();
+        String sql = "SELECT * FROM library.backup_cycle WHERE backupName = ? LIMIT 1";
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
             ps.setString(1, backupName);
+            ResultSet rs = ps.executeQuery();
 
-            ps.executeUpdate();
+            while (rs.next()) {
+                String t = rs.getString("backupName");
+                backupCycle1.setBackupName(BackupNameType.fromDescription(t));
+                backupCycle1.setBackupCycle(rs.getInt("backupCycle"));
+                backupCycle1.setBackupLoc(rs.getString("backupLoc"));
+                backupCycle1.setOperator(rs.getString("operator"));
+
+            }
             dao.AllClose();
+            return backupCycle1; // 返回查询结果
         } catch (SQLException e) {
-            throw new RuntimeException("删除备份周期数据失败", e);
+            throw new RuntimeException("查看数据失败", e);
         }
     }
+
+    // 更新
+    public boolean updateBackupCycle(BackupCycle backupCycle1) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.backup_cycle SET " +
+                "backupCycle = ?, backupLoc = ?, operator = ? " +
+                "WHERE backupName = ?";
+        try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setInt(1, backupCycle1.getBackupCycle());
+            ps.setString(2, backupCycle1.getBackupLoc());
+            ps.setString(3, backupCycle1.getOperator());
+            ps.setString(4, backupCycle1.getBackupName().getDescription());
+
+            int result = ps.executeUpdate();
+            dao.AllClose();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("修改备份周期信息数据失败", e);
+        }
+    }
+
 }

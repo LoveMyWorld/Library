@@ -10,6 +10,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>冠军小队维护系统</title>
     <style>
         body {
@@ -229,6 +230,7 @@
             border-radius: 5px;
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
         .search {
             padding: 0px 7px 0px 0px;
@@ -293,6 +295,93 @@
         .pagination button:hover {
             background-color: #ddd;
         }
+
+        /* 弹框 */
+        .modal {
+            display: none; /* 默认不显示 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0); /* 背景半透明 */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: none; /* 移除阴影 */
+            cursor: move; /* 让鼠标呈现可以拖动的状态 */
+        }
+
+        .modal-header {
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #3498db;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 30px;
+            color: #e74c3c; /* 红色，突出 */
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .close:hover {
+            color: #c0392b; /* 更深的红色 */
+        }
+
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .modal-table th, .modal-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .modal-table th {
+            background-color: #f4f4f4;
+        }
+
+        .modal-table td {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-table td input, .modal-table td select {
+            width: 48%; /* 使输入框/选择框分布在一行中 */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-table td select {
+            height: 30px;
+        }
+
+        .modal-table td input[type="text"] {
+            width: 50%; /* 调整输入框宽度 */
+        }
+
 
     </style>
 
@@ -489,32 +578,32 @@
     <div id="backup-cycle-table" class="content-box" style="<%= request.getAttribute("showBackupCycleTable") != null && (boolean)request.getAttribute("showBackupCycleTable") ? "display: block;" : "display: none;" %>">
         <div class="header">备份周期表</div>
         <div class="toolbar">
-            <div class="tools">
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
-                    <div class="tooltip">添加</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                    <div class="tooltip">编辑</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
-                    <div class="tooltip">删除</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
-                    <div class="tooltip">刷新</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
-                    <div class="tooltip">导入</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
-                    <div class="tooltip">导出</div>
-                </button>
-            </div>
+<%--            <div class="tools">--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">--%>
+<%--                    <div class="tooltip">添加</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+<%--                    <div class="tooltip">编辑</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+<%--                    <div class="tooltip">删除</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">--%>
+<%--                    <div class="tooltip">刷新</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+<%--                    <div class="tooltip">导入</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+<%--                    <div class="tooltip">导出</div>--%>
+<%--                </button>--%>
+<%--            </div>--%>
 
             <div class="search">
                 <form action="${pageContext.request.contextPath}/BackupCycleServlet" method="get">
@@ -536,6 +625,7 @@
                 <th>备份周期（天）</th>
                 <th>备份位置</th>
                 <th>操作员</th>
+                <th style="width: 30px;">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -554,6 +644,15 @@
                 <td><%= backupCycle.getBackupCycle() %></td>
                 <td><%= backupCycle.getBackupLoc() %></td>
                 <td><%= backupCycle.getOperator() %></td>
+
+                <td>
+                    <div class="tools">
+                        <button id="editButton">
+                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                            <div class="tooltip">编辑</div>
+                        </button>
+                    </div>
+                </td>
             </tr>
             <%
                     }
@@ -576,32 +675,32 @@
     <div id="backup-info-table" class="content-box" style="<%= request.getAttribute("showBackupInfoTable") != null && (boolean)request.getAttribute("showBackupInfoTable") ? "display: block;" : "display: none;" %>">
         <div class="header">备份信息表</div>
         <div class="toolbar">
-            <div class="tools">
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
-                    <div class="tooltip">添加</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                    <div class="tooltip">编辑</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
-                    <div class="tooltip">删除</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
-                    <div class="tooltip">刷新</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
-                    <div class="tooltip">导入</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
-                    <div class="tooltip">导出</div>
-                </button>
-            </div>
+<%--            <div class="tools">--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">--%>
+<%--                    <div class="tooltip">添加</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+<%--                    <div class="tooltip">编辑</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+<%--                    <div class="tooltip">删除</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">--%>
+<%--                    <div class="tooltip">刷新</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+<%--                    <div class="tooltip">导入</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+<%--                    <div class="tooltip">导出</div>--%>
+<%--                </button>--%>
+<%--            </div>--%>
 
             <div class="search">
                 <form action="${pageContext.request.contextPath}/BackupInfoServlet" method="get">
@@ -666,5 +765,164 @@
 
 
 </div>
+
+<%--编辑框--%>
+<div id="myModal2" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            备份周期信息
+            <span class="close" id="closeModal2">&times;</span>
+        </div>
+        <form id="backupCycleForm_edit">
+            <table class="modal-table">
+                <tr>
+                    <th>备份表名</th>
+                    <td><input type="text" id="backupName2" name="backupName" readonly></td>
+                    <th>备份周期（天）</th>
+                    <td><input type="text" id="backupCycle2" name="backupCycle"></td>
+                </tr>
+                <tr>
+                    <th>备份路径</th>
+                    <td><textarea id="backupLoc2" name="backupLoc"  rows="2" cols="50"></textarea></td>
+                    <th>操作员</th>
+                    <td><input type="text" id="operator2" name="operator"></td>
+                </tr>
+            </table>
+            <button type="button" id="submitForm2">提交</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var modal2 = document.getElementById("myModal2");
+        var closeModal2 = document.getElementById("closeModal2");
+        // 获取所有的“编辑”按钮
+        var editButtons = document.querySelectorAll("#editButton");
+
+
+        // 遍历所有“编辑”按钮并绑定点击事件
+        editButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                modal2.style.display = "block";
+                // 获取点击按钮所在行的读者信息
+                var backupName = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+
+                // 发送请求获取该读者的详细信息
+                fetchBookmanDetails(backupName);
+            });
+        });
+
+
+        // 关闭模态框
+        closeModal2.onclick = function () {
+            modal2.style.display = "none";
+        }
+
+        // 点击模态框外部关闭模态框
+        window.onclick = function (event) {
+            if (event.target == modal2) {
+                modal2.style.display = "none";
+            }
+        }
+
+
+        // 关闭弹框
+        $('.close').click(function() {
+            $('#myModal').hide();
+        });
+
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var submitForm2 = document.getElementById("submitForm2");
+
+        // 提交表单2时验证
+        submitForm2.onclick = function () {
+            var backupName = document.getElementById("backupName2").value;
+            var backupCycle = document.getElementById("backupCycle2").value;
+            var backupLoc = document.getElementById("backupLoc2").value;
+            var operator = document.getElementById("operator2").value;
+
+            // 检查必填项
+            if (!backupName || !backupCycle || !backupLoc || !operator) {
+                alert("所有必填项不能为空！");
+                return;
+            }
+
+            // 验证备份周期
+            if (!/^\d+$/.test(backupCycle) || parseInt(backupCycle, 10) < 0) {
+                alert("备份周期必须为大于等于0的整数！");
+                return;
+            }
+
+
+            // 弹出确认框
+            var confirmSubmit = confirm("是否确定提交？");
+            if (confirmSubmit) {
+
+                var formData=$('#backupCycleForm_edit').serialize();
+                console.log("即将开始Ajax");
+                console.log(formData );
+                // 使用 AJAX 发送数据到后端
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/EditBackupCycleServlet',  // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: formData,  // 发送的表单数据
+                    dataType: 'json',  // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            alert("提交成功！");
+                            $('#myModal').hide();  // 关闭弹窗
+                            location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("提交失败，错误信息: " + response.resultInfo.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+
+            } else {
+                // 如果用户点击"否"，则不提交
+                alert("提交已取消！");
+            }
+        }
+    });
+
+    // 获取并填充读者详细信息
+    function fetchBookmanDetails(backupName) {
+        // 假设我们通过后端接口 `/LookBookmanServlet` 获取数据
+        $.ajax({
+            url: '${pageContext.request.contextPath}/LookBackupCycleServlet', // 你的后端接口
+            method: 'GET',
+            data: { backupName: backupName }, // 发送读者编号（或其他唯一标识符）到后端
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    document.getElementById("backupName2").value = response.data.backupName;
+                    document.getElementById("backupCycle2").value = response.data.backupCycle;
+                    document.getElementById("backupLoc2").value = response.data.backupLoc;
+                    document.getElementById("operator2").value = response.data.operator;
+
+                    // 显示弹框
+                    // modal1.style.display = "block";
+                } else {
+                    alert("无法获取备份周期信息！");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("获取备份周期信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+            }
+        });
+    }
+
+</script>
+
+
 </body>
 </html>
