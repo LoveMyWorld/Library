@@ -26,13 +26,13 @@ public class AddBookmanServlet extends HttpServlet {
 
         // 从请求中获取参数
         String name = request.getParameter("name");
-        String add = request.getParameter("add");
+        String addr = request.getParameter("addr");
         String contact = request.getParameter("contact");
         String phoneNum = request.getParameter("phoneNum");
         String postcode = request.getParameter("postcode");
 
         // 创建 Bookman 对象
-        Bookman newBookman = new Bookman(name, add, contact, phoneNum, postcode);
+        Bookman newBookman = new Bookman(name, addr, contact, phoneNum, postcode);
 
         // 使用 BookmanDao 保存数据
         BookmanDao bookmanDao = new BookmanDao();

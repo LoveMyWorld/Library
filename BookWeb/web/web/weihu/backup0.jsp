@@ -436,10 +436,10 @@
             </div>
         </div>
         <a onclick="location.href='${pageContext.request.contextPath}/BookmanServlet'">书商字典维护</a>
-        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">出版社字典维护</a>
-        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">收藏单位字典维护</a>
-        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">印刷厂字典维护</a>
-        <a onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">术语字典</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/PublisherServlet'">出版社字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/CollectionServlet'">收藏单位字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/PrinteryServlet'">印刷厂字典维护</a>
+        <a onclick="location.href='${pageContext.request.contextPath}/TermDicServlet'">术语字典</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->
@@ -531,9 +531,9 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>备份表名</th>
-                <th>备份周期</th>
+                <th>备份周期（天）</th>
                 <th>备份位置</th>
                 <th>操作员</th>
             </tr>
@@ -619,7 +619,7 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>备份编号</th>
                 <th>备份表名</th>
                 <th>备份位置</th>

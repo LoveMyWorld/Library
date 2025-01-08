@@ -204,7 +204,7 @@
             background-color: #ddd;
         }
         table {
-            table-layout: fixed;
+            table-layout: auto;
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -403,7 +403,7 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>读者级别</th>
                 <th>信用分范围</th>
                 <th>可借阅数</th>
@@ -411,7 +411,7 @@
                 <th>可预约数</th>
                 <th>预约天数</th>
                 <th>超期罚款/天</th>
-                <th>操作</th>
+                <th style="width: 80px;">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -771,12 +771,12 @@
 
         // 提交表单2时验证
         submitForm2.onclick = function () {
-            var creditPointRange = document.getElementById("creditPointRange").value;
-            var borrowNum = document.getElementById("borrowNum").value;
-            var borrowDay = document.getElementById("borrowDay").value;
-            var orderNum = document.getElementById("orderNum").value;
-            var orderDay = document.getElementById("orderDay").value;
-            var fineEveryday = document.getElementById("fineEveryday").value;
+            var creditPointRange = document.getElementById("creditPointRange2").value;
+            var borrowNum = document.getElementById("borrowNum2").value;
+            var borrowDay = document.getElementById("borrowDay2").value;
+            var orderNum = document.getElementById("orderNum2").value;
+            var orderDay = document.getElementById("orderDay2").value;
+            var fineEveryday = document.getElementById("fineEveryday2").value;
 
             // 检查必填项
             if (!creditPointRange  || !borrowNum || !borrowDay || !orderNum || !orderDay || !fineEveryday ) {

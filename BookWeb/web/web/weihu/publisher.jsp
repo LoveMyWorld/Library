@@ -3,10 +3,10 @@
 
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.Publisher" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Entity.BackupInfo" %>
-<%@ page import="Entity.Bookman" %>
+<%@ page import="Entity.Publisher" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -370,7 +370,7 @@
     <!-- 管理列表框 -->
     <div class="content-box">
         <div class="header">
-            书商字典维护列表
+            出版社字典维护列表
         </div>
         <div class="toolbar">
             <div class="tools">
@@ -401,7 +401,7 @@
             </div>
 
             <div class="search">
-                <form action="${pageContext.request.contextPath}/BookmanServlet" method="get">
+                <form action="${pageContext.request.contextPath}/PublisherServlet" method="get">
                     <select name="searchField">
                         <option value="name">名称</option>
                         <option value="addr">地址</option>
@@ -430,18 +430,18 @@
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Bookman> bookmanList= (List<Bookman>) request.getAttribute("bookmanList");
+                List<Publisher> publisherList= (List<Publisher>) request.getAttribute("publisherList");
                 int count = 1; // 初始化计数器
-                if (bookmanList != null) { // 判断数据是否为空
-                    for (Bookman bookman : bookmanList) {
+                if (publisherList != null) { // 判断数据是否为空
+                    for (Publisher publisher : publisherList) {
             %>
             <tr >
                 <td><%= count++ %></td>
-                <td><%= bookman.getName() %></td>
-                <td><%= bookman.getAddr() %></td>
-                <td><%= bookman.getContact() %></td>
-                <td><%= bookman.getPhoneNum() %></td>
-                <td><%= bookman.getPostcode() %></td>
+                <td><%= publisher.getName() %></td>
+                <td><%= publisher.getAddr() %></td>
+                <td><%= publisher.getContact() %></td>
+                <td><%= publisher.getPhoneNum() %></td>
+                <td><%= publisher.getPostcode() %></td>
 
                 <td>
                     <div class="tools">
@@ -476,11 +476,11 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/PublisherServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/BookmanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/PublisherServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
             </div>
 
         </div>
@@ -491,10 +491,10 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            出版社信息
             <span class="close" id="closeModal">&times;</span>
         </div>
-        <form id="bookmanForm_add">
+        <form id="publisherForm_add">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -523,10 +523,10 @@
 <div id="myModal1" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            出版社信息
             <span class="close" id="closeModal1">&times;</span>
         </div>
-        <form id="bookmanForm_look">
+        <form id="publisherForm_look">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -554,10 +554,10 @@
 <div id="myModal2" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            书商信息
+            出版社信息
             <span class="close" id="closeModal2">&times;</span>
         </div>
-        <form id="bookmanForm_edit">
+        <form id="publisherForm_edit">
             <table class="modal-table">
                 <tr>
                     <th>名称</th>
@@ -616,7 +616,7 @@
                 var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchPublisherDetails(name);
             });
         });
 
@@ -628,7 +628,7 @@
                 var name = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
 
                 // 发送请求获取该读者的详细信息
-                fetchBookmanDetails(name);
+                fetchPublisherDetails(name);
             });
         });
 
@@ -701,12 +701,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_add').serialize();
+                var formData=$('#publisherForm_add').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/AddBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/AddPublisherServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -760,12 +760,12 @@
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookmanForm_edit').serialize();
+                var formData=$('#publisherForm_edit').serialize();
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/EditBookmanServlet',  // 后端接口，用于提交数据
+                    url: '${pageContext.request.contextPath}/EditPublisherServlet',  // 后端接口，用于提交数据
                     method: 'POST',
                     data: formData,  // 发送的表单数据
                     dataType: 'json',  // 期待返回的数据格式
@@ -791,10 +791,10 @@
     });
 
     // 获取并填充读者详细信息
-    function fetchBookmanDetails(name) {
-        // 假设我们通过后端接口 `/LookBookmanServlet` 获取数据
+    function fetchPublisherDetails(name) {
+        // 假设我们通过后端接口 `/LookPublisherServlet` 获取数据
         $.ajax({
-            url: '${pageContext.request.contextPath}/LookBookmanServlet', // 你的后端接口
+            url: '${pageContext.request.contextPath}/LookPublisherServlet', // 你的后端接口
             method: 'GET',
             data: { name: name }, // 发送读者编号（或其他唯一标识符）到后端
             dataType: 'json',
@@ -815,11 +815,11 @@
                     // 显示弹框
                     // modal1.style.display = "block";
                 } else {
-                    alert("无法获取书商信息！");
+                    alert("无法获取出版社信息！");
                 }
             },
             error: function(xhr, status, error) {
-                alert("获取书商信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                alert("获取出版社信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
             }
         });
     }
@@ -839,7 +839,7 @@
                 if (confirmSubmit) {
 
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/DeleteBookmanServlet',  // 后端接口，用于提交数据
+                        url: '${pageContext.request.contextPath}/DeletePublisherServlet',  // 后端接口，用于提交数据
                         method: 'POST',
                         data:  { name: name },   // 发送的读者编号
                         dataType: 'json',  // 期待返回的数据格式

@@ -2,7 +2,7 @@ package Entity;
 
 public class Bookman {
     private  String name;
-    private  String add;
+    private  String addr;
     private  String contact;
     private  String phoneNum;
     private  String postcode;
@@ -10,9 +10,9 @@ public class Bookman {
     public Bookman() {
     }
 
-    public Bookman(String name, String add, String contact, String phoneNum, String postcode) {
+    public Bookman(String name, String addr, String contact, String phoneNum, String postcode) {
         this.name = name;
-        this.add = add;
+        this.addr = addr;
         this.contact = contact;
         this.phoneNum = phoneNum;
         this.postcode = postcode;
@@ -26,12 +26,12 @@ public class Bookman {
         this.name = name;
     }
 
-    public String getAdd() {
-        return add;
+    public String getAddr() {
+        return addr;
     }
 
-    public void setAdd(String add) {
-        this.add = add;
+    public void setAddr(String addr) {
+        this.addr = addr;
     }
 
     public String getContact() {

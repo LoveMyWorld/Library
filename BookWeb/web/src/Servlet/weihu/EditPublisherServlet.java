@@ -1,8 +1,8 @@
 package Servlet.weihu;
 
 
-import Dao.BookmanDao;
-import Entity.Bookman;
+import Dao.PublisherDao;
+import Entity.Publisher;
 import Entity.ResultInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,8 @@ import java.io.Writer;
 import java.sql.Date;
 import java.util.HashMap;
 
-@WebServlet("/EditBookmanServlet")
-public class EditBookmanServlet extends HttpServlet {
+@WebServlet("/EditPublisherServlet")
+public class EditPublisherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -30,17 +30,17 @@ public class EditBookmanServlet extends HttpServlet {
         String phoneNum = request.getParameter("phoneNum");
         String postcode = request.getParameter("postcode");
 
-        // 创建 Bookman 对象
-        Bookman newBookman = new Bookman(name, addr, contact, phoneNum, postcode);
-        // 使用 BookmanDao 保存数据
-        BookmanDao bookmanDao = new BookmanDao();
-        boolean success = bookmanDao.updateBookman(newBookman);
+        // 创建 Publisher 对象
+        Publisher newPublisher = new Publisher(name, addr, contact, phoneNum, postcode);
+        // 使用 PublisherDao 保存数据
+        PublisherDao publisherDao = new PublisherDao();
+        boolean success = publisherDao.updatePublisher(newPublisher);
 
         if (success) {
             ResultInfo resultInfo = new ResultInfo();
             resultInfo.setFlag(true);
             resultInfo.setErrorMsg("提交成功！");
-            resultInfo.setData(newBookman);
+            resultInfo.setData(newPublisher);
             HashMap<String,Object> map = new HashMap<>();
             map.put("resultInfo",resultInfo);
 

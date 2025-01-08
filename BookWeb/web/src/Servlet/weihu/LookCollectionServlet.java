@@ -1,7 +1,7 @@
 package Servlet.weihu;
 
-import Dao.BookmanDao;
-import Entity.Bookman;
+import Dao.CollectionDao;
+import Entity.Collection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,8 +11,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-@WebServlet("/LookBookmanServlet")
-public class LookBookmanServlet extends HttpServlet {
+@WebServlet("/LookCollectionServlet")
+public class LookCollectionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,20 +25,20 @@ public class LookBookmanServlet extends HttpServlet {
 
         if (name != null && !name.isEmpty()) {
             // 通过 name 从数据库中查询该读者的详细信息
-            BookmanDao bookmanDao = new BookmanDao();
-            Bookman bookman = bookmanDao.getBookmanByName(name);
+            CollectionDao collectionDao = new CollectionDao();
+            Collection collection = collectionDao.getCollectionByName(name);
 
             // 如果找到该读者的信息，返回成功的 JSON 响应
-            if (bookman != null) {
+            if (collection != null) {
                 // 创建一个包含读者详细信息的 JSON 对象
                 JSONObject jsonResponse = new JSONObject();
                 jsonResponse.put("success", true);
                 jsonResponse.put("data", new JSONObject()
-                        .put("name", bookman.getName())
-                        .put("addr", bookman.getAddr())
-                        .put("contact", bookman.getContact())
-                        .put("phoneNum", bookman.getPhoneNum())
-                        .put("postcode", bookman.getPostcode()));
+                        .put("name", collection.getName())
+                        .put("addr", collection.getAddr())
+                        .put("contact", collection.getContact())
+                        .put("phoneNum", collection.getPhoneNum())
+                        .put("postcode", collection.getPostcode()));
 
                 // 返回响应
                 response.getWriter().write(jsonResponse.toString());
@@ -50,7 +50,7 @@ public class LookBookmanServlet extends HttpServlet {
                 response.getWriter().write(jsonResponse.toString());
             }
         } else {
-            // 如果没有传递 bookmanID，返回错误的 JSON 响应
+            // 如果没有传递 collectionID，返回错误的 JSON 响应
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("success", false);
             jsonResponse.put("message", "缺少名称");
