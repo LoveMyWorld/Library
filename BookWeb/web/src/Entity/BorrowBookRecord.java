@@ -11,8 +11,9 @@ public class BorrowBookRecord {
     private String title; // 对应 title 字段
     private LocalDate borrowStart;
     private LocalDate borrowEnd;
+    private BorrowStatus borrowStatus;
 
-    public BorrowBookRecord(long bbrID, String readID, String name, String phoneNum, String bookID, String title, LocalDate borrowStart, LocalDate borrowEnd) {
+    public BorrowBookRecord(long bbrID, String readID, String name, String phoneNum, String bookID, String title, LocalDate borrowStart, LocalDate borrowEnd, BorrowStatus borrowStatus) {
         this.bbrID = bbrID;
         this.readID = readID;
         this.name = name;
@@ -21,11 +22,20 @@ public class BorrowBookRecord {
         this.title = title;
         this.borrowStart = borrowStart;
         this.borrowEnd = borrowEnd;
+        this.borrowStatus = borrowStatus;
     }
 
     public BorrowBookRecord() {
 
     };
+
+    public BorrowStatus getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(BorrowStatus borrowStatus) {
+        this.borrowStatus = borrowStatus;
+    }
 
     public long getBbrID() {
         return bbrID;

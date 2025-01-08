@@ -1,9 +1,6 @@
 package Dao;
 
-import Entity.Appointment;
-import Entity.BorrowBookRecord;
-import Entity.DocumentType;
-import Entity.Yanshou;
+import Entity.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +9,7 @@ import java.time.LocalDate;
 
 public class BorrowBookRecordDao {
     //通过readID找天数
-    private int getBorrowDayByReaderID(String readID) {
+    public int getBorrowDayByReaderID(String readID) {
         Dao dao = new Dao();
         String sql = "";
         int borrowDay = 0;
@@ -25,9 +22,6 @@ public class BorrowBookRecordDao {
 
 
         try {
-
-
-
             PreparedStatement ps = dao.conn.prepareStatement(sql);
             ps.setString(1, readID);
             ResultSet rs = ps.executeQuery();
@@ -63,7 +57,7 @@ public class BorrowBookRecordDao {
 //        borrowRecord.setTitle(title);
 //        borrowRecord.setBorrowStart(currentDate);
 
-        sql = "INSERT INTO borrowbookrecord (readID, name, phoneNum, bookID, title, borrowStart, borrowEnd) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        sql = "INSERT INTO borrowbookrecord (readID, name, phoneNum, bookID, title, borrowStart, borrowEnd,borrowStatus) VALUES (?, ?,?, ?, ?, ?, ?, ?)";
         boolean isSuccess = false;
 
         try {
@@ -76,6 +70,7 @@ public class BorrowBookRecordDao {
             ps.setDate(6, java.sql.Date.valueOf(currentDate));
             // 假设 borrowEnd 是当前日期加上30天，你可以根据实际情况调整
             ps.setDate(7, java.sql.Date.valueOf(currentDate.plusDays(getBorrowDayByReaderID(readID))));
+            ps.setString(8,"借阅中");
 
             int rowsAffected = ps.executeUpdate();
             isSuccess = rowsAffected > 0;
@@ -86,6 +81,27 @@ public class BorrowBookRecordDao {
         }
 
         return isSuccess;
+    }
+    //从reader中通过读者编号找到读者的name和phoneNum,通过bookID找到书的title,borrowStart=currentDate,borrowEnd=currentDate+borrowDay,borrowStatus="借阅中"
+    public boolean mIntoBorrowBookRecord(String readID,String bookID,LocalDate currentDate ){
+        ReaderDao readerDao = new ReaderDao();
+        Reader reader = readerDao.getReaderByID(bookID);
+        if(reader != null){
+            LiutongDao liutongDao = new LiutongDao();
+            Liutong liutong=liutongDao.FindLiutongByBookID(bookID);
+            if(liutong != null){
+                Appointment appointment = new Appointment();
+                appointment.setReadID(readID);
+                appointment.setBookID(bookID);
+                appointment.setName(reader.getName());
+                appointment.setPhoneNum(reader.getPhoneNum());
+                appointment.setTitle(liutong.getTitle());
+                addBorrowRecord(appointment, currentDate);
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }

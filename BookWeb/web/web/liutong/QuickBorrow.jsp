@@ -330,39 +330,56 @@
       width: 16px; /* 调整为你需要的宽度 */
       height: 16px; /* 调整为你需要的高度 */
     }
+    /*//借书*/
+    .borrow-options {
+      display: flex;
+      flex-direction: column; /* 垂直排列按钮 */
+      align-items: center; /* 水平居中对齐 */
+      gap: 10px; /* 按钮之间的间距 */
+      margin-top: 20px; /* 与上方内容的间距 */
+    }
+
+    .borrow-option {
+
+      padding: 10px 20px; /* 内边距 */
+      border: none; /* 无边框 */
+      border-radius: 5px; /* 圆角 */
+      background: linear-gradient(to right, #51669c, #266acf); /* 渐变背景 */
+      font-family: '楷体';
+      color: white; /* 文字颜色 */
+      font-size: 16px; /* 字体大小 */
+      cursor: pointer; /* 鼠标指针样式 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 阴影 */
+      transition: background-color 0.3s, transform 0.3s; /* 过渡效果 */
+    }
+
+    .borrow-option:hover {
+      background: linear-gradient(to right, #516693, #2e4d9f); /* 鼠标悬停时的渐变背景 */
+      font-family: '楷体';
+      transform: translateY(-2px); /* 向上移动 */
+    }
+
+    .borrow-option:active {
+      transform: translateY(0); /* 按钮按下时的位置 */
+    }
   </style>
 </head>
 <body>
-<%--<div class="sidebar">--%>
-<%--  <div>--%>
-<%--    <h3>冠军小队</h3>--%>
 
-<%--    <a href="#" class="active">编目管理</a>--%>
-<%--&lt;%&ndash;    <a href="#" class="active">验收清单</a>&ndash;%&gt;--%>
-<%--      <a href="javascript:void(0);" class="active" id="yanshou-btn">验收清单</a>--%>
-
-
-<%--      <a href="#" class="active">报损</a>--%>
-<%--      改--%>
 <div class="sidebar">
   <div>
     <h3>冠军小队</h3>
 
     <%--        <a  onclick="location.href='${pageContext.request.contextPath}/BorrowBookServlet'">借书</a>--%>
     <a onclick="showBorrowOptions()">借书</a>
-    <a  onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">还书</a>
+    <a  onclick="location.href='${pageContext.request.contextPath}/ReturnBookServlet'">还书</a>
     <%--        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">罚款</a>--%>
   </div>
-  <!-- 借书选项的隐藏区域 -->
-  <%--    <div id="borrowOptions" style="display: none;">--%>
-  <%--        <button onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button>--%>
-  <%--        <button onclick="location.href='${pageContext.request.contextPath}/ReaderBorrowServlet'">读者亲自借书</button>--%>
-  <%--    </div>--%>
-  <div id="borrowOptions" style="display: none;">
-    <%--        <button class="borrow-option">快速通道</button>--%>
-    <%--        <button class="borrow-option">读者亲自借书</button>--%>
-    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button>
-    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/ReaderBorrowServlet'">读者亲自借书</button>
+
+  <div id="borrowOptions" style="display: none;" class="borrow-options">
+    <button  class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button><p/>
+<%--    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/DirBorrowServlet'">读者亲自借书</button>--%>
+    <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/liutong/DirBorrow.jsp'">读者亲自借书</button>
   </div>
   <%--      改--%>
   <!-- 底部横杠和关于我们按钮 -->
@@ -594,6 +611,14 @@
         });
       }
 
+      // function showBorrowOptions() {
+      //   var borrowOptions = document.getElementById("borrowOptions");
+      //   if (borrowOptions.style.display === "none") {
+      //     borrowOptions.style.display = "block";
+      //   } else {
+      //     borrowOptions.style.display = "none";
+      //   }
+      // }
       function showBorrowOptions() {
         var borrowOptions = document.getElementById("borrowOptions");
         if (borrowOptions.style.display === "none") {
