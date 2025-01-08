@@ -1,4 +1,4 @@
-<%@ page import="Entity.Announcement" %>
+<%@ page import="Entity.Tongbao" %>
 <%@ page import="java.util.List" %><%--
 
 
@@ -355,9 +355,9 @@
     </div>
 </div>
 
-<form action="${pageContext.request.contextPath}/UserAnnouncementServlet" method="get">
+<form action="${pageContext.request.contextPath}/UserTongbaoServlet" method="get">
     <div id="history-announcement" class="content-box" >
-        <h4>历史公告</h4>
+        <h4>通报列表</h4>
         <button type="submit" class="return-button">刷新</button>
 
         <table>
@@ -373,16 +373,16 @@
             <!-- 假设这里用 Java 在后台动态填充数据 -->
 
             <%
-                List<Announcement> announcementList= (List<Announcement>) request.getAttribute("list");
+                List<Tongbao> announcementList= (List<Tongbao>) request.getAttribute("list");
                 if (announcementList != null) { // 判断数据是否为空
-                    for (Announcement announcement : announcementList) {
+                    for (Tongbao announcement : announcementList) {
             %>
             <tr >
-                <td><%= announcement.getAnnouncementID() %></td>
+                <td><%= announcement.getTongbaoID() %></td>
                 <td><%= announcement.getPublisher() %></td>
-                <td><%= announcement.getAnnouncementKey() %></td>
+                <td><%= announcement.getTongbaoKey() %></td>
 
-                <td><%= announcement.getAnnouncementText() %>
+                <td><%= announcement.getTongbaoText() %>
                 </td>
             </tr>
             <%
