@@ -69,8 +69,9 @@
 <body>
 
 <div class="nav">
-  <button class="login-button" onclick="window.location.href='http://localhost:8080/Library_war_exploded/login.jsp'">登录</button>
-  <button class="register-button" onclick="window.location.href='http://localhost:8080/Library_war_exploded/register.jsp'">注册</button>
+  <button class="login-button" onclick="window.location.href='reader_login.jsp'">读者登录</button>
+  <button class="login-button" onclick="window.location.href='adm_login.jsp'">管理员登录</button>
+  <button class="register-button" onclick="window.location.href='http://localhost:8080/web_Web_exploded/register.jsp'">注册</button>
 </div>
 <div class="header">
   <h2>冠军小队图书馆</h2>
