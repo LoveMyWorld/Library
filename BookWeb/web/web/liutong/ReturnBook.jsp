@@ -404,6 +404,11 @@
         .borrow-option:active {
             transform: translateY(0); /* 按钮按下时的位置 */
         }
+        .disabled {
+            background-color: grey; /* 设置为灰色 */
+            pointer-events: none; /* 禁止鼠标事件 */
+            opacity: 0.5; /* 半透明 */
+        }
 
     </style>
 </head>
@@ -535,11 +540,23 @@
                 <td><%= borrowBookRecord.getBorrowStatus() %></td>
                 <td>
 
-                    <button class="reviewButton">
-                        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核" class="review-icon">
-                        <div class="tooltip">审核</div>
-                    </button>
-
+<%--                    <button class="reviewButton">--%>
+<%--                        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核" class="review-icon">--%>
+<%--                        <div class="tooltip">审核</div>--%>
+<%--                    </button>--%>
+    <% if ("已还".equals(borrowBookRecord.getBorrowStatus())) { %>
+    <!-- 如果借阅状态为已还，设置按钮为灰色并禁用点击 -->
+    <button class="reviewButton disabled">
+        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核" class="review-icon">
+        <div class="tooltip">审核</div>
+    </button>
+    <% } else { %>
+    <!-- 否则，正常显示审核按钮 -->
+    <button class="reviewButton" onclick="handleReview(this)">
+        <img src="${pageContext.request.contextPath}/image/Shenhe.png" alt="审核" class="review-icon">
+        <div class="tooltip">审核</div>
+    </button>
+    <% } %>
 
                 </td>
             </tr>
@@ -566,6 +583,91 @@
         </div>
         <script>
 
+            // document.addEventListener("DOMContentLoaded", function() {
+            //     var confirmModal = document.getElementById("confirmModal");
+            //     var fineModal = document.getElementById("fineModal");
+            //     var closeButton = document.querySelector(".close");
+            //     var confirmDamagedButton = document.getElementById("confirmDamaged");
+            //     var confirmNotDamagedButton = document.getElementById("confirmNotDamaged");
+            //     var paidFineButton = document.getElementById("paidFine");
+            //     var notPaidFineButton = document.getElementById("notPaidFine");
+            //
+            //     // 审核按钮点击事件
+            //     var reviewButtons = document.querySelectorAll(".reviewButton");
+            //     reviewButtons.forEach(function(button) {
+            //         button.addEventListener("click", function(event) {
+            //             event.preventDefault();
+            //             var bbrID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+            //             confirmModal.dataset.bbrID = bbrID;
+            //             confirmModal.style.display = "block";
+            //         });
+            //     });
+            //
+            //     // 关闭确认模态框
+            //     closeButton.onclick = function() {
+            //         confirmModal.style.display = "none";
+            //         fineModal.style.display = "none"; // 确保罚款模态框也关闭
+            //     }
+            //
+            //     // 点击模态框外部区域关闭模态框
+            //     window.onclick = function(event) {
+            //         if (event.target == confirmModal) {
+            //             closeButton.click();
+            //         }
+            //     }
+            //
+            //     // 已损坏按钮点击事件
+            //     confirmDamagedButton.onclick = function() {
+            //         fineModal.style.display = "block"; // 显示罚款状态模态框
+            //         confirmModal.style.display = "none"; // 关闭确认模态框
+            //     }
+            //
+            //     // 未损坏按钮点击事件
+            //     confirmNotDamagedButton.onclick = function() {
+            //         sendReviewData(confirmModal.dataset.bbrID, false);
+            //     }
+            //
+            //     // 已缴费按钮点击事件
+            //     paidFineButton.onclick = function() {
+            //         sendReviewData(confirmModal.dataset.bbrID, true, true); // 传递已缴费状态
+            //         fineModal.style.display = "none"; // 关闭罚款状态模态框
+            //     }
+            //
+            //     // 未缴费按钮点击事件
+            //     notPaidFineButton.onclick = function() {
+            //         sendReviewData(confirmModal.dataset.bbrID, true, false); // 传递未缴费状态
+            //         fineModal.style.display = "none"; // 关闭罚款状态模态框
+            //     }
+            // });
+
+
+            function sendReviewData(bbrID, isDamaged, isPaid) {
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/CheckRetBookServlet',
+                    method: 'POST',
+                    data: {
+                        bbrID: bbrID,
+                        isDamaged: isDamaged,
+                        isPaid: isPaid
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            alert("还书成功！");
+                            // 可能需要刷新页面或者更新列表
+                            // location.reload(); // 或者使用其他方法更新页面
+                            window.location.href = '${pageContext.request.contextPath}/ReturnBookServlet';
+                        } else {
+                            // alert("还书失败：" + response.message);
+                            alert("借阅失败，错误信息: " + response.resultInfo.errorMsg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("请求失败，错误代码 " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+                document.getElementById("fineModal").style.display = "none"; // 关闭模态框
+            }
             document.addEventListener("DOMContentLoaded", function() {
                 var confirmModal = document.getElementById("confirmModal");
                 var fineModal = document.getElementById("fineModal");
@@ -578,13 +680,22 @@
                 // 审核按钮点击事件
                 var reviewButtons = document.querySelectorAll(".reviewButton");
                 reviewButtons.forEach(function(button) {
-                    button.addEventListener("click", function(event) {
-                        event.preventDefault();
-                        var bbrID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
-                        confirmModal.dataset.bbrID = bbrID;
-                        confirmModal.style.display = "block";
-                    });
+                    var tr = button.closest("tr");
+                    var status = tr.querySelector("td:nth-child(7)").innerText; // 确保这是正确的列索引
+                    if (status === "已还") {
+                        button.classList.add("disabled");
+                        button.setAttribute("disabled", "true"); // 确保按钮被禁用
+                    }
+                    else {
+                        button.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            var bbrID = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+                            confirmModal.dataset.bbrID = bbrID;
+                            confirmModal.style.display = "block";
+                        });
+                    }
                 });
+
 
                 // 关闭确认模态框
                 closeButton.onclick = function() {
@@ -623,38 +734,35 @@
                 }
             });
 
-            // function sendReviewData(bbrID, isDamaged, isPaid) {
-            //     // 发送AJAX请求的逻辑
-            //     console.log("bbrID:", bbrID, "isDamaged:", isDamaged, "isPaid:", isPaid);
-            //     // 这里可以添加AJAX请求代码
-            // }
-            function sendReviewData(bbrID, isDamaged, isPaid) {
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/CheckRetBookServlet',
-                    method: 'POST',
-                    data: {
-                        bbrID: bbrID,
-                        isDamaged: isDamaged,
-                        isPaid: isPaid
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.resultInfo.flag) {
-                            alert("还书成功！");
-                            // 可能需要刷新页面或者更新列表
-                            // location.reload(); // 或者使用其他方法更新页面
-                            window.location.href = '${pageContext.request.contextPath}/ReturnBookServlet';
-                        } else {
-                            // alert("还书失败：" + response.message);
-                            alert("借阅失败，错误信息: " + response.resultInfo.errorMsg);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("请求失败，错误代码 " + xhr.status + "\n" + xhr.statusText);
-                    }
-                });
-                document.getElementById("fineModal").style.display = "none"; // 关闭模态框
+
+            // 在文档加载完毕后，设置按钮的样式和事件监听器
+            // document.addEventListener("DOMContentLoaded", function() {
+            //     var reviewButtons = document.querySelectorAll(".reviewButton");
+            //     reviewButtons.forEach(function(button) {
+            //         var tr = button.closest("tr");
+            //         var status = tr.querySelector("td:nth-child(7)").innerText; // 确保这是正确的列索引
+            //         if (status === "已还") {
+            //             button.classList.add("disabled");
+            //             button.setAttribute("disabled", "true"); // 确保按钮被禁用
+            //         } else {
+            //             button.classList.remove("disabled");
+            //             button.removeAttribute("disabled");
+            //             button.onclick = function(event) {
+            //                 handleReview(event.currentTarget);
+            //             };
+            //         }
+            //     });
+            // });
+
+            function handleReview(button) {
+                var bbrID = button.closest("tr").querySelector("td:nth-child(2)").innerText;
+                var confirmModal = document.getElementById("confirmModal");
+                confirmModal.dataset.bbrID = bbrID;
+                confirmModal.style.display = "block";
             }
+
+            // 其他函数如 sendReviewData 等...
+
         </script>
     </div>
 </div>
