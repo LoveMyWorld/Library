@@ -3,7 +3,8 @@ package Service;
 import Dao.AppointmentDao;
 import Dao.BorrowBookRecordDao;
 import Dao.LiutongDao;
-import Entity.BorrowBookRecord;
+import Dao.ReaderDao;
+import Entity.*;
 
 import java.time.LocalDate;
 
@@ -44,7 +45,7 @@ public class DirBorrowSevice {
         LiutongDao liutongDao = new LiutongDao();
         int isUpdate=liutongDao.updateLiutongList(bookID);
         if(isUpdate!=1){
-            return 3;//此时是：有书可以借出，但是流通库表没有更新成功
+            return 3;//此时是：有书可以借出，但是流通库表没有更新成功或者流通
         }
         //借阅记录写进去,把手写的借阅登记写入借阅记录
         //其实我这里写的有点浪费时间，不过函数里面能复用，也蛮好的，borrowDay这时已经得到了，却还是又建了
@@ -56,6 +57,34 @@ public class DirBorrowSevice {
         return 5;//正确的成功返回
 
 
+    }
+    public DisplayBorrowBookMsg dispalyBorrowBook(String readID, String bookID) {
+        ReaderDao readerDao = new ReaderDao();
+        Reader reader = readerDao.getReaderByID(readID);
+        DisplayBorrowBookMsg displayBorrowBookMsg = new DisplayBorrowBookMsg();
+        if (reader != null) {
+            LiutongDao liutongDao = new LiutongDao();
+            Liutong liutong = liutongDao.FindLiutongByBookID(bookID);
+            if (liutong != null) {
+
+                displayBorrowBookMsg.setReadID(reader.getReadID());
+                displayBorrowBookMsg.setBookID(liutong.getBookID());
+                displayBorrowBookMsg.setAuthor(liutong.getAuthor());
+                displayBorrowBookMsg.setTitle(liutong.getTitle());
+                displayBorrowBookMsg.setEdition(liutong.getEdition());
+                displayBorrowBookMsg.setPhoneNum(reader.getPhoneNum());
+                displayBorrowBookMsg.setName(reader.getName());
+                displayBorrowBookMsg.setGender(reader.getGender());
+
+                displayBorrowBookMsg.setMsg(1);//1是成功
+                return displayBorrowBookMsg;
+            }
+            displayBorrowBookMsg.setMsg(2);//流通库表没书
+            return displayBorrowBookMsg;
+        }
+        displayBorrowBookMsg.setMsg(3);//此人不是读者
+
+        return displayBorrowBookMsg;
     }
 }
 

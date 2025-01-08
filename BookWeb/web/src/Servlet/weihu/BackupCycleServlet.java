@@ -11,12 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 @WebServlet(
         name = "BackupCycleServlet",
         value = {"/BackupCycleServlet"}
 )
 public class BackupCycleServlet extends HttpServlet {
-    public static final int PAGE_SIZE = 16;  // 每页显示的备份周期数
+    //public static final int PAGE_SIZE = 16;  // 每页显示的备份周期数
 
     public BackupCycleServlet() {
     }

@@ -133,11 +133,10 @@ public class AppointmentDao {
             throw new RuntimeException("删除预约记录失败", e);
         }
     }
-    //通过图书编号找到册数
     public int Ap_FindBookNumByBookID(String bookID) {
         Dao dao = new Dao();
-        int totalBookNum = 0; // 初始化总数为0
-        String sql = "SELECT bookNum FROM library.appointmentlist WHERE bookID = ?";
+        int rowCount = 0; // 初始化行数为0
+        String sql = "SELECT COUNT(*) FROM library.appointmentlist WHERE bookID = ?";
 
         try {
             // 准备 PreparedStatement
@@ -149,14 +148,14 @@ public class AppointmentDao {
             // 执行查询操作
             ResultSet rs = ps.executeQuery();
 
-            // 遍历结果集，将所有行的 bookNum 相加
-            while (rs.next()) {
-                totalBookNum += rs.getInt("bookNum");
+            // 检查结果集，获取行数
+            if (rs.next()) {
+                rowCount = rs.getInt(1); // 获取第一列的值，即行数
             }
 
             // 关闭资源
             dao.AllClose();
-            return totalBookNum; // 返回总数
+            return rowCount; // 返回行数
         } catch (SQLException e) {
             // 如果发生 SQL 异常，抛出运行时异常
             throw new RuntimeException("查找数据失败", e);

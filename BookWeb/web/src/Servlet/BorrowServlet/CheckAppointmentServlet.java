@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
+//快速通道需要用到的地方，预约表要处理
 @WebServlet(name = "CheckAppointmentServlet", value = "/CheckAppointmentServlet")
 public class CheckAppointmentServlet extends HttpServlet {
 

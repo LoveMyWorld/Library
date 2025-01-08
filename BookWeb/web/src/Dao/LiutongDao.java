@@ -36,8 +36,8 @@ public class LiutongDao {
                 liutong.setSupplier(rs.getString("supplier"));                                // 书商
                 liutong.setTitle(rs.getString("title"));                                      // 书名
                 liutong.setPublisher(rs.getString("publisher"));                              // 出版社
-                liutong.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                liutong.setReceiver(rs.getString("receiver"));                                // 验收人
+              // liutong.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
+           //     liutong.setReceiver(rs.getString("receiver"));                                // 验收人
                 liutong.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 liutong.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
@@ -117,8 +117,8 @@ public class LiutongDao {
     }
     public Liutong FindLiutongByBookID(String bookID) {
         Dao dao = new Dao();
-        String sql = "SELECT bookNum FROM library.liutonglist WHERE bookID = ? LIMIT 1";
-
+        String sql = "SELECT * FROM library.liutonglist WHERE bookID = ? LIMIT 1";
+        Liutong liutong =null;
         try {
             // 准备 PreparedStatement
             PreparedStatement ps = dao.conn.prepareStatement(sql);
@@ -128,15 +128,17 @@ public class LiutongDao {
 
             // 执行查询操作
             ResultSet rs = ps.executeQuery();
-            Liutong liutong=null;
+
             // 检查结果集是否有数据
             while (rs.next()) {
+                liutong = new Liutong(); // 初始化 Liutong 对象
                 // 如果有数据，返回 bookNum 的值
+                liutong.setBookID(rs.getString("bookID"));
                 liutong.setSupplier(rs.getString("supplier"));                                // 书商
                 liutong.setTitle(rs.getString("title"));                                      // 书名
                 liutong.setPublisher(rs.getString("publisher"));                              // 出版社
-                liutong.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-                liutong.setReceiver(rs.getString("receiver"));                                // 验收人
+ //               liutong.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
+               // liutong.setReceiver(rs.getString("receiver"));                                // 验收人
                 liutong.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 liutong.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码

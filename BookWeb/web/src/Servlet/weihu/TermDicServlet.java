@@ -11,12 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 @WebServlet(
         name = "TermDicServlet",
         value = {"/TermDicServlet"}
 )
 public class TermDicServlet extends HttpServlet {
-    public static final int PAGE_SIZE = 16;  // 每页显示的读者数
+    //public static final int PAGE_SIZE = 16;  // 每页显示的读者数
 
     public TermDicServlet() {
     }

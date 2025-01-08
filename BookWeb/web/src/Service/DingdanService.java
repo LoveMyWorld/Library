@@ -5,7 +5,8 @@ import Entity.Caifang;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Servlet.DingdanServlet.PAGE_SIZE;
+import static Servlet.YanshouServlet.PAGE_SIZE;
+
 
 public class DingdanService {
 
