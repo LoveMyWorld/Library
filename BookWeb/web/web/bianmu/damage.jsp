@@ -477,24 +477,24 @@
                     <td><input type="text" id="publicationDate" name="publicationDate" readonly ></td>
                 </tr>
                 <tr>
-                     <th>版次</th>
+                    <th>版次</th>
                     <td><input type="text" id="edition" name="edition" readonly ></td>
                     <th>文献类型</th>
                     <td><input type="text" id="documentType" name="documentType" readonly ></td>
-<%--                    <th>币种编号</th>--%>
-<%--                    <td><input type="text" id="currencyCode"></td>--%>
+                    <%--                    <th>币种编号</th>--%>
+                    <%--                    <td><input type="text" id="currencyCode"></td>--%>
                 </tr>
-                 <tr>
-                     <th>册数</th>
-                     <td><input type="text" id="bookNum" name="bookNum" readonly ></td>
-                     <th>图书分类号</th>
-                     <td><select id="categoryName" name="categoryName">
+                <tr>
+                    <th>册数</th>
+                    <td><input type="text" id="bookNum" name="bookNum" readonly ></td>
+                    <th>图书分类号</th>
+                    <td><select id="categoryName" name="categoryName">
                         <option value="A 马克思主义、列宁主义、毛泽东思想、邓小平理论">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
                         <option value="A1 马克思、恩格斯著作">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
                         <option value="A11 选集、文集">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
                         <option value="A12 单行著作">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
 
-                     </select></td>
+                    </select></td>
                 </tr>
                 <tr>
                     <th>ISBN</th>
@@ -509,7 +509,7 @@
                     <td><input type="text" id="price" name="price" readonly ></td>
                 </tr>
 
-             </table>
+            </table>
             <button type="button" id="confirmButton" name="confirmButton">确定</button>
         </form>
         <!-- 成功提示框 -->
@@ -675,8 +675,8 @@
                             $('#categoryName').prop('disabled' , false);
                         }
 
-                         console.log(response.resultInfo.data.isbn);
-                         console.log(response.publicationDate);
+                        console.log(response.resultInfo.data.isbn);
+                        console.log(response.publicationDate);
                         console.log(response.resultInfo.data.supplier);
                         // console.log(dataString)
                         // 显示弹框
