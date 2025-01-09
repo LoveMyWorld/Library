@@ -99,6 +99,49 @@ public class DirBorrowSevice {
 
         return displayBorrowBookMsg;
     }
+
+    public int checkNetAppointment(String readID, String bookID, LocalDate currentDate) {
+        //看读者资质是否合格
+        //即为看读者是否为黑名单用户，通过输入的readID，找到读者的library.readerLevel对应的borrowDay
+        BorrowBookRecordDao borrowBookRecordDao = new BorrowBookRecordDao();
+        int borrowDay = borrowBookRecordDao.getBorrowDayByReaderID(readID);
+        if (borrowDay == 0) {
+            return 1;//代表读者不存在或者在黑名单用户
+        }
+        //如果不是黑名单用户，看这本书是否还有库存（预约表和流通库表）
+        boolean isHas = false;
+        isHas = isHaveBook(bookID);
+        if (!isHas) {
+            return 2;//说明没有多余的可借书了，预约表借该书的总数小于等于流通库表
+        }
+        //找reader
+        ReaderDao readerDao = new ReaderDao();
+        Reader reader=readerDao.getReaderByID(readID);
+        //找liutonglist
+        LiutongDao liutongDao = new LiutongDao();
+        Liutong liutong=liutongDao.FindLiutongByBookID(bookID);
+        //写入预约表
+        Appointment appointment=new Appointment();
+        //写入预约实体
+        appointment.setBookID(bookID);
+        appointment.setReadID(readID);
+        appointment.setName(reader.getName());
+        appointment.setPhoneNum(reader.getPhoneNum());
+        appointment.setTitle(liutong.getTitle());
+        appointment.setAppointmentStart(currentDate);
+        int orderday=borrowBookRecordDao.getOrderDayByReaderID(readID);
+
+        //写入appointmentlist
+        AppointmentDao appointmentDao = new AppointmentDao();
+        boolean issucess=appointmentDao.insertAppointment(appointment,orderday);
+        if(!issucess){
+            return 3;//写入预约表失败
+        }
+        //删去记录，预约表中的时间LIBRARY.appointmentEnd小于当前时间
+        appointmentDao.deleteExpiredAppointments();
+        return 4;//成功
+
+    }
 }
 
 

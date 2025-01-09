@@ -12,7 +12,7 @@ import java.util.List;
 import java.time.temporal.ChronoUnit;
 
 public class BorrowBookRecordDao {
-    //通过readID找天数
+    //通过readID找借阅天数
     public int getBorrowDayByReaderID(String readID) {
         Dao dao = new Dao();
         String sql = "";
@@ -39,6 +39,36 @@ public class BorrowBookRecordDao {
         }
         return borrowDay;
     }
+
+    //通过readID找预约天数
+    public int getOrderDayByReaderID(String readID) {
+        Dao dao = new Dao();
+        String sql = "";
+        int orderDay = 0;
+        sql =
+                "SELECT rlevel_rule.orderDay\n" +
+                        "        FROM library.reader\n" +
+                        "        JOIN library.rlevel_rule\n" +
+                        "        ON library.reader.readerLevel = library.rlevel_rule.readerLevel\n" +
+                        "        WHERE library.reader.readID = ?";
+
+
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setString(1, readID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                orderDay = rs.getInt("orderDay");
+            }
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("查询最大预约天数失败", e);
+        }
+        return orderDay;
+    }
+
+
     //预约的一条记录加入借阅记录
     public boolean addBorrowRecord(Appointment appointment, LocalDate currentDate) {
         Dao dao = new Dao();

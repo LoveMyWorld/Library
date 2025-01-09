@@ -48,6 +48,8 @@ public class AppointmentDao {
             throw new RuntimeException("查询数据失败", e);
         }
     }
+
+    //搜索
     public List<Appointment> findBooksBySearch(String searchField,String searchValue) {
         Dao dao = new Dao();
         List<Appointment> dataList = new ArrayList<>();
@@ -89,6 +91,7 @@ public class AppointmentDao {
             throw new RuntimeException("查询数据失败", e);
         }
     }
+    //通过预约号找一本书
     public Appointment getOneBookByApID(long apID){
         Dao dao = new Dao();
         Appointment appointment = null;
@@ -160,6 +163,61 @@ public class AppointmentDao {
             // 如果发生 SQL 异常，抛出运行时异常
             throw new RuntimeException("查找数据失败", e);
         }
+    }
+    //
+    // 将预约信息插入数据库
+    public boolean insertAppointment(Appointment appointment,int orderdays) {
+        Dao dao = new Dao();
+        String sql = "INSERT INTO Library.appointmentlist (readID, name, phoneNum, bookID, title, appointmentStart, appointmentEnd) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+        boolean isSuccess = false; // 用于标识插入是否成功
+
+        try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+            // 设置 PreparedStatement 的参数
+
+            ps.setString(1, appointment.getReadID());
+            ps.setString(2, appointment.getName());
+            ps.setString(3, appointment.getPhoneNum());
+            ps.setString(4, appointment.getBookID());
+            ps.setString(5, appointment.getTitle());
+//            ps.setObject(6, appointment.getAppointmentStart(), java.sql.Types.DATE);
+//            ps.setObject(7, appointment.getAppointmentEnd(), java.sql.Types.DATE);
+LocalDate appointmentStart = appointment.getAppointmentStart();
+            ps.setDate(6, java.sql.Date.valueOf(appointmentStart));
+            // 假设 borrowEnd 是当前日期加上30天，你可以根据实际情况调整
+            ps.setDate(7, java.sql.Date.valueOf(appointmentStart.plusDays(orderdays)));
+
+            // 执行插入操作
+            int rowsAffected = ps.executeUpdate();
+            isSuccess = rowsAffected > 0; // 如果影响行数大于0，插入成功
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("插入预约数据失败", e);
+        }
+
+        return isSuccess; // 返回插入是否成功的结果
+    }
+
+    // 删除预约结束时间小于当前时间的记录
+    public int deleteExpiredAppointments() {
+        Dao dao = new Dao();
+        String sql = "DELETE FROM Library.appointmentlist WHERE appointmentEnd < ?";
+        int rowsAffected = 0; // 用于存储受影响的行数
+
+        try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+            // 设置 PreparedStatement 的参数为当前日期
+            LocalDate now = LocalDate.now(); // 获取当前日期和时间
+            ps.setDate(1, java.sql.Date.valueOf(now));
+
+            // 执行删除操作
+            rowsAffected = ps.executeUpdate();
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("删除过期预约记录失败", e);
+        }
+
+        return rowsAffected; // 返回受影响的行数
     }
 
 }
