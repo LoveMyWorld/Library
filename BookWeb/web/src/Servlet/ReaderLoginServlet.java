@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 
 @WebServlet(
@@ -29,6 +31,8 @@ public class ReaderLoginServlet extends HttpServlet {
         LoginService loginService = new LoginService();
         String ok = loginService.isCorrect(user);
         if (ok.equals("true")) {
+            HttpSession session = request.getSession();
+            session.setAttribute("reader", user);
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             request.setAttribute("login_ret", ok);
