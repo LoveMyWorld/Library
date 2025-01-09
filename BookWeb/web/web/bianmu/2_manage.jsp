@@ -530,7 +530,7 @@
             书籍编目
             <span class="close" id="closeModal2">&times;</span>
         </div>
-        <form id="bookForm_edit" action="" method="get">
+        <form id="bookForm_edit2" action="" method="get">
             <table class="modal-table">
                 <tr>
                     <th>图书编号</th>
@@ -578,7 +578,7 @@
                 </tr>
 
             </table>
-            <button type="button" id="confirmButton2" name="confirmButton">确定</button>
+            <button type="button" id="confirmButton2" name="confirmButton" >确定</button>
         </form>
     </div>
 </div>
@@ -636,6 +636,7 @@
             fetchInitData();  // 获取并展示现有数据
         }
 
+        // 编辑显示
         editButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 modal2.style.display = "block";
@@ -826,7 +827,7 @@
     });
 
     // 获取并填充读者详细信息
-    function fetchCataloglistDetails(ISBN) {
+    function fetchCataloglistDetails(ISBN)  {
         // 假设我们通过后端接口 `/lookBookForm` 获取数据
         $.ajax({
             url: '${pageContext.request.contextPath}/lookBookForm', // 你的后端接口
@@ -834,25 +835,25 @@
             data: { ISBN: ISBN}, // 发送读者编号（或其他唯一标识符）到后端
             dataType: 'json',
             success: function(response) {
-                if (response.success) {
-                    document.getElementById("bookID2").value = response.data.bookID;
-                    document.getElementById("title2").value = response.data.title;
-                    document.getElementById("author2").value = response.data.author;
-                    document.getElementById("publicationDate2").value = response.data.publicationDate;
-                    document.getElementById("edition2").value = response.data.edition;
-                    document.getElementById("documentType2").value = response.data.documentType;
-                    document.getElementById("bookNum2").value = response.data.bookNum;
-                    document.getElementById("categoryName2").value = response.data.categoryName;
+                if (response.resultInfo.flag) {
+                    document.getElementById("bookID2").value = response.resultInfo.data.bookID;
+                    document.getElementById("title2").value = response.resultInfo.data.title;
+                    document.getElementById("author2").value = response.resultInfo.data.author;
+                    document.getElementById("publicationDate2").value = response.publicationDate;
+                    document.getElementById("edition2").value = response.resultInfo.data.edition;
+                    document.getElementById("documentType2").value = response.resultInfo.data.documentType;
+                    document.getElementById("bookNum2").value = response.resultInfo.data.bookNum;
+                    document.getElementById("categoryName2").value = response.resultInfo.data.categoryName;
                     var catevalue = document.getElementById("categoryName2").value;
-                    document.getElementById("isbn2").value = response.data.ISBN;
-                    document.getElementById("publisher2").value = response.data.publisher;
-                    document.getElementById("supplier2").value = response.data.supplier;
-                    document.getElementById("price2").value = response.data.price;
+                    document.getElementById("isbn2").value = response.resultInfo.data.isbn;
+                    document.getElementById("publisher2").value = response.resultInfo.data.publisher;
+                    document.getElementById("supplier2").value = response.resultInfo.data.supplier;
+                    document.getElementById("price2").value = response.resultInfo.data.price;
 
                     if(response.resultInfo.data.categoryName){
                         var categoryIndex = response.categoryIndex;
                         $('#categoryName2').prop('selectedIndex' , categoryIndex);
-                        $('#categoryName2').prop('disabled' , true);
+                        $('#categoryName2').prop('disabled' , false);
                     }
                     else{
                         $('#categoryName2').prop('selectedIndex' , 0);
@@ -860,8 +861,9 @@
                     }
                     // 显示弹框
                     // modal1.style.display = "block";
+                    alert(response.resultInfo.errorMsg);
                 } else {
-                    alert("无法获取书目信息！");
+                    alert(response.resultInfo.errorMsg);
                 }
             },
             error: function(xhr, status, error) {
@@ -875,19 +877,14 @@
         var submitForm2 = document.getElementById("submitForm2");
 
         // 提交表单2时验证
-        submitForm2.onclick = function () {
+        confirmButton2.onclick = function () {
 
             // 弹出确认框
             var confirmSubmit = confirm("是否确定提交？");
             if (confirmSubmit) {
 
-                var formData=$('#bookForm_edit').serialize();
-                var extraData = {
-                    currencyID: '<%= 1 %>',
-                    orderPerson: '',
-                };
-                var extraDataStr = $.param(extraData);
-                formData += '&' + extraDataStr;
+                var formData=$('#bookForm_edit2').serialize();
+
                 // console.log("即将开始Ajax");
                 // console.log(formData );
                 // 使用 AJAX 发送数据到后端
@@ -903,7 +900,7 @@
                             $('#myModal').hide();  // 关闭弹窗
                             location.reload(true);  // 刷新页面，显示新数据
                         } else {
-                            alert("提交失败，错误信息: " + response.resultInfo.message);
+                            alert("提交失败，错误信息: " + response.resultInfo.errorMsg);
                         }
                     },
                     error: function(xhr, status, error) {

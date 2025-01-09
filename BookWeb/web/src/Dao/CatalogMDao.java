@@ -47,7 +47,7 @@ class CatalogMDao
                 cataloglist.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
                 cataloglist.setCategoryName(rs.getString("categoryName"));
                 cataloglist.setAuthor(rs.getString("author"));
-
+                cataloglist.setBookNum(rs.getInt("bookNum"));
             }
             dao.AllClose();
             return cataloglist; // 返回找到的编目号
@@ -77,8 +77,9 @@ class CatalogMDao
 
             if (rs.next()) {
                 // 如果存在，更新 bookNum
+                int bookNum = rs.getInt("bookNum");
                 PreparedStatement updatePs = dao.conn.prepareStatement(updateSql);
-                updatePs.setInt(1, cataloglist.getBookNum());
+                updatePs.setInt(1, cataloglist.getBookNum() + bookNum);
                 updatePs.setString(2, cataloglist.getBookID());
                 int rowsAffected = updatePs.executeUpdate();
                 dao.AllClose();
@@ -203,13 +204,13 @@ class CatalogMDao
 
     public boolean updateCataloglist(Cataloglist cataloglist) {
         Dao dao = new Dao();
-        String sql = "UPDATE library.bookman SET " +
-                "bookID = ?, documentType = ? " +
+        String sql = "UPDATE library.cataloglist SET " +
+                "bookID = ?, categoryName = ? " +
                 "WHERE ISBN = ?";
         try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
 
             ps.setString(1, cataloglist.getBookID());
-            ps.setString(2, cataloglist.getDocumentType().getDescription());
+            ps.setString(2, cataloglist.getCategoryName());
             ps.setString(3, cataloglist.getISBN());
 
             int result = ps.executeUpdate();

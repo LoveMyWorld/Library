@@ -238,6 +238,7 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         String edition = request.getParameter("edition");
         String supplier = request.getParameter("supplier");
         String currencyID = request.getParameter("currencyID");
+        if(currencyID == null || currencyID.equals("")){currencyID="0";}
         String price = request.getParameter("price");
         String bookNum = request.getParameter("bookNum");
         String documentType = request.getParameter("documentType");
@@ -250,7 +251,7 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         String bookID = categoryName + ISBN;
 
         // 创建 Cataloglist 对象
-        Cataloglist newCataloglist = new Cataloglist(bookID,title,author,ISBN, LocalDate.parse(publicationDate),publisher,edition,supplier, Integer.parseInt(currencyID),Double.valueOf(price),orderPerson, Integer.parseInt(bookNum),DocumentType.fromDescription(documentType),categoryName);
+        Cataloglist newCataloglist = new Cataloglist(bookID,title,author,ISBN, LocalDate.parse(publicationDate),publisher,edition,supplier, Integer.parseInt(currencyID),Double.valueOf(price),orderPerson, Integer.parseInt(bookNum),DocumentType.valueOf(documentType),precategoryName);
         // 使用 CataloglistDao 保存数据
         CatalogMDao cataloglistDao = new CatalogMDao();
         boolean success = cataloglistDao.updateCataloglist(newCataloglist);
@@ -263,6 +264,13 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
             HashMap<String,Object> map = new HashMap<>();
             map.put("resultInfo",resultInfo);
             map.put("BianmuBookID", bookID);
+            // 格式化 LocalDate 为 "yyyy-MM-dd"
+            String formattedDate = newCataloglist.getPublicationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            // 更新 JSON 中的 publicationDate 字段
+            map.put("publicationDate", formattedDate);
+            // 对应中图分类表
+            map.put("categoryIndex", ZhongTu.strToidx(newCataloglist.getCategoryName()));
+
 
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(map);
@@ -272,7 +280,23 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
             writer.flush();
             writer.close();
         } else {
-            response.getWriter().write("Failed");
+            ResultInfo resultInfo = new ResultInfo();
+            resultInfo.setFlag(false);
+            resultInfo.setErrorMsg("修改成功！");
+
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("resultInfo",resultInfo);
+            // 对应中图分类表
+            map.put("categoryIndex", ZhongTu.strToidx(newCataloglist.getCategoryName()));
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(map);
+
+            Writer writer = response.getWriter();
+            writer.write(json);
+            writer.flush();
+            writer.close();
         }
     }
     
@@ -283,6 +307,10 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
         // 获取传递的 isbn 参数
         String ISBN = request.getParameter("ISBN");
+        ResultInfo resultInfo = new ResultInfo();
+
+        HashMap<String,Object> map = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         if (ISBN != null && !ISBN.isEmpty()) {
             // 通过 isbn 从数据库中查询该读者的详细信息
@@ -291,41 +319,32 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
             // 如果找到该读者的信息，返回成功的 JSON 响应
             if (cataloglist != null) {
-                // 创建一个包含读者详细信息的 JSON 对象
-                JSONObject jsonResponse = new JSONObject();
-                jsonResponse.put("success", true);
-                jsonResponse.put("data", new JSONObject()
-                        .put("bookID", cataloglist.getBookID())
-                        .put("title", cataloglist.getTitle())
-                        .put("author", cataloglist.getAuthor())
-                        .put("ISBN", cataloglist.getISBN())
-                        .put("publicationDate", cataloglist.getPublicationDate())
-                        .put("publisher", cataloglist.getPublisher())
-                        .put("edition", cataloglist.getEdition())
-                        .put("supplier", cataloglist.getSupplier())
-                        .put("currencyID", cataloglist.getCurrencyID())
-                        .put("price", cataloglist.getPrice())
-                        .put("bookNum", cataloglist.getBookNum())
-                        .put("documentType", cataloglist.getDocumentType().getDescription())
-                        .put("catagoryName",cataloglist.getCategoryName())
-                        .put("orderPerson", cataloglist.getOrderPerson()));
-
-                // 返回响应
-                response.getWriter().write(jsonResponse.toString());
+                resultInfo.setFlag(true);
+                resultInfo.setData(cataloglist);
+                resultInfo.setErrorMsg("查询成功");
+                map.put("selectIndex" , ZhongTu.strToidx(cataloglist.getCategoryName()));
+                map.put("bookID", cataloglist.getBookID());
+                String formattedDate = cataloglist.getPublicationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                map.put("publicationDate", formattedDate);
             } else {
-                // 如果没有找到该读者信息，返回错误的 JSON 响应
-                JSONObject jsonResponse = new JSONObject();
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "未找到该书目信息");
-                response.getWriter().write(jsonResponse.toString());
+                resultInfo.setFlag(false);
+                resultInfo.setData(cataloglist);
+                resultInfo.setErrorMsg("查询失败，数据库有误");
             }
         } else {
-            // 如果没有传递 cataloglistID，返回错误的 JSON 响应
-            JSONObject jsonResponse = new JSONObject();
-            jsonResponse.put("success", false);
-            jsonResponse.put("message", "缺少ISBN");
-            response.getWriter().write(jsonResponse.toString());
+            resultInfo.setFlag(false);
+            resultInfo.setData(null);
+            resultInfo.setErrorMsg("传参失败，服务器异常，请重试");
         }
+
+
+        map.put("resultInfo", resultInfo);
+        String json = objectMapper.writeValueAsString(map);
+        PrintWriter out = response.getWriter();
+        out.print(json);
+        out.flush();
+        out.close();
+
     }
     
     
