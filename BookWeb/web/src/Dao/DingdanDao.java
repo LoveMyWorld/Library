@@ -106,8 +106,8 @@ public class DingdanDao {
 
     public boolean addDingdan1(Dingdan dingdan) {
         Dao dao = new Dao();
-        String sql = "INSERT INTO library.dingdan (orderName, supplier, title, publisher, orderPerson,  ISBN, documentType, currencyID, price,edition,printingHouse,author,isBianmu) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
+        String sql = "INSERT INTO library.dingdan (orderName, supplier, title, publisher, orderPerson,  ISBN, documentType, currencyID, price,edition,printingHouse,author) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try (
                 PreparedStatement ps = dao.conn.prepareStatement(sql)) {
             ps.setString(1, dingdan.getOrderName());
@@ -125,7 +125,7 @@ public class DingdanDao {
 
 
             ps.setString(12,dingdan.getAuthor());
-            ps.setBoolean(13,dingdan.isBianmu());
+//            ps.setBoolean(13,dingdan.isBianmu());
 
 
 

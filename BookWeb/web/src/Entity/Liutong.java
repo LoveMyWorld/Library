@@ -13,30 +13,12 @@ public class Liutong {
     private String supplier;//书商
     private int currencyID; // 币种编码
     private double price; // 定价
-    private String orderPerson; // 订购人
-    private String receiver; // 验收人
+//    private String orderPerson; // 订购人
+//    private String receiver; // 验收人
     private int bookNum; // 征订册数
     private DocumentType documentType;//文献类型
     private String categoryName;
     public Liutong(){};
-
-    public Liutong(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, String orderPerson, String receiver, int bookNum, DocumentType documentType, String categoryName) {
-        this.bookID = bookID;
-        this.title = title;
-        this.author = author;
-        this.ISBN = ISBN;
-        this.publicationDate = publicationDate;
-        this.publisher = publisher;
-        this.edition = edition;
-        this.supplier = supplier;
-        this.currencyID = currencyID;
-        this.price = price;
-        this.orderPerson = orderPerson;
-        this.receiver = receiver;
-        this.bookNum = bookNum;
-        this.documentType = documentType;
-        this.categoryName = categoryName;
-    }
 
     public String getBookID() {
         return bookID;
@@ -70,14 +52,6 @@ public class Liutong {
         this.ISBN = ISBN;
     }
 
-    public LocalDate getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDate publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
     public String getPublisher() {
         return publisher;
     }
@@ -102,14 +76,6 @@ public class Liutong {
         this.supplier = supplier;
     }
 
-    public int getCurrencyID() {
-        return currencyID;
-    }
-
-    public void setCurrencyID(int currencyID) {
-        this.currencyID = currencyID;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -118,28 +84,12 @@ public class Liutong {
         this.price = price;
     }
 
-    public String getOrderPerson() {
-        return orderPerson;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setOrderPerson(String orderPerson) {
-        this.orderPerson = orderPerson;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public int getBookNum() {
-        return bookNum;
-    }
-
-    public void setBookNum(int bookNum) {
-        this.bookNum = bookNum;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public DocumentType getDocumentType() {
@@ -150,11 +100,43 @@ public class Liutong {
         this.documentType = documentType;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public int getBookNum() {
+        return bookNum;
     }
 
-    public void setCategoryName(String categoryName) {
+    public void setBookNum(int bookNum) {
+        this.bookNum = bookNum;
+    }
+
+    public int getCurrencyID() {
+        return currencyID;
+    }
+
+    public void setCurrencyID(int currencyID) {
+        this.currencyID = currencyID;
+    }
+
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public Liutong(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String edition, String publisher, String supplier, int currencyID, double price, DocumentType documentType, int bookNum, String categoryName) {
+        this.bookID = bookID;
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.publicationDate = publicationDate;
+        this.edition = edition;
+        this.publisher = publisher;
+        this.supplier = supplier;
+        this.currencyID = currencyID;
+        this.price = price;
+        this.documentType = documentType;
+        this.bookNum = bookNum;
         this.categoryName = categoryName;
     }
 }
