@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
-@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"  ,"/lookBookForm"}) public class CatalogMServlet extends HttpServlet {
+@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"  ,"/lookBookForm","/editBookForm"}) public class CatalogMServlet extends HttpServlet {
 //    static final int PAGE_SIZE = 16;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

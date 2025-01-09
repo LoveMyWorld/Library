@@ -1,5 +1,6 @@
-<%@ page import="Entity.Tongbao" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="Entity.WeiGui" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Entity.WeiGui" %><%--
 
 
 
@@ -343,7 +344,7 @@
         <a href="http://localhost:8080/Library_war_exploded/web_yuyue.jsp">预约借书</a>
         <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
         <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
-        <a href="${pageContext.request.contextPath}/UserTongbaoServlet">消息</a>
+        <a href="${pageContext.request.contextPath}/WeiguiServlet">违规通报</a>
         <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
     </div>
 </div>
@@ -355,7 +356,7 @@
     </div>
 </div>
 
-<form action="${pageContext.request.contextPath}/UserTongbaoServlet" method="get">
+<form action="${pageContext.request.contextPath}/WeiguiServlet" method="get">
     <div id="history-announcement" class="content-box" >
         <h4>通报列表</h4>
         <button type="submit" class="return-button">刷新</button>
@@ -364,25 +365,24 @@
             <thead>
             <tr>
                 <th>序号</th>
-                <th>发布人</th>
-                <th>主题</th>
-                <th>内容</th>
+                <th>违规人</th>
+                <th>违规内容</th>
+                
             </tr>
             </thead>
             <tbody>
             <!-- 假设这里用 Java 在后台动态填充数据 -->
 
             <%
-                List<Tongbao> announcementList= (List<Tongbao>) request.getAttribute("list");
-                if (announcementList != null) { // 判断数据是否为空
-                    for (Tongbao announcement : announcementList) {
+                List<WeiGui> weiguiList= (List<WeiGui>) request.getAttribute("list");
+                if (weiguiList != null) { // 判断数据是否为空
+                    for (WeiGui weigui : weiguiList) {
             %>
             <tr >
-                <td><%= announcement.getTongbaoID() %></td>
-                <td><%= announcement.getPublisher() %></td>
-                <td><%= announcement.getTongbaoKey() %></td>
+                <td><%= weigui.getWeiguiID() %></td>
+                <td><%= weigui.getName() %></td>
+                <td><%= weigui.getBadContent() %></td>
 
-                <td><%= announcement.getTongbaoText() %>
                 </td>
             </tr>
             <%

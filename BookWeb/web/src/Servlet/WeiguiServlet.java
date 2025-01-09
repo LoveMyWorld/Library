@@ -1,7 +1,9 @@
 package Servlet;
-import Entity.Tongbao;
+import Entity.WeiGui;
 
-import Service.UserTongbaoService;
+
+import Service.WeiguiService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,16 +13,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet (name = "UserTongbaoServlet" , value ="/UserTongbaoServlet" ) public class UserTongbaoServlet extends HttpServlet {
+@WebServlet (name = "WeiguiServlet" , value ="/WeiguiServlet" ) public class WeiguiServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         //获取数据
         //取最近的十条消息
 
-        UserTongbaoService historyAnnouncementService = new UserTongbaoService();
+        WeiguiService weiguiService = new WeiguiService();
 
-        List<Tongbao> list = historyAnnouncementService.getLastTenLines();
+        List<WeiGui> list = weiguiService.getLastTenLines();
 
 
         //将数据投送到表格中

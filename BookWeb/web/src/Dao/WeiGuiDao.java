@@ -1,8 +1,13 @@
 package Dao;
 
+import Entity.Gender;
+import Entity.WeiGui;
 import Entity.WeiGui;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeiGuiDao {
 
@@ -35,6 +40,47 @@ public class WeiGuiDao {
 //            return -1;
         }
         return rowsAffected;//被影响的行数
+    }
+
+    public List<WeiGui> getLastTenLines() {
+        String sql ="SELECT * FROM library.weigui\n" +
+                "ORDER BY    weiguiID DESC\n" +
+                "LIMIT 10";
+
+        Dao dao = new Dao();
+        List<WeiGui> dataList = new ArrayList<>();
+        try{
+            PreparedStatement ps =dao.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                WeiGui weigui = new WeiGui();
+                weigui.setWeiguiID(rs.getInt("weiguiID"));
+                weigui.setName(rs.getString("name"));
+                String t = rs.getString("gender");
+                weigui.setGender(Gender.fromDescription(t));
+                weigui.setReadID(rs.getString("readID"));
+                weigui.setBadContent(rs.getString("badContent"));
+
+
+
+
+                dataList.add(weigui);
+
+            }
+
+            dao.AllClose();
+            return dataList;
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 }
 

@@ -127,94 +127,19 @@
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="http://localhost:8080/web_Web_exploded/caifang/interview.jsp"'>采访管理</a>
-        <a href="#">编目管理</a>
-        <a href="#">流通管理</a>
-        <a href="#">用户管理</a>
-        <a href="#">系统维护</a>
-        <a href="#">期刊管理</a>
-
-        <a href="http://localhost:8080/web_Web_exploded/wangye/network.jsp">网页管理</a>
+        <a href="http://localhost:8080/web_Web_exploded/caifang/interview.jsp"  style="color: gray; pointer-events: none;">采访管理</a>
+        <a href="${pageContext.request.contextPath}/CatalogMServlet"  style="color: gray; pointer-events: none;">编目管理</a>
+        <a href="${pageContext.request.contextPath}/NetAppointmentServlet">流通管理</a>
+        <a href="${pageContext.request.contextPath}/ReaderServlet" style="color: gray; pointer-events: none;">用户管理</a>
+        <a href="${pageContext.request.contextPath}/weihu/backup0.jsp" style="color: gray; pointer-events: none;">系统维护</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/network.jsp" style="color: gray; pointer-events: none;">网页管理</a>
     </div>
 </div>
 <div class="container">
     <div class="system-title-box">
         图书馆管理员操作界面
     </div>
-<%--    <div class="content-box">--%>
-<%--        <div class="toolbar">--%>
-<%--            <div class="search">--%>
-<%--                <select id="search-type">--%>
-<%--                    <option value="bookname">书名</option>--%>
-<%--                    <option value="author">作者</option>--%>
-<%--                    <option value="isbn">ISBN</option>--%>
-<%--                </select>--%>
-<%--                <input type="text" id="search-input" placeholder="请输入搜索关键词...">--%>
-<%--            </div>--%>
-<%--        </div>--%>
 
-<%--        <!-- 采访管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>采访管理</h4>--%>
-<%--            <button onclick="location.href='caifang/interview.jsp'">添加采访记录</button>--%>
-<%--            <button onclick="location.href='caifang/interview.jsp'">查看采访记录</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 编目管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>编目管理</h4>--%>
-<%--            <button>添加编目</button>--%>
-<%--            <button>查看编目</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 流通管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>流通管理</h4>--%>
-<%--            <button>借阅图书</button>--%>
-<%--            <button>归还图书</button>--%>
-<%--            <button>查询流通记录</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 用户管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>用户管理</h4>--%>
-<%--            <button>查看用户列表</button>--%>
-<%--            <button>修改用户信息</button>--%>
-<%--            <button>删除用户</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 系统维护 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>系统维护</h4>--%>
-<%--            <button>备份数据</button>--%>
-<%--            <button>恢复数据</button>--%>
-<%--            <button>清理缓存</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 期刊管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>期刊管理</h4>--%>
-<%--            <button>添加期刊</button>--%>
-<%--            <button>查看期刊</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 统计管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>统计管理</h4>--%>
-<%--            <button>查看借阅统计</button>--%>
-<%--            <button>查看期刊统计</button>--%>
-<%--            <button>查看用户活跃度统计</button>--%>
-<%--        </div>--%>
-
-<%--        <!-- 网页管理 -->--%>
-<%--        <div class="section-box">--%>
-<%--            <h4>网页管理</h4>--%>
-<%--            <button>更新首页内容</button>--%>
-<%--            <button>修改公告</button>--%>
-<%--            <button>修改网站设置</button>--%>
-<%--        </div>--%>
-
-<%--    </div>--%>
 </div>
 </body>
 </html>

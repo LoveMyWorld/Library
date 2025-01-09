@@ -33,7 +33,7 @@ public class ReaderLoginServlet extends HttpServlet {
         if (ok.equals("true")) {
             HttpSession session = request.getSession();
             session.setAttribute("reader", user);
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("wangyeyonghu/userweb.jsp").forward(request, response);
         } else {
             request.setAttribute("login_ret", ok);
             response.getWriter().write(ok);

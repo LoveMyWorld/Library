@@ -1,17 +1,9 @@
-<%@ page import="Entity.Announcement" %>
-
-
-<%@ page import="java.util.List" %>
-<%@ page import="Entity.Message" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-
-
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>管理员网络管理界面</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>图书馆管理员操作界面</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,7 +74,6 @@
             width: 100%;
             margin-left: 1%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
         }
         .toolbar {
             display: flex;
@@ -130,101 +121,25 @@
         .section-box button:hover {
             background-color: #2980b9;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse; /* 合并边框 */
-        }
-        th, td {
-            border: 1px solid #ccc; /* 设置边框颜色 */
-            padding: 8px; /* 设置单元格内边距 */
-            text-align: left; /* 文本左对齐 */
-        }
-        th {
-            background-color: #f4f4f4; /* 表头背景颜色 */
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9; /* 偶数行背景颜色 */
-        }
-        tr:hover {
-            background-color: #fffbcc; /* 鼠标悬停时的背景颜色 */
-        }
-
-        .return-button {
-            padding: 10px 15px;
-            margin-top: 20px;
-            border: none;
-            background-color: #3498db;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-family: '楷体';
-        }
-        .return-button:hover {
-            background-color: #2980b9;
-        }
-
-
     </style>
 </head>
 <body>
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
-        <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb5.jsp">返回</a>
+        <a href="http://localhost:8080/web_Web_exploded/caifang/interview.jsp"  style="color: gray; pointer-events: none;">采访管理</a>
+        <a href="${pageContext.request.contextPath}/CatalogMServlet"  style="color: gray; pointer-events: none;">编目管理</a>
+        <a href="${pageContext.request.contextPath}/NetAppointmentServlet" style="color: gray; pointer-events: none;">流通管理</a>
+        <a href="${pageContext.request.contextPath}/ReaderServlet">用户管理</a>
+        <a href="${pageContext.request.contextPath}/weihu/backup0.jsp" style="color: gray; pointer-events: none;">系统维护</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/network.jsp" style="color: gray; pointer-events: none;">网页管理</a>
     </div>
 </div>
 <div class="container">
     <div class="system-title-box">
-        管理员网络管理界面
+        图书馆管理员操作界面
     </div>
 
-
-    <%--    发布公告--%>
-    <div class="content-box" id="announcement-form">
-        <h4>发布公告</h4>
-        <form action="${pageContext.request.contextPath}/AnnouncementServlet" method="get">
-            <div class="form-group" style="display: flex; align-items: center;">
-                <div style="margin-right: 10px;">
-                    <label for="publisher">发布人</label>
-                    <input name="publisher" type="text" id="publisher" value="${sessionScope.username}" style="width: 150px;">
-                </div>
-                <div>
-                    <label for="publishDate">发布日期</label>
-                    <input name="announcementDate" type="date" id="publishDate" style="width: 150px;">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="announcementTitle">公告主题</label>
-                <input name="announcementKey" type="text" id="announcementTitle">
-            </div>
-            <div class="form-group">
-                <label for="announcementContent">公告内容</label>
-                <textarea name="announcementText" id="announcementContent" rows="5"></textarea>
-            </div>
-            <button type="submit" class="return-button">发布</button>
-        </form>
-        <!-- 添加历史公告按钮 -->
-
-    </div>
-
-
+</div>
+</body>
 </html>

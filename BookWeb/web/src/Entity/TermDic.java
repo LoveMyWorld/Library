@@ -7,7 +7,7 @@ public class TermDic {
     public TermDic() {
     }
 
-    public TermDic(String def, String term) {
+    public TermDic(String term, String def) {
         this.def = def;
         this.term = term;
     }

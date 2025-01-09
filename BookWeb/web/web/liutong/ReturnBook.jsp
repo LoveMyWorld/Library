@@ -421,6 +421,7 @@
         <%--        <a  onclick="location.href='${pageContext.request.contextPath}/BorrowBookServlet'">借书</a>--%>
         <a href="${pageContext.request.contextPath}/QuickBorrowServlet">借书</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/ReturnBookServlet'">还书</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb2.jsp">返回</a>
         <%--        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">罚款</a>--%>
     </div>
 

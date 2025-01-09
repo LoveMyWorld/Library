@@ -351,6 +351,7 @@
         <a onclick="location.href='${pageContext.request.contextPath}/CollectionServlet'">收藏单位字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/PrinteryServlet'">印刷厂字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/TermDicServlet'">术语字典</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb3.jsp">返回</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->
