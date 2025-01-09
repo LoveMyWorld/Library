@@ -1,5 +1,7 @@
 package Servlet.Catalog;
 
+import Dao.CatalogMDao;
+import Entity.Cataloglist;
 import Entity.Cataloglist;
 import Entity.DocumentType;
 import Entity.ResultInfo;
@@ -8,9 +10,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,6 +36,12 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         switch (path) {
             case "/initBookForm":
                 processCatalogInfo(request, response);
+                break;
+            case "/editBookForm":
+                editCatalogInfo(request, response);
+                break;
+            case "/lookBookForm":
+                lookCatalogInfo(request, response);
                 break;
             case "/CatalogMServlet":
                 String page = request.getParameter("currentPage");
@@ -172,6 +183,111 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         out.close();
     }
 
+    public void editCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        // 从请求中获取参数
+        String title = request.getParameter("title");
+        String author = request.getParameter("author");
+        String ISBN = request.getParameter("isbn");
+        String publicationDate = request.getParameter("publicationDate");
+        String publisher = request.getParameter("publisher");
+        String edition = request.getParameter("edition");
+        String supplier = request.getParameter("supplier");
+        String currencyID = request.getParameter("currencyID");
+        String price = request.getParameter("price");
+        String bookNum = request.getParameter("bookNum");
+        String documentType = request.getParameter("documentType");
+//        String categoryName = request.getParameter("categoryName");
+        String orderPerson = request.getParameter("orderPerson");
+
+        String precategoryName = request.getParameter("categoryName");
+        //只取前面的几位
+        String categoryName = precategoryName.replaceAll("[^A-Za-z0-9]", "");
+        String bookID = categoryName + ISBN;
+
+        // 创建 Cataloglist 对象
+        Cataloglist newCataloglist = new Cataloglist(bookID,title,author,ISBN, LocalDate.parse(publicationDate),publisher,edition,supplier, Integer.parseInt(currencyID),Double.valueOf(price),orderPerson, Integer.parseInt(bookNum),DocumentType.fromDescription(documentType),categoryName);
+        // 使用 CataloglistDao 保存数据
+        CatalogMDao cataloglistDao = new CatalogMDao();
+        boolean success = cataloglistDao.updateCataloglist(newCataloglist);
+
+        if (success) {
+            ResultInfo resultInfo = new ResultInfo();
+            resultInfo.setFlag(true);
+            resultInfo.setErrorMsg("修改成功！");
+            resultInfo.setData(newCataloglist);
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("resultInfo",resultInfo);
+            map.put("BianmuBookID", bookID);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(map);
+
+            Writer writer = response.getWriter();
+            writer.write(json);
+            writer.flush();
+            writer.close();
+        } else {
+            response.getWriter().write("Failed");
+        }
+    }
+    
+    public void lookCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 设置响应的编码格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 获取传递的 isbn 参数
+        String ISBN = request.getParameter("ISBN");
+
+        if (ISBN != null && !ISBN.isEmpty()) {
+            // 通过 isbn 从数据库中查询该读者的详细信息
+            CatalogMDao catalogMDao = new CatalogMDao();
+            Cataloglist cataloglist = catalogMDao.findDataByISBN(ISBN);
+
+            // 如果找到该读者的信息，返回成功的 JSON 响应
+            if (cataloglist != null) {
+                // 创建一个包含读者详细信息的 JSON 对象
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("success", true);
+                jsonResponse.put("data", new JSONObject()
+                        .put("bookID", cataloglist.getBookID())
+                        .put("title", cataloglist.getTitle())
+                        .put("author", cataloglist.getAuthor())
+                        .put("ISBN", cataloglist.getISBN())
+                        .put("publicationDate", cataloglist.getPublicationDate())
+                        .put("publisher", cataloglist.getPublisher())
+                        .put("edition", cataloglist.getEdition())
+                        .put("supplier", cataloglist.getSupplier())
+                        .put("currencyID", cataloglist.getCurrencyID())
+                        .put("price", cataloglist.getPrice())
+                        .put("bookNum", cataloglist.getBookNum())
+                        .put("documentType", cataloglist.getDocumentType().getDescription())
+                        .put("catagoryName",cataloglist.getCategoryName())
+                        .put("orderPerson", cataloglist.getOrderPerson()));
+
+                // 返回响应
+                response.getWriter().write(jsonResponse.toString());
+            } else {
+                // 如果没有找到该读者信息，返回错误的 JSON 响应
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "未找到该书目信息");
+                response.getWriter().write(jsonResponse.toString());
+            }
+        } else {
+            // 如果没有传递 cataloglistID，返回错误的 JSON 响应
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "缺少ISBN");
+            response.getWriter().write(jsonResponse.toString());
+        }
+    }
+    
+    
     public void changePage(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException{
         // 分页处理
         CatalogMService catalogMService = new CatalogMService();

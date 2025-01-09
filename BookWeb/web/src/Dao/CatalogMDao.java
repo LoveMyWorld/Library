@@ -1,5 +1,6 @@
 package Dao;
 
+import Entity.Bookman;
 import Entity.Cataloglist;
 import Entity.DocumentType;
 import Entity.Yanshou;
@@ -196,6 +197,25 @@ class CatalogMDao
             return dataList; // 返回查询结果
         } catch (SQLException e) {
             throw new RuntimeException("查询数据失败", e);
+        }
+    }
+
+    public boolean updateCataloglist(Cataloglist cataloglist) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.bookman SET " +
+                "bookID = ?, documentType = ? " +
+                "WHERE ISBN = ?";
+        try (PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+
+            ps.setString(1, cataloglist.getBookID());
+            ps.setString(2, cataloglist.getDocumentType().getDescription());
+            ps.setString(3, cataloglist.getISBN());
+
+            int result = ps.executeUpdate();
+            dao.AllClose();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("修改书目信息数据失败", e);
         }
     }
 }

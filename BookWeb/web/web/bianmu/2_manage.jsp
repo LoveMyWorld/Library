@@ -174,6 +174,7 @@
             border-radius: 5px;
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
         .search {
             padding: 0px 7px 0px 0px;
@@ -404,12 +405,12 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>书名</th>
                 <th>ISBN</th>
                 <th>作者</th>
                 <th>出版社</th>
-                <th>操作</th>
+                <th style="width: 30px;">操作</th>
 
             </tr>
             </thead>
@@ -428,10 +429,14 @@
                 <td><%= catalog.getISBN() %></td>
                 <td><%= catalog.getAuthor() %></td>
                 <td><%= catalog.getPublisher() %></td>
-                <td><button>
-                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                    <div class="tooltip">编辑</div>
-                </button></td>
+                <td>
+                    <div class="tools">
+                        <button id="editButton">
+                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
+                            <div class="tooltip">编辑</div>
+                        </button>
+                    </div>
+                </td>
             </tr>
             <%
                     }
@@ -517,6 +522,66 @@
     </div>
 </div>
 
+<%--编辑框--%>
+<div id="myModal2" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            书籍编目
+            <span class="close" id="closeModal2">&times;</span>
+        </div>
+        <form id="bookForm_edit" action="" method="get">
+            <table class="modal-table">
+                <tr>
+                    <th>图书编号</th>
+                    <td><input type="text" id="bookID2" name="bookID" readonly ></td>
+                    <th>书名</th>
+                    <td><input type="text" id="title2" name="title" readonly ></td>
+                </tr>
+                <tr>
+                    <th>作者</th>
+                    <td><input type="text" id="author2" name="author" readonly ></td>
+                    <th>出版日期</th>
+                    <td><input type="text" id="publicationDate2" name="publicationDate" readonly ></td>
+                </tr>
+                <tr>
+                    <th>版次</th>
+                    <td><input type="text" id="edition2" name="edition" readonly ></td>
+                    <th>文献类型</th>
+                    <td><input type="text" id="documentType2" name="documentType" readonly ></td>
+                    <%--                    <th>币种编号</th>--%>
+                    <%--                    <td><input type="text" id="currencyCode"></td>--%>
+                </tr>
+                <tr>
+                    <th>册数</th>
+                    <td><input type="text" id="bookNum2" name="bookNum" readonly ></td>
+                    <th>图书分类号</th>
+                    <td><select id="categoryName2" name="categoryName">
+                        <option value="A 马克思主义、列宁主义、毛泽东思想、邓小平理论">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
+                        <option value="A1 马克思、恩格斯著作">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
+                        <option value="A11 选集、文集">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
+                        <option value="A12 单行著作">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
+
+                    </select></td>
+                </tr>
+                <tr>
+                    <th>ISBN</th>
+                    <td><input type="text" id="isbn2" name="isbn" readonly ></td>
+                    <th>出版社</th>
+                    <td><input type="text" id="publisher2" name="publisher" readonly ></td>
+                </tr>
+                <tr>
+                    <th>书商</th>
+                    <td><input type="text" id="supplier2" name="supplier" readonly ></td>
+                    <th>定价</th>
+                    <td><input type="text" id="price2" name="price" readonly ></td>
+                </tr>
+
+            </table>
+            <button type="button" id="confirmButton2" name="confirmButton">确定</button>
+        </form>
+    </div>
+</div>
+
 
 
 <script>
@@ -530,6 +595,12 @@
         var closeSuccessModal = document.getElementById("closeSuccessModal");
 
 
+        // 获取模态框元素
+        var modal2 = document.getElementById("myModal2");
+        var closeModal2 = document.getElementById("closeModal2");
+        // 获取所有的“编辑”按钮
+        var editButtons = document.querySelectorAll("#editButton");
+
         // 打开模态框
         addButton.onclick = function () {
             modal.style.display = "block";
@@ -537,15 +608,32 @@
             fetchInitData();  // 获取并展示现有数据
         }
 
+        editButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                modal2.style.display = "block";
+                // 获取点击按钮所在行的读者信息
+                var ISBN = event.target.closest("tr").querySelector("td:nth-child(3)").innerText;
+
+                // 发送请求获取该读者的详细信息
+                fetchCataloglistDetails(ISBN);
+            });
+        });
+
         // 关闭模态框
         closeModal.onclick = function () {
             modal.style.display = "none";
+        }
+        closeModal2.onclick = function () {
+            modal2.style.display = "none";
         }
 
         // 点击模态框外部关闭模态框
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+            if (event.target == modal2) {
+                modal2.style.display = "none";
             }
         }
 
@@ -692,6 +780,8 @@
                 }
             });
         }
+
+
         // 关闭成功提示框
         closeSuccessModal.onclick = function () {
             successModal.style.display = "none";
@@ -701,6 +791,90 @@
             $('#myModal').hide();
         });
     });
+
+    // 获取并填充读者详细信息
+    function fetchCataloglistDetails(ISBN) {
+        // 假设我们通过后端接口 `/lookBookForm` 获取数据
+        $.ajax({
+            url: '${pageContext.request.contextPath}/lookBookForm', // 你的后端接口
+            method: 'GET',
+            data: { ISBN: ISBN}, // 发送读者编号（或其他唯一标识符）到后端
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    document.getElementById("bookID2").value = response.data.bookID;
+                    document.getElementById("title2").value = response.data.title;
+                    document.getElementById("author2").value = response.data.author;
+                    document.getElementById("publicationDate2").value = response.data.publicationDate;
+                    document.getElementById("edition2").value = response.data.edition;
+                    document.getElementById("documentType2").value = response.data.documentType;
+                    document.getElementById("bookNum2").value = response.data.bookNum;
+                    document.getElementById("categoryName2").value = response.data.categoryName;
+                    document.getElementById("isbn2").value = response.data.ISBN;
+                    document.getElementById("publisher2").value = response.data.publisher;
+                    document.getElementById("supplier2").value = response.data.supplier;
+                    document.getElementById("price2").value = response.data.price;
+
+                    // 显示弹框
+                    // modal1.style.display = "block";
+                } else {
+                    alert("无法获取书目信息！");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("获取书目信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 获取模态框元素
+        var submitForm2 = document.getElementById("submitForm2");
+
+        // 提交表单2时验证
+        submitForm2.onclick = function () {
+
+            // 弹出确认框
+            var confirmSubmit = confirm("是否确定提交？");
+            if (confirmSubmit) {
+
+                var formData=$('#bookForm_edit').serialize();
+                var extraData = {
+                    currencyID: '<%= 1 %>',
+                    orderPerson: '',
+                };
+                var extraDataStr = $.param(extraData);
+                formData += '&' + extraDataStr;
+                // console.log("即将开始Ajax");
+                // console.log(formData );
+                // 使用 AJAX 发送数据到后端
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/editBookForm',  // 后端接口，用于提交数据
+                    method: 'POST',
+                    data: formData,  // 发送的表单数据
+                    dataType: 'json',  // 期待返回的数据格式
+                    success: function(response) {
+                        if (response.resultInfo.flag) {
+                            var BianmuBookID=response.BianmuBookID;
+                            alert("修改成功,图书编号为："+BianmuBookID);
+                            $('#myModal').hide();  // 关闭弹窗
+                            location.reload(true);  // 刷新页面，显示新数据
+                        } else {
+                            alert("提交失败，错误信息: " + response.resultInfo.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+                    }
+                });
+
+            } else {
+                // 如果用户点击"否"，则不提交
+                alert("提交已取消！");
+            }
+        }
+    });
+
 </script>
 
 </body>
