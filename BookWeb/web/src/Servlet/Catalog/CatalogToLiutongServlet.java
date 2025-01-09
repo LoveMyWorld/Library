@@ -37,9 +37,9 @@ public class CatalogToLiutongServlet extends HttpServlet {
         int success = performExportOperation();
         // 创建 ResultInfo 对象并设置响应内容
         ResultInfo resultInfo = new ResultInfo();
-        resultInfo.setFlag(success == 3); // 假设 msg 为 4 表示成功
+        resultInfo.setFlag(success == 3); // 假设 msg 为 3 表示成功
         if (resultInfo.isFlag()) {
-            resultInfo.setErrorMsg("审核成功");
+//            resultInfo.setErrorMsg("审核成功");
         } else {
             if(success==1){
                 resultInfo.setErrorMsg("编目清单无内容,无需导出");
@@ -73,9 +73,13 @@ public class CatalogToLiutongServlet extends HttpServlet {
             Liutong liutong = new Liutong();
             //先看有没有这个图书编号,如果有，就结束啦
 
-            int effect=-liutongDao.UpdateByBookID(catalog.getBookID(), catalog.getBookNum());
+            int effect=liutongDao.UpdateByBookID(catalog.getBookID(), catalog.getBookNum());
             if(effect>0){//影响大于一行
                ;
+               //删去此条编目清单,通过bookID
+                
+
+
             }
             else{
                 liutong.setBookID(catalog.getBookID());
@@ -91,7 +95,7 @@ public class CatalogToLiutongServlet extends HttpServlet {
                 liutong.setISBN(catalog.getISBN());
                 liutong.setSupplier(catalog.getSupplier());
                 liutong.setOrderPerson(catalog.getOrderPerson());
-
+                liutong.setOrderPerson(catalog.getOrderPerson());
                 // 插入 Liutong 到 liutonglist 表
                 int result = liutongDao.insertIntoLiutongList(liutong);
                 if (result <= 0) {
@@ -99,6 +103,8 @@ public class CatalogToLiutongServlet extends HttpServlet {
                     // 如果插入流通库表失败
 
                 }
+                //删除此条编目清单
+
 
             }
         }

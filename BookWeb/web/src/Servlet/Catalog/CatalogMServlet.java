@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
-@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"}) public class CatalogMServlet extends HttpServlet {
+@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"  ,"/lookBookForm"}) public class CatalogMServlet extends HttpServlet {
 //    static final int PAGE_SIZE = 16;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -130,10 +130,11 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         }
 
     }
-    @Override protected void doPost (HttpServletRequest request, HttpServletResponse response) throws
+    @Override
+    protected void doPost (HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException
     {
-//            doGet(request, response);
+            doGet(request, response);
     }
     public void processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

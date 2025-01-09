@@ -292,7 +292,7 @@ public class LiutongDao {
     }
     public int insertIntoLiutongList(Liutong liutong) {
         Dao dao = new Dao();
-        String sql = "INSERT INTO library.liutonglist (bookID, supplier, title, publisher,  ISBN, documentType, price, edition, publicationDate, categoryName, author, bookNum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO library.liutonglist (bookID, supplier, title, publisher,  ISBN, documentType, price, edition, publicationDate, categoryName, author, bookNum) VALUES (  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int rowsAffected = 0; // 用于存储受影响的行数
 
         try {
