@@ -134,7 +134,136 @@ public class LiutongDao {
         } catch (SQLException e) {
             throw new RuntimeException("查询数据失败", e);
         }   
-        
-        
+
     }
+
+    //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
+    public int subOneBookNuminLiutongList(String bookID) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.liutonglist SET bookNum = bookNum - 1 WHERE bookID = ? AND bookNum > 0";
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行更新操作
+            int rowsAffected = ps.executeUpdate();
+
+            // 关闭资源
+            dao.AllClose();
+
+            // 如果影响的行数大于0，表示更新成功
+            return rowsAffected > 0 ? 1 : 0;
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("更新数据失败", e);
+        }
+    }
+    //找一条记录,通过bookID找到library.liutonglist中的bookNum表项
+    public int FindBookNumByBookID(String bookID) {
+        Dao dao = new Dao();
+        String sql = "SELECT bookNum FROM library.liutonglist WHERE bookID = ? LIMIT 1";
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行查询操作
+            ResultSet rs = ps.executeQuery();
+
+            // 检查结果集是否有数据
+            while (rs.next()) {
+                // 如果有数据，返回 bookNum 的值
+                int bookNum = rs.getInt("bookNum");
+                // 关闭资源
+                dao.AllClose();
+                return bookNum;
+            }
+            dao.AllClose();
+            return 0;
+
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("查找数据失败", e);
+        }
+    }
+    public Liutong FindLiutongByBookID(String bookID) {
+        Dao dao = new Dao();
+        String sql = "SELECT * FROM library.liutonglist WHERE bookID = ? LIMIT 1";
+        Liutong liutong =null;
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行查询操作
+            ResultSet rs = ps.executeQuery();
+
+            // 检查结果集是否有数据
+            while (rs.next()) {
+                liutong = new Liutong(); // 初始化 Liutong 对象
+                // 如果有数据，返回 bookNum 的值
+                liutong.setBookID(rs.getString("bookID"));
+                liutong.setSupplier(rs.getString("supplier"));                                // 书商
+                liutong.setTitle(rs.getString("title"));                                      // 书名
+                liutong.setPublisher(rs.getString("publisher"));                              // 出版社
+                //               liutong.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
+                // liutong.setReceiver(rs.getString("receiver"));                                // 验收人
+                liutong.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
+                String t = rs.getString("documentType");
+                liutong.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
+                liutong.setPrice(rs.getDouble("price"));                                      // 定价
+                liutong.setEdition(rs.getString("edition"));                                  // 版次
+                liutong.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
+                liutong.setCategoryName(rs.getString("categoryName"));
+                liutong.setAuthor(rs.getString("author"));
+                liutong.setBookNum(rs.getInt("bookNum"));
+                // 关闭资源
+                dao.AllClose();
+                return liutong;
+            }
+            dao.AllClose();
+            return null;
+
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("查找数据失败", e);
+        }
+    }
+
+    //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
+    public int addOneBookNuminLiutongList(String bookID) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.liutonglist SET bookNum = bookNum + 1 WHERE bookID = ? ";
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数，bookID 作为搜索条件
+            ps.setString(1, bookID);
+
+            // 执行更新操作
+            int rowsAffected = ps.executeUpdate();
+
+            // 关闭资源
+            dao.AllClose();
+
+            // 如果影响的行数大于0，表示更新成功
+            return rowsAffected > 0 ? 1 : 0;
+        } catch (SQLException e) {
+            // 如果发生 SQL 异常，抛出运行时异常
+            throw new RuntimeException("更新数据失败", e);
+        }
+    }
+
+
 }
