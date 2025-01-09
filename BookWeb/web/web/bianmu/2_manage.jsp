@@ -334,7 +334,7 @@
         <h3>冠军小队</h3>
         <a  onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet'">编目管理</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收清单</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">报损</a>
+        <a  onclick="location.href='${pageContext.request.contextPath}/DamageServlet'">报损</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->

@@ -214,4 +214,32 @@ try{
 
 }
 
+public Announcement getAnnouncementByID(int announcementID) {
+        String sql = "SELECT * FROM library.announcement WHERE announcementID = ?";
+        Dao dao = new Dao();
+        Announcement announcement = new Announcement();
+        try{
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setInt(1, announcementID);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                announcement.setAnnouncementID(rs.getInt("announcementID"));
+                announcement.setAnnouncementDate(rs.getObject("announcementDate",LocalDate.class));
+                announcement.setPublisher(rs.getString("publisher"));
+                announcement.setAnnouncementText(rs.getString("announcementText"));
+                announcement.setAnnouncementKey(rs.getString("announcementKey"));
+
+                dao.AllClose();
+
+            }
+
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    return announcement;
+
+    }
 }

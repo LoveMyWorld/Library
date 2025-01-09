@@ -1,13 +1,15 @@
 package Dao;
 
-import Entity.DocumentType;
-import Entity.Liutong;
+import Entity.*;
 
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LiutongDao {
     //通过ISBN找流通的书籍全部信息
@@ -32,8 +34,8 @@ public class LiutongDao {
                 liutong.setSupplier(rs.getString("supplier"));                                // 书商
                 liutong.setTitle(rs.getString("title"));                                      // 书名
                 liutong.setPublisher(rs.getString("publisher"));                              // 出版社
-              // liutong.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
-           //     liutong.setReceiver(rs.getString("receiver"));                                // 验收人
+//                liutong.setOrderPerson(rs.getString("orderPerson"));                          // 订购人
+//                liutong.setReceiver(rs.getString("receiver"));                                // 验收人
                 liutong.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 liutong.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
@@ -42,8 +44,6 @@ public class LiutongDao {
                 liutong.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
                 liutong.setCategoryName(rs.getString("categoryName"));
                 liutong.setAuthor(rs.getString("author"));
-                liutong.setBookNum(rs.getInt("bookNum"));
-                liutong.setBookID(rs.getString("bookID"));
 
             }
             dao.AllClose();
@@ -55,6 +55,88 @@ public class LiutongDao {
         }
         return null; // 如果没有找到对应的编目号，返回 null
     }
+
+
+    public List<Liutong> getAllLiutongs() {
+        Dao dao = new Dao();
+        List<Liutong> liutongList = new ArrayList<>();
+        String sql = "SELECT * FROM library.liutonglist"; // 表名是liutong
+        try (
+                PreparedStatement ps = dao.conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Liutong liutong = new Liutong();
+                liutong.setBookID(rs.getString("bookID"));
+                liutong.setTitle(rs.getString("title"));
+                liutong.setAuthor(rs.getString("author"));
+                liutong.setISBN(rs.getString("ISBN"));  
+                liutong.setPublicationDate(rs.getObject("publicationDate", LocalDate.class));
+                liutong.setPublisher(rs.getString("publisher"));
+                liutong.setEdition(rs.getString("edition"));
+                liutong.setSupplier(rs.getString("supplier"));
+                liutong.setCurrencyID(rs.getInt("currencyID") );
+                liutong.setPrice(rs.getDouble("price")   );
+                liutong.setBookNum(rs.getInt("bookNum"));
+                liutong.setDocumentType(DocumentType.fromDescription(rs.getString("documentType")));
+                liutong.setCategoryName(rs.getString("categoryName"));
+                
+                liutongList.add(liutong);
+            }
+
+            dao.AllClose();
+            return liutongList;
+        } catch (SQLException e) {
+            throw new RuntimeException("查询数据失败", e);
+        }
+    }
+
+    public List<Liutong> findLiutongsBySearch(String searchField, String searchValue) {
+        Dao dao = new Dao();
+        List<Liutong> liutongList = new ArrayList<>();
+        String sql = "";
+
+        // 根据 searchField 决定查询条件
+        if (searchField.equals("bookID")) {
+            sql = "SELECT * FROM library.liutonglist WHERE bookID LIKE ?";
+        } else if (searchField.equals("title")) {
+            sql = "SELECT * FROM library.liutonglist WHERE title LIKE ?";
+        } else if (searchField.equals("author")) {
+            sql = "SELECT * FROM library.liutonglist WHERE author LIKE ?";
+        }
+
+        try {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            ps.setString(1, "%" + searchValue + "%");  // 使用模糊匹配
+            ResultSet rs = ps.executeQuery();
+
+            // 遍历查询结果，构建 Liutong 对象列表
+            while (rs.next()) {
+                Liutong liutong = new Liutong();
+                liutong.setBookID(rs.getString("bookID"));
+                liutong.setTitle(rs.getString("title"));
+                liutong.setAuthor(rs.getString("author"));
+                liutong.setISBN(rs.getString("ISBN"));
+                liutong.setPublicationDate(rs.getObject("publicationDate", LocalDate.class));
+                liutong.setPublisher(rs.getString("publisher"));
+                liutong.setEdition(rs.getString("edition"));
+                liutong.setSupplier(rs.getString("supplier"));
+                liutong.setCurrencyID(rs.getInt("currencyID") );
+                liutong.setPrice(rs.getDouble("price")   );
+                liutong.setBookNum(rs.getInt("bookNum"));
+                liutong.setDocumentType(DocumentType.fromDescription(rs.getString("documentType")));
+                liutong.setCategoryName(rs.getString("categoryName"));
+                liutongList.add(liutong);
+            }
+
+            dao.AllClose();
+            return liutongList;
+        } catch (SQLException e) {
+            throw new RuntimeException("查询数据失败", e);
+        }   
+
+    }
+
     //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
     public int subOneBookNuminLiutongList(String bookID) {
         Dao dao = new Dao();
@@ -104,7 +186,7 @@ public class LiutongDao {
                 return bookNum;
             }
             dao.AllClose();
-               return 0;
+            return 0;
 
         } catch (SQLException e) {
             // 如果发生 SQL 异常，抛出运行时异常
@@ -133,8 +215,8 @@ public class LiutongDao {
                 liutong.setSupplier(rs.getString("supplier"));                                // 书商
                 liutong.setTitle(rs.getString("title"));                                      // 书名
                 liutong.setPublisher(rs.getString("publisher"));                              // 出版社
- //               liutong.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
-               // liutong.setReceiver(rs.getString("receiver"));                                // 验收人
+                //               liutong.setOrderPerson(rs.getString("orderPerson"));                          // 编目人
+                // liutong.setReceiver(rs.getString("receiver"));                                // 验收人
                 liutong.setISBN(rs.getString("ISBN"));                                        // 国际标准书号
                 String t = rs.getString("documentType");
                 liutong.setDocumentType(DocumentType.fromDescription(t));                           // 币种编码
@@ -243,5 +325,6 @@ public class LiutongDao {
 
         return rowsAffected; // 返回受影响的行数
     }
+
 
 }

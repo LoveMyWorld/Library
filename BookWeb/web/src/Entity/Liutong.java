@@ -60,14 +60,6 @@ public class Liutong {
         this.ISBN = ISBN;
     }
 
-    public LocalDate getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDate publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
     public String getPublisher() {
         return publisher;
     }
@@ -92,36 +84,12 @@ public class Liutong {
         this.supplier = supplier;
     }
 
-    public int getCurrencyID() {
-        return currencyID;
-    }
-
-    public void setCurrencyID(int currencyID) {
-        this.currencyID = currencyID;
-    }
-
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public int getBookNum() {
-        return bookNum;
-    }
-
-    public void setBookNum(int bookNum) {
-        this.bookNum = bookNum;
-    }
-
-    public DocumentType getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
     }
 
     public String getCategoryName() {
@@ -132,19 +100,51 @@ public class Liutong {
         this.categoryName = categoryName;
     }
 
-    public Liutong(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String publisher, String edition, String supplier, int currencyID, double price, int bookNum, DocumentType documentType, String categoryName) {
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public int getBookNum() {
+        return bookNum;
+    }
+
+    public void setBookNum(int bookNum) {
+        this.bookNum = bookNum;
+    }
+
+    public int getCurrencyID() {
+        return currencyID;
+    }
+
+    public void setCurrencyID(int currencyID) {
+        this.currencyID = currencyID;
+    }
+
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public Liutong(String bookID, String title, String author, String ISBN, LocalDate publicationDate, String edition, String publisher, String supplier, int currencyID, double price, DocumentType documentType, int bookNum, String categoryName) {
         this.bookID = bookID;
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.publicationDate = publicationDate;
-        this.publisher = publisher;
         this.edition = edition;
+        this.publisher = publisher;
         this.supplier = supplier;
         this.currencyID = currencyID;
         this.price = price;
-        this.bookNum = bookNum;
         this.documentType = documentType;
+        this.bookNum = bookNum;
         this.categoryName = categoryName;
     }
 }

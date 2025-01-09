@@ -1013,7 +1013,7 @@
                 if (confirmSubmit) {
 
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/DeleteReaderServlet',  // 后端接口，用于提交数据
+                        url: '${pageContext.request.contextPath}/DeleteReaderServlet2',  // 后端接口，用于提交数据
                         method: 'POST',
                         data:  { readID: readID },   // 发送的读者编号
                         dataType: 'json',  // 期待返回的数据格式
