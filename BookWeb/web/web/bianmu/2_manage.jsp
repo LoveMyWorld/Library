@@ -383,7 +383,7 @@
                     <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
                     <div class="tooltip">导入</div>
                 </button>
-                <button>
+                <button id="daochuButton">
                     <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
                     <div class="tooltip">导出</div>
                 </button>
@@ -585,6 +585,32 @@
 
 
 <script>
+    // 获取导出按钮元素
+    var daochuButton = document.getElementById("daochuButton");
+
+    // 为导出按钮添加点击事件监听器
+    daochuButton.onclick = function() {
+        // 使用 AJAX 发送请求到后端的 CatalogToLiutongServlet
+        $.ajax({
+            url: '${pageContext.request.contextPath}/CatalogToLiutongServlet', // 后端 Servlet 路径
+            method: 'POST', // 请求方法
+            dataType: 'json', // 期待返回的数据格式
+            success: function(response) {
+                // 检查后端返回的 errorMsg 是否为空，如果为空则表示成功
+                if (response.errorMsg === "" || response.errorMsg === null) {
+                    alert("导出成功！");
+                    // 可能需要刷新页面或者更新列表
+                    location.reload(); // 或者使用其他方法更新页面
+                } else {
+                    alert("导出失败，错误信息: " + response.errorMsg);
+                }
+            },
+            error: function(xhr, status, error) {
+                // 处理 AJAX 请求失败的情况
+                alert("导出失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
+            }
+        });
+    };
     document.addEventListener("DOMContentLoaded", function() {
         // 获取模态框元素
         var modal = document.getElementById("myModal");
