@@ -338,6 +338,7 @@
         <a  onclick="location.href='${pageContext.request.contextPath}/DingdanServlet'">订单管理</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/CYanshouServlet'">验收</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/TuihuoServlet'">退货清单</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb.jsp">返回</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->
