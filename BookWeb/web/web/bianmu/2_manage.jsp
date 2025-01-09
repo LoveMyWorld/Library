@@ -597,12 +597,13 @@
             dataType: 'json', // 期待返回的数据格式
             success: function(response) {
                 // 检查后端返回的 errorMsg 是否为空，如果为空则表示成功
-                if (response.errorMsg === "" || response.errorMsg === null) {
+                // console.log(response.resultInfo.flag);
+                if (response.resultInfo.flag) {
                     alert("导出成功！");
                     // 可能需要刷新页面或者更新列表
-                    location.reload(); // 或者使用其他方法更新页面
+                   // location.reload(); // 或者使用其他方法更新页面
                 } else {
-                    alert("导出失败，错误信息: " + response.errorMsg);
+                    alert("导出失败，错误信息: " + response.resultInfo.errorMsg);
                 }
             },
             error: function(xhr, status, error) {
@@ -836,6 +837,7 @@
                     document.getElementById("documentType2").value = response.data.documentType;
                     document.getElementById("bookNum2").value = response.data.bookNum;
                     document.getElementById("categoryName2").value = response.data.categoryName;
+                    var catevalue = document.getElementById("categoryName2").value;
                     document.getElementById("isbn2").value = response.data.ISBN;
                     document.getElementById("publisher2").value = response.data.publisher;
                     document.getElementById("supplier2").value = response.data.supplier;

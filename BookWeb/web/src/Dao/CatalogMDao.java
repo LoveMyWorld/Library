@@ -142,7 +142,8 @@ class CatalogMDao
                 cataloglist.setEdition(rs.getString("edition"));                                  // 版次// 印刷厂
                 cataloglist.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
                 cataloglist.setBookNum(rs.getInt("bookNum"));                           // 征订册数
-                cataloglist.setAuthor(rs.getString("author"));                                    // 作者
+                cataloglist.setAuthor(rs.getString("author"));   
+                cataloglist.setCategoryName(rs.getString("categoryName"));// 作者
                 // 根据 Cataloglist 类的字段继续添加赋值逻辑
                 dataList.add(cataloglist); // 将对象添加到列表
             }
