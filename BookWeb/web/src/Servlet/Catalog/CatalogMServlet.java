@@ -1,10 +1,8 @@
 package Servlet.Catalog;
 
 import Dao.CatalogMDao;
+import Entity.*;
 import Entity.Cataloglist;
-import Entity.Cataloglist;
-import Entity.DocumentType;
-import Entity.ResultInfo;
 import Service.Catalog.CatalogMService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
@@ -24,7 +22,7 @@ import java.util.Map;
 
 import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
 
-@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/initBookForm", "/CatalogOneBook"  ,"/lookBookForm","/editBookForm"}) public class CatalogMServlet extends HttpServlet {
+@WebServlet(name = "CatalogMServlet", value = {"/CatalogMServlet", "/editBookForm","/initBookForm", "/CatalogOneBook"  ,"/lookBookForm"}) public class CatalogMServlet extends HttpServlet {
 //    static final int PAGE_SIZE = 16;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,6 +71,11 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
                     String categoryName = request.getParameter("categoryName");
                     String orderPerson = request.getParameter("orderPerson");
 
+                    if(categoryName == null || !categoryName.equals("")){
+                        Cataloglist aCataloglist = (Cataloglist) request.getSession().getAttribute("readyConfirmBook");
+                        categoryName = aCataloglist.getCategoryName();
+                    }
+
                     Cataloglist cataloglist = new Cataloglist(
                             bookID,title , author,ISBN,publicationDate,publisher,edition,supplier,
                             currencyID,price,orderPerson,bookNum,documentType,categoryName
@@ -96,35 +99,58 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
                     HashMap<String , Object> map = new HashMap<>();
                     map.put("resultInfo", resultInfo);
                     map.put("BianmuBookID", bookID);
+                    if(resultInfo.isFlag()){
+                        CatalogMService.addCatalog(cataloglist);
+                    }
                     ObjectMapper objectMapper = new ObjectMapper();
                     String json = objectMapper.writeValueAsString(map);
                     PrintWriter out = response.getWriter();
                     out.print(json);
                     out.flush();
                     out.close();
-                    processCatalogInfo(request, response);
+                    System.out.println("I am a CatalogOneBook");
                     break;
                 }
-                String precategoryName = request.getParameter("categoryName");
-                //只取前面的几位
-                String categoryName = precategoryName.replaceAll("[^A-Za-z0-9]", "");
+                else{
+                    String precategoryName = request.getParameter("categoryName");
+                    //只取前面的几位
+                    String categoryName = precategoryName.replaceAll("[^A-Za-z0-9]", "");
 
-                String isbn = request.getParameter("isbn");
-                String bookID = categoryName + isbn;
-                //传到编目清单
-                HttpSession session = request.getSession();
-                session.setAttribute("BianmuBookID", bookID);
+                    String isbn = request.getParameter("isbn");
+                    String bookID = categoryName + isbn;
+                    //传到编目清单
+                    HttpSession session = request.getSession();
+//                session.setAttribute("BianmuBookID", bookID);
 
-                CatalogMService catalogMService = new CatalogMService();
+                    CatalogMService catalogMService = new CatalogMService();
 
-                Cataloglist cataloglist = (Cataloglist) request.getSession().getAttribute("readyBMBook");
+                    Cataloglist cataloglist = (Cataloglist) request.getSession().getAttribute("readyConfirmBook");
+                    cataloglist.setBookID(bookID);
+                    cataloglist.setCategoryName(precategoryName);
+//                catalogMService.setCataloglistnew(cataloglist);
 
+                    boolean iswriteDB= catalogMService.writeCatalogNew(cataloglist, bookID, precategoryName);
 
-                cataloglist.setBookID(bookID);
-                catalogMService.setCataloglistnew(cataloglist);
-
-                boolean iswriteDB= catalogMService.writeCatalogNew(cataloglist, bookID, precategoryName);
-                processCatalogInfo(request, response);
+                    if(iswriteDB){
+                        ResultInfo resultInfo = new ResultInfo();
+                        resultInfo.setFlag(true);
+                        resultInfo.setData(cataloglist);
+                        resultInfo.setErrorMsg("编目成功");
+                        HashMap<String , Object> map = new HashMap<>();
+                        map.put("resultInfo", resultInfo);
+                        map.put("BianmuBookID", bookID);
+                        if(resultInfo.isFlag()){
+                            CatalogMService.addCatalog(cataloglist);
+                        }
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String json = objectMapper.writeValueAsString(map);
+                        PrintWriter out = response.getWriter();
+                        out.print(json);
+                        out.flush();
+                        out.close();
+                        System.out.println("I am a CatalogOneBook");
+                    }
+                }
 
                 break;
         }
@@ -136,9 +162,10 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
     {
             doGet(request, response);
     }
-    public void processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
 
+
+    public String processCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         CatalogMService catalogMService = new CatalogMService();
         Cataloglist cataloglist = catalogMService.getCatalogInfoWithFallback();
 
@@ -146,16 +173,19 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         if (cataloglist != null) {
             resultInfo.setFlag(true);
             resultInfo.setData(cataloglist);
+            session.setAttribute("readyConfirmBook", cataloglist);
             // 判断是否已经编目
             if (cataloglist.getBookID() != null && !cataloglist.getBookID().equals("")) {
-                resultInfo.setErrorMsg("isBianmu");
+                resultInfo.setErrorMsg("haveBookID");
+
+                session.setAttribute("BianmuBookID", cataloglist.getBookID());
             } else {
-                resultInfo.setErrorMsg("unBianmu");
+                resultInfo.setErrorMsg("noBookID");
             }
 
             // 放入requst
 
-            session.setAttribute("readyBMBook", cataloglist);
+
         } else {
             resultInfo.setFlag(false);
             resultInfo.setErrorMsg("书籍已经全部编目，无待编目书籍");
@@ -167,7 +197,16 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         Map<String, Object> map = new HashMap<>();
 
         map.put("resultInfo", resultInfo);
-        map.put("BianmuBookID", session.getAttribute("BianmuBookID"));
+        if(cataloglist != null) {
+            map.put("categoryIndex", ZhongTu.strToidx(cataloglist.getCategoryName()));
+        }
+        if(resultInfo.getErrorMsg().equals("haveBookID")){
+            map.put("BianmuBookID", session.getAttribute("BianmuBookID"));
+        }
+        else{
+
+        }
+
 
         // 获取 publicationDate 字段
         if (cataloglist != null && cataloglist.getPublicationDate() != null) {
@@ -182,6 +221,7 @@ import static Servlet.Catalog.YanshouServlet.PAGE_SIZE;
         out.print(json);
         out.flush();
         out.close();
+        return json;
     }
 
     public void editCatalogInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

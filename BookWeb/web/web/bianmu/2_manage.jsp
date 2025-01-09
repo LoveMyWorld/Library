@@ -696,10 +696,12 @@
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
                         if(response.resultInfo.data.categoryName){
-                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            var categoryIndex = response.categoryIndex;
+                            $('#categoryName').prop('selectedIndex' , categoryIndex);
                             $('#categoryName').prop('disabled' , true);
                         }
                         else{
+                            $('#categoryName').prop('selectedIndex' , 0);
                             $('#categoryName').prop('disabled' , false);
                         }
 
@@ -730,11 +732,11 @@
             var categoryName = document.getElementById("categoryName").value;
             var isbn = document.getElementById("isbn").value;
             // 如果目录字段为空，则提醒用户并返回
-            if (document.getElementById("categoryName").value==null||document.getElementById("categoryName").value=='') {
-                alert("目录不能为空！");
-                return;
-            }
-            else{
+            // if (document.getElementById("categoryName").value==null||document.getElementById("categoryName").value=='') {
+            //     alert("目录不能为空！");
+            //     return;
+            // }
+            // else{
                 var formData = $('#bookForm').serialize();
                 $.ajax({
                     url:'${pageContext.request.contextPath}/CatalogOneBook' ,
@@ -748,16 +750,17 @@
                             console.log(response.resultInfo.date);
                             var BianmuBookID=response.BianmuBookID;
                             alert("编目成功,图书编号为："+BianmuBookID);
+                            location.reload(true);
                             // // 在点击时向后端请求相关数据
-                            // fetchNextData();  // 获取并展示现有数据
-                            fetchNextData();
+                            fetchNextData();  // 获取并展示现有数据
+
                         }
                         else{
                             alert(response.resultInfo.ErrorMsg);
                         }
                     }
                 });
-            }
+            // }
         }
         function fetchNextData() {
             console.log("I an fetchNextData function");
@@ -783,10 +786,12 @@
                         $('#bookNum').val(response.resultInfo.data.bookNum);
                         $('#documentType').val(response.resultInfo.data.documentType);
                         if(response.resultInfo.data.categoryName){
-                            $('#categoryName').val(response.resultInfo.data.categoryName);
+                            var categoryIndex = response.categoryIndex;
+                            $('#categoryName').prop('selectedIndex' , categoryIndex);
                             $('#categoryName').prop('disabled' , true);
                         }
                         else{
+                            $('#categoryName').prop('selectedIndex' , 0);
                             $('#categoryName').prop('disabled' , false);
                         }
 
@@ -844,6 +849,15 @@
                     document.getElementById("supplier2").value = response.data.supplier;
                     document.getElementById("price2").value = response.data.price;
 
+                    if(response.resultInfo.data.categoryName){
+                        var categoryIndex = response.categoryIndex;
+                        $('#categoryName2').prop('selectedIndex' , categoryIndex);
+                        $('#categoryName2').prop('disabled' , true);
+                    }
+                    else{
+                        $('#categoryName2').prop('selectedIndex' , 0);
+                        $('#categoryName2').prop('disabled' , false);
+                    }
                     // 显示弹框
                     // modal1.style.display = "block";
                 } else {

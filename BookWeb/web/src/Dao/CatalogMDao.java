@@ -142,7 +142,7 @@ class CatalogMDao
                 cataloglist.setEdition(rs.getString("edition"));                                  // 版次// 印刷厂
                 cataloglist.setPublicationDate(rs.getObject("publicationDate", LocalDate.class)); // 出版日期
                 cataloglist.setBookNum(rs.getInt("bookNum"));                           // 征订册数
-                cataloglist.setAuthor(rs.getString("author"));   
+                cataloglist.setAuthor(rs.getString("author"));
                 cataloglist.setCategoryName(rs.getString("categoryName"));// 作者
                 // 根据 Cataloglist 类的字段继续添加赋值逻辑
                 dataList.add(cataloglist); // 将对象添加到列表
@@ -218,6 +218,29 @@ class CatalogMDao
         } catch (SQLException e) {
             throw new RuntimeException("修改书目信息数据失败", e);
         }
+    }
+    // 通过书籍ID删除编目清单
+    public int deleteByBookID(String bookID) {
+        Dao dao = new Dao();
+        String sql = "DELETE FROM library.cataloglist WHERE bookID = ?";
+        int rowsAffected = 0; // 用于存储受影响的行数
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数
+            ps.setString(1, bookID);
+
+            // 执行删除操作
+            rowsAffected = ps.executeUpdate();
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("删除数据失败", e);
+        }
+
+        return rowsAffected; // 返回受影响的行数
     }
 }
 

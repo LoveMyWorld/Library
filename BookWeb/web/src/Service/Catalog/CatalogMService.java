@@ -21,6 +21,12 @@ public class CatalogMService {
     //将这几个函数融合
     Cataloglist  cataloglistnew = new Cataloglist();
 
+    public static List<Cataloglist> cataloglist = new ArrayList<>();
+
+    public static void addCatalog(Cataloglist catalog) {
+        cataloglist.add(catalog);
+    }
+
     public Cataloglist getCataloglistnew() {
         return cataloglistnew;
     }
@@ -107,8 +113,8 @@ public class CatalogMService {
         Liutong liutong = getLiutongInfo(yanshou.getISBN());
         if (liutong != null) {
 //            cataloglistnew.setBookNum(1);应该不用设吧，征订册数毕竟不一定一本，可以保留验收清单的册数
-            cataloglistnew.setBookID(cataloglist.getBookID());
-            cataloglistnew.setCategoryName(cataloglist.getCategoryName());
+            cataloglistnew.setBookID(liutong.getBookID());
+            cataloglistnew.setCategoryName(liutong.getCategoryName());
             return cataloglistnew;
         }
 
@@ -119,15 +125,14 @@ public class CatalogMService {
         boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
         return issuceed;//是否在数据库成功写入
     }
+    //编目清单   图书编号和图书分类号是没有的内容，需要填新的
     public boolean writeCatalogNew(Cataloglist cataloglist , String bookID, String precategoryName){
-        cataloglist = cataloglistnew;
         cataloglist.setBookID(bookID);
         cataloglist.setCategoryName(precategoryName);
         CatalogMDao catalogMDao = new CatalogMDao();
         boolean issuceed=catalogMDao.pushCatalogList(cataloglist);
         return issuceed;
     }
-    public static List<Cataloglist> cataloglist = new ArrayList<>();
     public int getTotalBookNum(){
         CatalogMDao catalogMDao = new CatalogMDao();
         cataloglist.clear();
