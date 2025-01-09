@@ -1,6 +1,7 @@
 <%@ page import="Dao.YanshouDao" %>
 <%@ page import="Entity.Yanshou" %>
 <%@ page import="java.util.List" %>
+<%@ page import="static Servlet.Catalog.YanshouServlet.PAGE_SIZE" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -376,7 +377,7 @@
             <!-- 上一页 -->
             <button onclick="location.href='${pageContext.request.contextPath}/YanshouServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
             <!-- 当前页信息 -->
-            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
+            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示<%=PAGE_SIZE%>条</span>
             <!-- 下一页 -->
             <button onclick="location.href='${pageContext.request.contextPath}/YanshouServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
         </div>

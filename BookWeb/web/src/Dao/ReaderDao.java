@@ -114,7 +114,7 @@ public class ReaderDao {
             return result > 0;
         } catch (SQLException e) {
 
-            throw new RuntimeException("添加备份信息数据失败", e);
+            throw new RuntimeException("添加读者信息失败", e);
         }
     }
 
@@ -146,7 +146,8 @@ public class ReaderDao {
             dao.AllClose();
             return reader; // 返回查询结果
         } catch (SQLException e) {
-            throw new RuntimeException("查询数据失败", e);
+//            String str=e.toString();
+            throw new RuntimeException("查看数据失败", e);
         }
     }
 
@@ -189,6 +190,29 @@ public class ReaderDao {
             return result > 0;  // 如果删除的行数大于0，表示删除成功
         } catch (SQLException e) {
             throw new RuntimeException("删除读者信息数据失败", e);
+        }
+    }
+
+    // 修改用户的信誉分和身份
+    public int updateReaderCPAndRL(Reader reader) {
+        Dao dao = new Dao(); // 假设您有一个Dao类来处理数据库连接
+        int rowsAffected = 0; // 用于存储受影响的行数
+
+        String sql = "UPDATE library.reader SET readerLevel = ?, creditPoint = ? WHERE readID = ?";
+        try  {
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+            // 设置PreparedStatement的参数
+            ps.setString(1, reader.getReaderLevel().toString());
+            ps.setInt(2, reader.getCreditPoint());
+            ps.setString(3, reader.getReadID());
+
+            // 执行更新操作
+            rowsAffected = ps.executeUpdate();
+
+            return rowsAffected;
+        } catch (SQLException e) {
+//            return rowsAffected = -1;
+            throw new RuntimeException(e);
         }
     }
 }

@@ -108,4 +108,19 @@ public class Reader {
     public void setCreditPoint(int creditPoint) {
         this.creditPoint = creditPoint;
     }
+
+    public static ReaderLevelType creditPoingToRlevel(int creditPoint){
+        if(creditPoint >= 81 && creditPoint <= 100){
+            return ReaderLevelType.ADVANCED;
+        }
+        else if(creditPoint >= 51 && creditPoint <= 80){
+            return ReaderLevelType.INTERMEDIATE;
+        }
+        else if(creditPoint >= 11 && creditPoint <= 50){
+            return ReaderLevelType.BEGINNER;
+        }
+        else{
+            return ReaderLevelType.BLACKLISTED;
+        }
+    }
 }

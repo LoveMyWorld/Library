@@ -204,7 +204,7 @@
             background-color: #ddd;
         }
         table {
-            table-layout: fixed;
+            table-layout: auto;
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -365,26 +365,26 @@
                     <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
                     <div class="tooltip">添加</div>
                 </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                    <div class="tooltip">编辑</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
-                    <div class="tooltip">删除</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
-                    <div class="tooltip">刷新</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
-                    <div class="tooltip">导入</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
-                    <div class="tooltip">导出</div>
-                </button>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">--%>
+<%--                    <div class="tooltip">编辑</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">--%>
+<%--                    <div class="tooltip">删除</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">--%>
+<%--                    <div class="tooltip">刷新</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+<%--                    <div class="tooltip">导入</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+<%--                    <div class="tooltip">导出</div>--%>
+<%--                </button>--%>
             </div>
 
             <div class="search">
@@ -405,13 +405,13 @@
         <table>
             <thead>
             <tr>
-                <th>序号</th>
+                <th style="width: 50px;">序号</th>
                 <th>读者编号</th>
                 <th>姓名</th>
                 <th>性别</th>
                 <th>电话号码</th>
                 <th>读者级别</th>
-                <th>操作</th>
+                <th style="width: 80px;">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -698,7 +698,7 @@
             if (event.target == modal1) {
                 modal1.style.display = "none";
             }
-            if (event.target == modal1) {
+            if (event.target == modal2) {
                 modal2.style.display = "none";
             }
         }

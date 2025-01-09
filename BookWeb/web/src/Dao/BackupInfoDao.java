@@ -82,66 +82,66 @@ public class BackupInfoDao {
         }
     }
 
-    // 添加备份信息
-    public void addBackupInfo(BackupInfo backupInfo) {
-        Dao dao = new Dao();
-        String sql = "INSERT INTO library.backup_info (backupID, backupName, backupLoc, backupReason, backupTime, operator) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
-            ps.setString(1, backupInfo.getBackupID());
-            ps.setString(2, backupInfo.getBackupName().toString());
-            ps.setString(3, backupInfo.getBackupLoc());
-            ps.setString(4, backupInfo.getBackupReason());
-            ps.setString(5, backupInfo.getBackupTime());
-            ps.setString(6, backupInfo.getOperator());
-
-            ps.executeUpdate();
-            dao.AllClose();
-        } catch (SQLException e) {
-            throw new RuntimeException("添加备份信息数据失败", e);
-        }
-    }
-
-    // 更新备份信息
-    public void updateBackupInfo(BackupInfo backupInfo) {
-        Dao dao = new Dao();
-        String sql = "UPDATE library.backup_info SET backupName = ?, backupLoc = ?, backupReason = ?, backupTime = ?, operator = ? " +
-                "WHERE backupID = ?";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
-            ps.setString(1, backupInfo.getBackupName().toString());
-            ps.setString(2, backupInfo.getBackupLoc());
-            ps.setString(3, backupInfo.getBackupReason());
-            ps.setString(4, backupInfo.getBackupTime());
-            ps.setString(5, backupInfo.getOperator());
-            ps.setString(6, backupInfo.getBackupID());
-
-            ps.executeUpdate();
-            dao.AllClose();
-        } catch (SQLException e) {
-            throw new RuntimeException("更新备份信息数据失败", e);
-        }
-    }
-
-    // 删除备份信息
-    public void deleteBackupInfo(String backupID) {
-        Dao dao = new Dao();
-        String sql = "DELETE FROM library.backup_info WHERE backupID = ?";
-
-        try (
-                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
-
-            ps.setString(1, backupID);
-
-            ps.executeUpdate();
-            dao.AllClose();
-        } catch (SQLException e) {
-            throw new RuntimeException("删除备份信息数据失败", e);
-        }
-    }
+//    // 添加备份信息
+//    public void addBackupInfo(BackupInfo backupInfo) {
+//        Dao dao = new Dao();
+//        String sql = "INSERT INTO library.backup_info (backupID, backupName, backupLoc, backupReason, backupTime, operator) " +
+//                "VALUES (?, ?, ?, ?, ?, ?)";
+//
+//        try (
+//                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+//
+//            ps.setString(1, backupInfo.getBackupID());
+//            ps.setString(2, backupInfo.getBackupName().toString());
+//            ps.setString(3, backupInfo.getBackupLoc());
+//            ps.setString(4, backupInfo.getBackupReason());
+//            ps.setString(5, backupInfo.getBackupTime());
+//            ps.setString(6, backupInfo.getOperator());
+//
+//            ps.executeUpdate();
+//            dao.AllClose();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("添加备份信息数据失败", e);
+//        }
+//    }
+//
+//    // 更新备份信息
+//    public void updateBackupInfo(BackupInfo backupInfo) {
+//        Dao dao = new Dao();
+//        String sql = "UPDATE library.backup_info SET backupName = ?, backupLoc = ?, backupReason = ?, backupTime = ?, operator = ? " +
+//                "WHERE backupID = ?";
+//
+//        try (
+//                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+//
+//            ps.setString(1, backupInfo.getBackupName().toString());
+//            ps.setString(2, backupInfo.getBackupLoc());
+//            ps.setString(3, backupInfo.getBackupReason());
+//            ps.setString(4, backupInfo.getBackupTime());
+//            ps.setString(5, backupInfo.getOperator());
+//            ps.setString(6, backupInfo.getBackupID());
+//
+//            ps.executeUpdate();
+//            dao.AllClose();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("更新备份信息数据失败", e);
+//        }
+//    }
+//
+//    // 删除备份信息
+//    public void deleteBackupInfo(String backupID) {
+//        Dao dao = new Dao();
+//        String sql = "DELETE FROM library.backup_info WHERE backupID = ?";
+//
+//        try (
+//                PreparedStatement ps = dao.conn.prepareStatement(sql)) {
+//
+//            ps.setString(1, backupID);
+//
+//            ps.executeUpdate();
+//            dao.AllClose();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("删除备份信息数据失败", e);
+//        }
+//    }
 }
