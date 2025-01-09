@@ -13,12 +13,20 @@ public class Liutong {
     private String supplier;//书商
     private int currencyID; // 币种编码
     private double price; // 定价
-//    private String orderPerson; // 订购人
+    private String orderPerson; // 订购人
 //    private String receiver; // 验收人
     private int bookNum; // 征订册数
     private DocumentType documentType;//文献类型
     private String categoryName;
     public Liutong(){};
+
+    public String getOrderPerson() {
+        return orderPerson;
+    }
+
+    public void setOrderPerson(String orderPerson) {
+        this.orderPerson = orderPerson;
+    }
 
     public String getBookID() {
         return bookID;

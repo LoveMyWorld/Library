@@ -239,6 +239,32 @@ public class LiutongDao {
         }
     }
 
+    //更改册数，通过id
+    public int UpdateByBookID(String bookID,int bookNum) {
+        Dao dao = new Dao();
+        String sql = "UPDATE library.liutonglist SET bookNum = bookNum + ? WHERE bookID = ?";
+        int rowsAffected = 0; // 用于存储受影响的行数
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数
+            ps.setInt(1, bookNum);
+            ps.setString(2, bookID);
+
+            // 执行更新操作
+            rowsAffected = ps.executeUpdate();
+
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("更新数据失败", e);
+        }
+
+        return rowsAffected; // 返回受影响的行数
+    }
+
+
     //返回值为0，说明没有待修改的数据，返回值为1，说明更新流通库成功
     public int addOneBookNuminLiutongList(String bookID) {
         Dao dao = new Dao();
@@ -263,6 +289,41 @@ public class LiutongDao {
             // 如果发生 SQL 异常，抛出运行时异常
             throw new RuntimeException("更新数据失败", e);
         }
+    }
+    public int insertIntoLiutongList(Liutong liutong) {
+        Dao dao = new Dao();
+        String sql = "INSERT INTO library.liutonglist (bookID, supplier, title, publisher,  ISBN, documentType, price, edition, publicationDate, categoryName, author, bookNum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int rowsAffected = 0; // 用于存储受影响的行数
+
+        try {
+            // 准备 PreparedStatement
+            PreparedStatement ps = dao.conn.prepareStatement(sql);
+
+            // 设置参数
+            ps.setString(1, liutong.getBookID());
+            ps.setString(2, liutong.getSupplier());
+            ps.setString(3, liutong.getTitle());
+            ps.setString(4, liutong.getPublisher());
+
+            ps.setString(5, liutong.getISBN());
+            ps.setString(6, liutong.getDocumentType().getDescription());
+            ps.setDouble(7, liutong.getPrice());
+            ps.setString(8, liutong.getEdition());
+            ps.setObject(9, liutong.getPublicationDate(), java.sql.Types.DATE);
+            ps.setString(10, liutong.getCategoryName());
+            ps.setString(11, liutong.getAuthor());
+            ps.setInt(12, liutong.getBookNum());
+
+
+            // 执行插入操作
+            rowsAffected = ps.executeUpdate();
+            // 如果影响的行数大于0，表示更新成功
+            dao.AllClose(); // 关闭资源
+        } catch (SQLException e) {
+            throw new RuntimeException("插入数据失败", e);
+        }
+
+        return rowsAffected; // 返回受影响的行数
     }
 
 

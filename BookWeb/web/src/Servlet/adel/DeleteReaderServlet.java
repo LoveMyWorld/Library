@@ -1,22 +1,20 @@
 package Servlet.adel;
 
-
 import Dao.ReaderDao;
 import Entity.ResultInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 
-@WebServlet("/DeleteReaderServlet")
+
+@WebServlet( name = "DeleteReaderServlet2" , value = "/DeleteReaderServlet2")
 public class DeleteReaderServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
@@ -50,5 +48,10 @@ public class DeleteReaderServlet extends HttpServlet {
         } else {
             response.getWriter().write("Failed");
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 }
