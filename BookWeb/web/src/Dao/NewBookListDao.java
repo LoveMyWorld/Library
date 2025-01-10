@@ -16,7 +16,7 @@ public class NewBookListDao {
     }
 
     public int clearNewBookList() {
-        String sql = "delete from booklist";
+        String sql = "delete from library.newbooklist";
         Dao dao = new Dao();
         try {
             PreparedStatement ps = dao.conn.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class NewBookListDao {
     }
 
     public int insertByCatelogList(){
-        String sql = "insert into library.newbooklist  select * from  library.cateloglist";
+        String sql = "insert into library.newbooklist  select * from  library.cataloglist";
         Dao dao = new Dao();
         try {
             PreparedStatement ps = dao.conn.prepareStatement(sql);

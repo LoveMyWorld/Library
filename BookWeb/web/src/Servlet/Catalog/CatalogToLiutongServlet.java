@@ -6,6 +6,7 @@ import Entity.Cataloglist;
 import Entity.Liutong;
 import Entity.ResultInfo;
 import Service.Borrow.AppointmentService;
+import Service.NewBookListService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -39,7 +40,7 @@ public class CatalogToLiutongServlet extends HttpServlet {
         ResultInfo resultInfo = new ResultInfo();
         resultInfo.setFlag(success == 3); // 假设 msg 为 3 表示成功
         if (resultInfo.isFlag()) {
-//            resultInfo.setErrorMsg("审核成功");
+            resultInfo.setErrorMsg("导出成功");
         } else {
             if(success==1){
                 resultInfo.setErrorMsg("编目清单无内容,无需导出");
@@ -58,6 +59,9 @@ public class CatalogToLiutongServlet extends HttpServlet {
     private int performExportOperation() {
         //直接跳过service层
         //将catalolist全部取出
+        NewBookListService newBookListService = new NewBookListService();
+        int iswrite= newBookListService.CatelogListToNewBookList();
+        //写入新书表
         CatalogMDao catalogMDao=new CatalogMDao();
         List<Cataloglist> dataList = new ArrayList<>();
         dataList=catalogMDao.getAllData();
@@ -74,11 +78,10 @@ public class CatalogToLiutongServlet extends HttpServlet {
             //先看有没有这个图书编号,如果有，就结束啦
 
             int effect=liutongDao.UpdateByBookID(catalog.getBookID(), catalog.getBookNum());
-            if(effect>0){//影响大于一行
-               ;
-               //删去此条编目清单,通过bookID
-                
+            if(effect>0){//影响大于或等于一行
 
+               //删去此条编目清单,通过bookID
+                catalogMDao.deleteByBookID(catalog.getBookID());
 
             }
             else{
@@ -104,7 +107,7 @@ public class CatalogToLiutongServlet extends HttpServlet {
 
                 }
                 //删除此条编目清单
-
+                catalogMDao.deleteByBookID(catalog.getBookID());
 
             }
         }

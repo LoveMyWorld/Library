@@ -31,6 +31,7 @@ public class LiutongDao {
                 // 假设编目号存储在 "categoryID" 字段中
                 liutong=new Liutong();
                 liutong.setISBN(isbn);
+                liutong.setBookID(rs.getString("BookID"));
                 liutong.setSupplier(rs.getString("supplier"));                                // 书商
                 liutong.setTitle(rs.getString("title"));                                      // 书名
                 liutong.setPublisher(rs.getString("publisher"));                              // 出版社

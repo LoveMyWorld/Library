@@ -1,13 +1,14 @@
-<%@ page import="Entity.Cataloglist" %>
+<%@ page import="Dao.YanshouDao" %>
+<%@ page import="Entity.Yanshou" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static Servlet.Catalog.YanshouServlet.PAGE_SIZE" %>
+<%@ page import="Entity.DamageList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>冠军小队编目系统</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>冠军小队编目系统——报损清单</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -174,7 +175,6 @@
             border-radius: 5px;
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            z-index: 10;
         }
         .search {
             padding: 0px 7px 0px 0px;
@@ -241,103 +241,20 @@
         .pagination button:hover {
             background-color: #ddd;
         }
-        /* 弹框 */
-        .modal {
-            display: none; /* 默认不显示 */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0); /* 背景半透明 */
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 800px;
-            border-radius: 5px;
-            position: relative;
-            box-shadow: none; /* 移除阴影 */
-            cursor: move; /* 让鼠标呈现可以拖动的状态 */
-        }
-
-        .modal-header {
-            color: white;
-            padding: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            background-color: #3498db;
-            border-radius: 5px;
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 30px;
-            color: #e74c3c; /* 红色，突出 */
-            cursor: pointer;
-            z-index: 100;
-        }
-
-        .close:hover {
-            color: #c0392b; /* 更深的红色 */
-        }
-
-        .modal-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .modal-table th, .modal-table td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .modal-table th {
-            background-color: #f4f4f4;
-        }
-
-        .modal-table td {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .modal-table td input, .modal-table td select {
-            width: 48%; /* 使输入框/选择框分布在一行中 */
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .modal-table td select {
-            height: 30px;
-        }
-
-        .modal-table td input[type="text"] {
-            width: 50%; /* 调整输入框宽度 */
-        }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <div>
         <h3>冠军小队</h3>
+
         <a  onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet'">编目管理</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收清单</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/DamageServlet'">报损</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb1.jsp">返回</a>
+        <a href="${pageContext.request.contextPath}/wangye/manageweb1.jsp">返回</a>
     </div>
-
+    <%--      改--%>
     <!-- 底部横杠和关于我们按钮 -->
     <div class="sidebar-footer">
         <div class="divider"></div>
@@ -355,89 +272,64 @@
     <!-- 编目管理列表框 -->
     <div class="content-box">
         <div class="header">
-            编目管理列表
+            报损管理列表
         </div>
         <div class="toolbar">
-            <div class="tools">
-                <%--                <button>--%>
-                <%--                    <img src="../image/add-icon.png" alt="添加">--%>
-                <%--                    <div class="tooltip">添加</div>--%>
-                <%--                </button>--%>
-                <button id="addButton">
-                    <img src="${pageContext.request.contextPath}/image/add-icon.png" alt="添加">
-                    <div class="tooltip">添加</div>
-                </button>
+<%--            <div class="tools">--%>
 
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                    <div class="tooltip">编辑</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/delete-icon.png" alt="删除">
-                    <div class="tooltip">删除</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/refresh-icon.png" alt="刷新">
-                    <div class="tooltip">刷新</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">
-                    <div class="tooltip">导入</div>
-                </button>
-                <button>
-                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">
-                    <div class="tooltip">导出</div>
-                </button>
-            </div>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/ru.png" alt="导入">--%>
+<%--                    <div class="tooltip">导入</div>--%>
+<%--                </button>--%>
+<%--                <button>--%>
+<%--                    <img src="${pageContext.request.contextPath}/image/chu.png" alt="导出">--%>
+<%--                    <div class="tooltip">导出</div>--%>
+<%--                </button>--%>
+<%--            </div>--%>
             <div class="search">
-                <form action="${pageContext.request.contextPath}/CatalogMServlet" method="get">
+                <form action="${pageContext.request.contextPath}/DamageServlet" method="get">
                     <select name="searchField">
-                        <option value="isbn">ISBN</option>
+                       
                         <option value="title">书名</option>
-                        <option value="author">作者</option>
-                        <option value="publisher">出版社</option>
+                        <option value="bookID">图书编号</option>
+                        
                     </select>
                     <input type="text" name="searchValue" placeholder="请输入关键词" />
                     <input type="text" name="seach" value="" hidden="hidden"/>
                     <button type="submit">搜索</button>
                 </form>
             </div>
+
         </div>
         <table>
             <thead>
             <tr>
-                <th style="width: 50px;">序号</th>
+                <th>序号</th>
+                <th>图书编号</th>
                 <th>书名</th>
-                <th>ISBN</th>
-                <th>作者</th>
-                <th>出版社</th>
-                <th style="width: 30px;">操作</th>
-
+                <th>读者编号</th>
+                <th>姓名</th>
+                
+                <%--        <th>编著者</th>--%>
+                <%--        <th>分类号</th>--%>
             </tr>
             </thead>
             <tbody>
             <%
                 int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
                 int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
-                List<Cataloglist> cataloglist= (List<Cataloglist>) request.getAttribute("Cataloglist");
+                List<DamageList> damageLists= (List<DamageList>) request.getAttribute("damageLists");
                 int count = 1; // 初始化计数器
-                if (cataloglist != null) { // 判断数据是否为空
-                    for (Cataloglist catalog : cataloglist) {
+                if (damageLists != null) { // 判断数据是否为空
+                    for (DamageList damageList : damageLists) {
             %>
             <tr >
                 <td><%= count++ %></td>
-                <td><%= catalog.getTitle() %></td>
-                <td><%= catalog.getISBN() %></td>
-                <td><%= catalog.getAuthor() %></td>
-                <td><%= catalog.getPublisher() %></td>
-                <td>
-                    <div class="tools">
-                        <button id="editButton">
-                            <img src="${pageContext.request.contextPath}/image/edit-icon.png" alt="编辑">
-                            <div class="tooltip">编辑</div>
-                        </button>
-                    </div>
-                </td>
+                <td><%= damageList.getReadID() %></td>
+                <td><%= damageList.getTitle() %></td>
+                <td><%= damageList.getReadID() %></td>
+                <td><%= damageList.getName() %></td>
+
             </tr>
             <%
                     }
@@ -445,439 +337,20 @@
                 }
             %>
             </tbody>
+            
         </table>
         <div class="pagination">
-            <!-- 上一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
-            <!-- 当前页信息 -->
-            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 <%=PAGE_SIZE %> 条</span>
-            <!-- 下一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
-        </div>
-    </div>
-</div>
-
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            书籍编目
-            <span class="close" id="closeModal">&times;</span>
-        </div>
-        <form id="bookForm" action="" method="get">
-            <table class="modal-table">
-                <tr>
-                    <th>图书编号</th>
-                    <td><input type="text" id="bookID" name="bookID" readonly ></td>
-                    <th>书名</th>
-                    <td><input type="text" id="title" name="title" readonly ></td>
-                </tr>
-                <tr>
-                    <th>作者</th>
-                    <td><input type="text" id="author" name="author" readonly ></td>
-                    <th>出版日期</th>
-                    <td><input type="text" id="publicationDate" name="publicationDate" readonly ></td>
-                </tr>
-                <tr>
-                    <th>版次</th>
-                    <td><input type="text" id="edition" name="edition" readonly ></td>
-                    <th>文献类型</th>
-                    <td><input type="text" id="documentType" name="documentType" readonly ></td>
-                    <%--                    <th>币种编号</th>--%>
-                    <%--                    <td><input type="text" id="currencyCode"></td>--%>
-                </tr>
-                <tr>
-                    <th>册数</th>
-                    <td><input type="text" id="bookNum" name="bookNum" readonly ></td>
-                    <th>图书分类号</th>
-                    <td><select id="categoryName" name="categoryName">
-                        <option value="A 马克思主义、列宁主义、毛泽东思想、邓小平理论">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
-                        <option value="A1 马克思、恩格斯著作">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
-                        <option value="A11 选集、文集">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
-                        <option value="A12 单行著作">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
-
-                    </select></td>
-                </tr>
-                <tr>
-                    <th>ISBN</th>
-                    <td><input type="text" id="isbn" name="isbn" readonly ></td>
-                    <th>出版社</th>
-                    <td><input type="text" id="publisher" name="publisher" readonly ></td>
-                </tr>
-                <tr>
-                    <th>书商</th>
-                    <td><input type="text" id="supplier" name="supplier" readonly ></td>
-                    <th>定价</th>
-                    <td><input type="text" id="price" name="price" readonly ></td>
-                </tr>
-
-            </table>
-            <button type="button" id="confirmButton" name="confirmButton">确定</button>
-        </form>
-        <!-- 成功提示框 -->
-        <div id="successModal" style="display: none;">
-            <div class="modal-content">
-                <p>编目成功！</p>
-                <button id="closeSuccessModal">关闭</button>
+            <div class="pagination">
+                <!-- 上一页 -->
+                <button onclick="location.href='${pageContext.request.contextPath}/DamageServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <!-- 当前页信息 -->
+                <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示<%=PAGE_SIZE%>条</span>
+                <!-- 下一页 -->
+                <button onclick="location.href='${pageContext.request.contextPath}/DamageServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
             </div>
         </div>
     </div>
 </div>
-
-<%--编辑框--%>
-<div id="myModal2" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            书籍编目
-            <span class="close" id="closeModal2">&times;</span>
-        </div>
-        <form id="bookForm_edit" action="" method="get">
-            <table class="modal-table">
-                <tr>
-                    <th>图书编号</th>
-                    <td><input type="text" id="bookID2" name="bookID" readonly ></td>
-                    <th>书名</th>
-                    <td><input type="text" id="title2" name="title" readonly ></td>
-                </tr>
-                <tr>
-                    <th>作者</th>
-                    <td><input type="text" id="author2" name="author" readonly ></td>
-                    <th>出版日期</th>
-                    <td><input type="text" id="publicationDate2" name="publicationDate" readonly ></td>
-                </tr>
-                <tr>
-                    <th>版次</th>
-                    <td><input type="text" id="edition2" name="edition" readonly ></td>
-                    <th>文献类型</th>
-                    <td><input type="text" id="documentType2" name="documentType" readonly ></td>
-                    <%--                    <th>币种编号</th>--%>
-                    <%--                    <td><input type="text" id="currencyCode"></td>--%>
-                </tr>
-                <tr>
-                    <th>册数</th>
-                    <td><input type="text" id="bookNum2" name="bookNum" readonly ></td>
-                    <th>图书分类号</th>
-                    <td><select id="categoryName2" name="categoryName">
-                        <option value="A 马克思主义、列宁主义、毛泽东思想、邓小平理论">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</option>
-                        <option value="A1 马克思、恩格斯著作">&nbsp;&nbsp;&nbsp;&nbsp;A1 马克思、恩格斯著作</option>
-                        <option value="A11 选集、文集">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A11 选集、文集</option>
-                        <option value="A12 单行著作">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A12 单行著作</option>
-
-                    </select></td>
-                </tr>
-                <tr>
-                    <th>ISBN</th>
-                    <td><input type="text" id="isbn2" name="isbn" readonly ></td>
-                    <th>出版社</th>
-                    <td><input type="text" id="publisher2" name="publisher" readonly ></td>
-                </tr>
-                <tr>
-                    <th>书商</th>
-                    <td><input type="text" id="supplier2" name="supplier" readonly ></td>
-                    <th>定价</th>
-                    <td><input type="text" id="price2" name="price" readonly ></td>
-                </tr>
-
-            </table>
-            <button type="button" id="confirmButton2" name="confirmButton">确定</button>
-        </form>
-    </div>
-</div>
-
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 获取模态框元素
-        var modal = document.getElementById("myModal");
-        var addButton = document.getElementById("addButton");
-        var closeModal = document.getElementById("closeModal");
-        var confirmButton = document.getElementById("confirmButton");
-        var successModal = document.getElementById("successModal");
-        var closeSuccessModal = document.getElementById("closeSuccessModal");
-
-
-        // 获取模态框元素
-        var modal2 = document.getElementById("myModal2");
-        var closeModal2 = document.getElementById("closeModal2");
-        // 获取所有的“编辑”按钮
-        var editButtons = document.querySelectorAll("#editButton");
-
-        // 打开模态框
-        addButton.onclick = function () {
-            modal.style.display = "block";
-            // 在点击时向后端请求相关数据
-            fetchInitData();  // 获取并展示现有数据
-        }
-
-        editButtons.forEach(function(button) {
-            button.addEventListener("click", function(event) {
-                modal2.style.display = "block";
-                // 获取点击按钮所在行的读者信息
-                var ISBN = event.target.closest("tr").querySelector("td:nth-child(3)").innerText;
-
-                // 发送请求获取该读者的详细信息
-                fetchCataloglistDetails(ISBN);
-            });
-        });
-
-        // 关闭模态框
-        closeModal.onclick = function () {
-            modal.style.display = "none";
-        }
-        closeModal2.onclick = function () {
-            modal2.style.display = "none";
-        }
-
-        // 点击模态框外部关闭模态框
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-            if (event.target == modal2) {
-                modal2.style.display = "none";
-            }
-        }
-
-        // 向后端请求初始化弹框数据
-        function fetchInitData() {
-            console.log("I an fetchInitData function");
-            $.ajax({
-                url: '${pageContext.request.contextPath}/initBookForm',  // 后端接口，初始化表单数据
-                method: 'GET',
-                dataType: 'json' ,
-                success: function (response) {
-                    if (response.resultInfo.flag) {
-                        // 假设后端返回的数据包含初始化的书籍信息
-                        // $('#bookID').val(response.resultInfo.data.bookID);
-                        // $('#title').val(response.resultInfo.data.title);
-                        // $('#author').val(response.resultInfo.data.author);
-                        // $('#publicationDate').val(response.publicationDate);
-                        // console.log(response.flag);
-                        // console.log(response.data);
-                        // console.log(response.errorMessage);
-                        // console.log(dataString)
-                        $('#bookID').val(response.resultInfo.data.bookID);
-                        $('#title').val(response.resultInfo.data.title);
-                        $('#author').val(response.resultInfo.data.author);
-                        $('#isbn').val(response.resultInfo.data.isbn);
-                        $('#publicationDate').val(response.publicationDate);
-                        $('#publisher').val(response.resultInfo.data.publisher);
-                        $('#edition').val(response.resultInfo.data.edition);
-                        $('#supplier').val(response.resultInfo.data.supplier);
-                        $('#currencyID').val(response.resultInfo.data.currencyID);
-                        $('#price').val(response.resultInfo.data.price);
-                        $('#bookNum').val(response.resultInfo.data.bookNum);
-                        $('#documentType').val(response.resultInfo.data.documentType);
-                        if(response.resultInfo.data.categoryName){
-                            $('#categoryName').val(response.resultInfo.data.categoryName);
-                            $('#categoryName').prop('disabled' , true);
-                        }
-                        else{
-                            $('#categoryName').prop('disabled' , false);
-                        }
-
-                        console.log(response.resultInfo.data.isbn);
-                        console.log(response.publicationDate);
-                        console.log(response.resultInfo.data.supplier);
-                        // console.log(dataString)
-                        // 显示弹框
-
-                        $('#myModal').show();
-                    } else {
-                        alert(response.resultInfo.errorMsg);
-                        $('#myModal').hide();
-                    }
-                    <%
-                        System.out.println("success");
-                    %>
-                },
-                error: function () {
-                    alert('请求失败，请稍后重试');
-                }
-            });
-        }
-        // 确认按钮点击事件
-        confirmButton.onclick = function () {
-            console.log("I am confirmButton onclick");
-            // 获取目录字段的值
-            var categoryName = document.getElementById("categoryName").value;
-            var isbn = document.getElementById("isbn").value;
-            // 如果目录字段为空，则提醒用户并返回
-            if (document.getElementById("categoryName").value==null||document.getElementById("categoryName").value=='') {
-                alert("目录不能为空！");
-                return;
-            }
-            else{
-                var formData = $('#bookForm').serialize();
-                $.ajax({
-                    url:'${pageContext.request.contextPath}/CatalogOneBook' ,
-                    method :'GET',
-                    data : formData,
-                    dataType : 'json',
-                    success : function (response) {
-
-                        if(response.resultInfo.flag){
-
-                            console.log(response.resultInfo.date);
-                            var BianmuBookID=response.BianmuBookID;
-                            alert("编目成功,图书编号为："+BianmuBookID);
-                            // // 在点击时向后端请求相关数据
-                            // fetchNextData();  // 获取并展示现有数据
-                            fetchNextData();
-                        }
-                        else{
-                            alert(response.resultInfo.ErrorMsg);
-                        }
-                    }
-                });
-            }
-        }
-        function fetchNextData() {
-            console.log("I an fetchNextData function");
-            $.ajax({
-                url: '${pageContext.request.contextPath}/initBookForm',  // 后端接口，初始化表单数据
-                method: 'GET',
-                dataType: 'json' ,
-                success: function (response) {
-                    if (response.resultInfo.flag) {
-                        // 假设后端返回的数据包含初始化的书籍信息
-
-                        console.log(response.resultInfo.data);
-                        $('#bookID').val(response.resultInfo.data.bookID);
-                        $('#title').val(response.resultInfo.data.title);
-                        $('#author').val(response.resultInfo.data.author);
-                        $('#isbn').val(response.resultInfo.data.isbn);
-                        $('#publicationDate').val(response.publicationDate);
-                        $('#publisher').val(response.resultInfo.data.publisher);
-                        $('#edition').val(response.resultInfo.data.edition);
-                        $('#supplier').val(response.resultInfo.data.supplier);
-                        $('#currencyID').val(response.resultInfo.data.currencyID);
-                        $('#price').val(response.resultInfo.data.price);
-                        $('#bookNum').val(response.resultInfo.data.bookNum);
-                        $('#documentType').val(response.resultInfo.data.documentType);
-                        if(response.resultInfo.data.categoryName){
-                            $('#categoryName').val(response.resultInfo.data.categoryName);
-                            $('#categoryName').prop('disabled' , true);
-                        }
-                        else{
-                            $('#categoryName').prop('disabled' , false);
-                        }
-
-
-
-                        // 显示弹框
-
-                        // $('#myModal').show();
-                    } else {
-                        alert(response.resultInfo.errorMsg);
-                        $('#myModal').hide();
-                    }
-                    <%
-                        System.out.println("success");
-                    %>
-                },
-                error: function () {
-                    alert('请求失败，请稍后重试');
-                }
-            });
-        }
-
-
-        // 关闭成功提示框
-        closeSuccessModal.onclick = function () {
-            successModal.style.display = "none";
-        }
-        // 关闭弹框
-        $('.close').click(function() {
-            $('#myModal').hide();
-        });
-    });
-
-    // 获取并填充读者详细信息
-    function fetchCataloglistDetails(ISBN) {
-        // 假设我们通过后端接口 `/lookBookForm` 获取数据
-        $.ajax({
-            url: '${pageContext.request.contextPath}/lookBookForm', // 你的后端接口
-            method: 'GET',
-            data: { ISBN: ISBN}, // 发送读者编号（或其他唯一标识符）到后端
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    document.getElementById("bookID2").value = response.data.bookID;
-                    document.getElementById("title2").value = response.data.title;
-                    document.getElementById("author2").value = response.data.author;
-                    document.getElementById("publicationDate2").value = response.data.publicationDate;
-                    document.getElementById("edition2").value = response.data.edition;
-                    document.getElementById("documentType2").value = response.data.documentType;
-                    document.getElementById("bookNum2").value = response.data.bookNum;
-                    document.getElementById("categoryName2").value = response.data.categoryName;
-                    document.getElementById("isbn2").value = response.data.ISBN;
-                    document.getElementById("publisher2").value = response.data.publisher;
-                    document.getElementById("supplier2").value = response.data.supplier;
-                    document.getElementById("price2").value = response.data.price;
-
-                    // 显示弹框
-                    // modal1.style.display = "block";
-                } else {
-                    alert("无法获取书目信息！");
-                }
-            },
-            error: function(xhr, status, error) {
-                alert("获取书目信息失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
-            }
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // 获取模态框元素
-        var submitForm2 = document.getElementById("submitForm2");
-
-        // 提交表单2时验证
-        submitForm2.onclick = function () {
-
-            // 弹出确认框
-            var confirmSubmit = confirm("是否确定提交？");
-            if (confirmSubmit) {
-
-                var formData=$('#bookForm_edit').serialize();
-                var extraData = {
-                    currencyID: '<%= 1 %>',
-                    orderPerson: '',
-                };
-                var extraDataStr = $.param(extraData);
-                formData += '&' + extraDataStr;
-                // console.log("即将开始Ajax");
-                // console.log(formData );
-                // 使用 AJAX 发送数据到后端
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/editBookForm',  // 后端接口，用于提交数据
-                    method: 'POST',
-                    data: formData,  // 发送的表单数据
-                    dataType: 'json',  // 期待返回的数据格式
-                    success: function(response) {
-                        if (response.resultInfo.flag) {
-                            var BianmuBookID=response.BianmuBookID;
-                            alert("修改成功,图书编号为："+BianmuBookID);
-                            $('#myModal').hide();  // 关闭弹窗
-                            location.reload(true);  // 刷新页面，显示新数据
-                        } else {
-                            alert("提交失败，错误信息: " + response.resultInfo.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("提交失败，错误代码: " + xhr.status + "\n" + xhr.statusText);
-                    }
-                });
-
-            } else {
-                // 如果用户点击"否"，则不提交
-                alert("提交已取消！");
-            }
-        }
-    });
-
-</script>
-
 </body>
 </html>
 

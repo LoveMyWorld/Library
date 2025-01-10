@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>图书馆管理员操作界面</title>
+    <title>图书馆流通系统界面</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -129,15 +129,15 @@
         <h3>冠军小队</h3>
         <a href="http://localhost:8080/web_Web_exploded/caifang/interview.jsp"  style="color: gray; pointer-events: none;">采访管理</a>
         <a href="${pageContext.request.contextPath}/CatalogMServlet"  style="color: gray; pointer-events: none;">编目管理</a>
-        <a href="${pageContext.request.contextPath}/NetAppointmentServlet">流通管理</a>
+        <a href="${pageContext.request.contextPath}/QuickBorrowServlet">流通管理</a>
         <a href="${pageContext.request.contextPath}/ReaderServlet" style="color: gray; pointer-events: none;">用户管理</a>
         <a href="${pageContext.request.contextPath}/weihu/backup0.jsp" style="color: gray; pointer-events: none;">系统维护</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/network.jsp" style="color: gray; pointer-events: none;">网页管理</a>
+        <a href="${pageContext.request.contextPath}/wangye/network.jsp" style="color: gray; pointer-events: none;">网页管理</a>
     </div>
 </div>
 <div class="container">
     <div class="system-title-box">
-        图书馆管理员操作界面
+        图书馆流通系统界面
     </div>
 
 </div>

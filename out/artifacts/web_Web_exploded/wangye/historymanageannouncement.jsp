@@ -248,10 +248,10 @@
         <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
 
         <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
-       
+
 
         <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb.jsp">返回</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb5.jsp">返回</a>
     </div>
 </div>
 <div class="container">

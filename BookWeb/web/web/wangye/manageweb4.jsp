@@ -132,7 +132,7 @@
         <a href="${pageContext.request.contextPath}/NetAppointmentServlet"  style="color: gray; pointer-events: none;">流通管理</a>
         <a href="${pageContext.request.contextPath}/ReaderServlet"  style="color: gray; pointer-events: none;">用户管理</a>
         <a href="${pageContext.request.contextPath}/weihu/backup0.jsp" >系统维护</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/network.jsp"  style="color: gray; pointer-events: none;">网页管理</a>
+        <a href="${pageContext.request.contextPath}/wangye/network.jsp" style="color: gray; pointer-events: none;">网页管理</a>
     </div>
 </div>
 <div class="container">
