@@ -38,7 +38,7 @@ public class EditDingdanServlet extends HttpServlet {
         String price = request.getParameter("price");
         String edition = request.getParameter("edition");
         String printHouse = request.getParameter("printingHouse");
-
+        String reveiver = request.getSession().getAttribute("receiver").toString();
 //        // 转换 birthDay 为 Date 类型
 //        Date birthDate = Date.valueOf(birthDay);
 
@@ -47,6 +47,8 @@ public class EditDingdanServlet extends HttpServlet {
         Dingdan newDingdan = new Dingdan(orderName,supplier,title,publisher,orderPerson,ISBN,DocumentType.fromDescription(documentType),Double.parseDouble(price),Integer.parseInt(currencyID),edition,printHouse,author,false);
         // 使用 DingdanDao 保存数据
         DingdanDao dingdanDao = new DingdanDao();
+        newDingdan.setReceiver(reveiver);
+        newDingdan.setSubscribeNum(1);
 
 
         boolean success = dingdanDao.updateDingdan(newDingdan);

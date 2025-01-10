@@ -260,7 +260,7 @@
 
               <a  onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet'">编目管理</a>
               <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收清单</a>
-              <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">报损</a>
+              <a  onclick="location.href='${pageContext.request.contextPath}/DamageServlet'">报损</a>
               <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb1.jsp">返回</a>
           </div>
 <%--      改--%>

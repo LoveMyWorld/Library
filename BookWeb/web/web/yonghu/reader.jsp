@@ -337,7 +337,7 @@
         <h3>冠军小队</h3>
         <a  onclick="location.href='${pageContext.request.contextPath}/ReaderServlet'">读者信息维护</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/RlevelServlet'">读者级别维护</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb4.jsp">返回</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb3.jsp">返回</a>
 
     </div>
 
@@ -728,6 +728,7 @@
             var emailAdd = document.getElementById("emailAdd").value;
             var creditPoint = document.getElementById("creditPoint").value;
             var birthDay = document.getElementById("birthDay").value;
+            var readerLevel=document.getElementById("readerLevel").value;
 
             // 检查必填项
             if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
@@ -845,7 +846,7 @@
             var emailAdd = document.getElementById("emailAdd2").value;
             var creditPoint = document.getElementById("creditPoint2").value;
             var birthDay = document.getElementById("birthDay2").value;
-
+            var readerLevel=document.getElementById("readerLevel2").value;
             // 检查必填项
             if (!readID || !name || !unit || !homeAdd || !phoneNum || !creditPoint || !birthDay) {
                 alert("所有必填项不能为空！");
