@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>冠军小队维护系统</title>
+    <title>小赫维护系统</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,7 +30,7 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h3 {
-            font-size: 26px; /* 冠军小队字体变大 */
+            font-size: 26px; /* 小赫字体变大 */
             font-family: '楷体';
             font-weight: bold;
             text-align: center;
@@ -514,7 +514,7 @@
 <body>
 <div class="sidebar">
     <div>
-        <h3>冠军小队</h3>
+        <h3>小赫</h3>
         <div class="menu-item">
             <a href="javascript:void(0);" onclick="toggleSubmenu()">备份</a>
             <div class="sidebar-submenu" id="backup-submenu" style="display: none;">
@@ -529,7 +529,7 @@
         <a onclick="location.href='${pageContext.request.contextPath}/CollectionServlet'">收藏单位字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/PrinteryServlet'">印刷厂字典维护</a>
         <a onclick="location.href='${pageContext.request.contextPath}/TermDicServlet'">术语字典</a>
-        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb3.jsp">返回</a>
+        <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb4.jsp">返回</a>
     </div>
 
     <!-- 底部横杠和关于我们按钮 -->
@@ -541,9 +541,9 @@
 </div>
 
 <div class="container">
-    <!-- 冠军小队系统框 -->
+    <!-- 小赫系统框 -->
     <div class="system-title-box">
-        冠军小队维护系统
+        小赫维护系统
     </div>
 
 

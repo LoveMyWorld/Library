@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>冠军小队读者信息维护</title>
+    <title>小赫读者信息维护</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +27,7 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h3 {
-            font-size: 26px; /* 冠军小队字体变大 */
+            font-size: 26px; /* 小赫字体变大 */
             font-family: '楷体';
             font-weight: bold;
             text-align: center;
@@ -334,7 +334,7 @@
 <body>
 <div class="sidebar">
     <div>
-        <h3>冠军小队</h3>
+        <h3>小赫</h3>
         <a  onclick="location.href='${pageContext.request.contextPath}/DingdanServlet'">订单管理</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/CYanshouServlet'">验收</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/TuihuoServlet'">退货清单</a>
@@ -350,9 +350,9 @@
 </div>
 
 <div class="container">
-    <!-- 冠军小队系统框 -->
+    <!-- 小赫系统框 -->
     <div class="system-title-box">
-        冠军小队采访系统
+        小赫采访系统
     </div>
 
     <!-- 管理列表框 -->

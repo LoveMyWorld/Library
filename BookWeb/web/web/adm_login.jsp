@@ -73,7 +73,7 @@
 </head>
 <body>
 <div class="header">
-    <div>冠军小队图书馆</div>
+    <div>小赫图书馆</div>
 </div>
 
 <div id="loginBox" class="login-box">

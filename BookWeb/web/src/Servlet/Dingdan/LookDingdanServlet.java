@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class LookDingdanServlet extends HttpServlet {
 
             // 如果找到该读者的信息，返回成功的 JSON 响应
             if (dingdan != null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("receiver", dingdan.getReceiver());
+
                 // 创建一个包含读者详细信息的 JSON 对象
                 JSONObject jsonResponse = new JSONObject();
                 jsonResponse.put("success", true);

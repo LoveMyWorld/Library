@@ -13,7 +13,7 @@ public class Dao {
 
     private static final String dburl = "jdbc:mysql://127.0.0.1:3306/library?useSSL=false&serverTimezone=UTC";
     private static final String username = "root";
-    private static final String password = "123456";
+    private static final String password = "root";//123456
 
     public Dao() {
         dbconn();

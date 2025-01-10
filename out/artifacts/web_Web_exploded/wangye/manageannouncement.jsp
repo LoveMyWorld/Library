@@ -185,7 +185,7 @@
 <body>
 <div class="sidebar">
     <div>
-        <h3>冠军小队</h3>
+        <h3>小赫</h3>
         <a href="${pageContext.request.contextPath}/wangye/manageannouncement.jsp" >发布公告</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/HistoryAnnouncementServlet'">历史公告</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/MessageServlet'">查看留言</a>

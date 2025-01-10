@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>冠军小队采访系统</title>
+    <title>小赫采访系统</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,7 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h3 {
-            font-size: 26px; /* 冠军小队字体变大 */
+            font-size: 26px; /* 小赫字体变大 */
             font-family: '楷体';
             font-weight: bold;
             text-align: center;
@@ -251,7 +251,7 @@
 
 <div class="sidebar">
     <div>
-        <h3>冠军小队</h3>
+        <h3>小赫</h3>
 
         <a  onclick="location.href='${pageContext.request.contextPath}/DingdanServlet'">订单管理</a>
         <a  onclick="location.href='${pageContext.request.contextPath}/CYanshouServlet'">验收</a>
@@ -270,7 +270,7 @@
 <div class="container">
 
     <div class="system-title-box">
-        冠军小队采访系统
+        小赫采访系统
     </div>
 
 <%--    <!-- 编目管理列表框 -->--%>

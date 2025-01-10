@@ -126,7 +126,7 @@
 <body>
 <div class="sidebar">
   <div>
-    <h3>冠军小队</h3>
+    <h3>小赫</h3>
     <a href="http://localhost:8080/web_Web_exploded/caifang/interview.jsp">采访管理</a>
     <a href="${pageContext.request.contextPath}/CatalogMServlet">编目管理</a>
     <a href="${pageContext.request.contextPath}/NetAppointmentServlet" style="color: gray; pointer-events: none;">流通管理</a>

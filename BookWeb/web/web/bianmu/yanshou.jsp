@@ -7,7 +7,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>冠军小队编目系统——验收</title>
+  <title>小赫编目系统——验收</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,7 +26,7 @@
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
     .sidebar h3 {
-      font-size: 26px; /* 冠军小队字体变大 */
+      font-size: 26px; /* 小赫字体变大 */
       font-family: '楷体';
       font-weight: bold;
       text-align: center;
@@ -245,7 +245,7 @@
 <body>
 <%--<div class="sidebar">--%>
 <%--  <div>--%>
-<%--    <h3>冠军小队</h3>--%>
+<%--    <h3>小赫</h3>--%>
 
 <%--    <a href="#" class="active">编目管理</a>--%>
 <%--&lt;%&ndash;    <a href="#" class="active">验收清单</a>&ndash;%&gt;--%>
@@ -256,11 +256,11 @@
 <%--      改--%>
 <div class="sidebar">
           <div>
-              <h3>冠军小队</h3>
+              <h3>小赫</h3>
 
               <a  onclick="location.href='${pageContext.request.contextPath}/CatalogMServlet'">编目管理</a>
               <a  onclick="location.href='${pageContext.request.contextPath}/YanshouServlet'">验收清单</a>
-              <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">报损</a>
+              <a  onclick="location.href='${pageContext.request.contextPath}/DamageServlet'">报损</a>
               <a href="http://localhost:8080/web_Web_exploded/wangye/manageweb1.jsp">返回</a>
           </div>
 <%--      改--%>
@@ -273,9 +273,9 @@
 </div>
 
 <div class="container">
-  <!-- 冠军小队编目系统框 -->
+  <!-- 小赫编目系统框 -->
   <div class="system-title-box">
-    冠军小队编目系统
+    小赫编目系统
   </div>
 
   <!-- 编目管理列表框 -->

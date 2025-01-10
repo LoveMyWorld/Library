@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>冠军小队图书馆</title>
+  <title>小赫图书馆</title>
   <style>
     body, html {
       font-family: '楷体', sans-serif;
@@ -11,7 +11,7 @@
       padding: 0;
       height: 100%;
       background-color: #f4f4f4;
-      background-image: url('image/sky.jpg');
+      background-image: url('image/sky1.jpg');
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -58,7 +58,7 @@
       margin: 0 auto; /* 水平居中 */
       display: block; /* 使图片独占一行 */
     }
-    /* 新增的冠军小队图书馆标题样式 */
+    /* 新增的小赫图书馆标题样式 */
     .header h2 {
       font-family: '楷体', sans-serif;
       font-weight: bold;
@@ -74,7 +74,7 @@
   <button class="register-button" onclick="window.location.href='http://localhost:8080/web_Web_exploded/register.jsp'">注册</button>
 </div>
 <div class="header">
-  <h2>冠军小队图书馆</h2>
+  <h2>小赫图书馆</h2>
 </div>
 
 <!-- 搜索栏代码被注释，如果需要可以取消注释 -->

@@ -337,7 +337,7 @@
 <body>
 <div class="sidebar">
     <div>
-        <h3>冠军小队</h3>
+        <h3>小赫</h3>
 
         <a href="${pageContext.request.contextPath}/SearchServlet">搜索书目</a>
         <a href="${pageContext.request.contextPath}/liutong/NetAppointment.jsp">预约借书</a>
