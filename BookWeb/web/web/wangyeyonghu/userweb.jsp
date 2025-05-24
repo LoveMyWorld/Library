@@ -101,6 +101,37 @@
             height: 30px;
             flex-grow: 1; /* 让输入框占据剩余空间 */
         }
+        .welcome-box {
+            font-size: 32px;
+            font-weight: bold;
+            color: #015999;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-family: '楷体', 'Arial', sans-serif;
+        }
+        .divider {
+            width: 80%;
+            height: 2px;
+            background: #3498db;
+            margin: 0 auto 20px auto;
+            border-radius: 2px;
+        }
+        .library-info {
+            font-size: 18px;
+            color: #333;
+            background: #f0f8ff;
+            border-radius: 8px;
+            padding: 18px 30px;
+            width: 70%;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+            line-height: 2.2;
+        }
+        .library-info strong {
+            color: #015999;
+        }
     </style>
 </head>
 <body>
@@ -112,24 +143,24 @@
         <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
         <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
         <a href="${pageContext.request.contextPath}/WeiguiServlet">违规通报</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
     </div>
 </div>
 <div class="container">
     <div class="system-title-box">
         图书馆用户界面
     </div>
-<%--    <div class="content-box">--%>
-<%--        <div class="toolbar">--%>
-<%--            <div class="search">--%>
-<%--                <select id="search-type">--%>
-<%--                    <option value="bookname">书名</option>--%>
-<%--                    <option value="author">作者</option>--%>
-<%--                </select>--%>
-<%--                <input type="text" id="search-input" placeholder="请输入搜索关键词...">--%>
-<%--            </div>--%>
-<%--        </div>--%>
-        <!-- 其他功能的留白区域 -->
-<%--    </div>--%>
-<%--</div>--%>
+    <div class="welcome-box">
+        欢迎读者进入小赫图书馆
+    </div>
+    <div class="divider"></div>
+    <div class="library-info">
+        <div><strong>地址：</strong> 河北省保定市莲池区华北电力大学（保定）二校区</div>
+        <div><strong>联系电话：</strong> 15614481233</div>
+        <div><strong>开放时间：</strong> 周一至周日 8:00-21:00</div>
+        <div><strong>闭馆日：</strong> 法定节假日</div>
+    </div>
+    <!-- 其他功能的留白区域 -->
+</div>
 </body>
 </html>

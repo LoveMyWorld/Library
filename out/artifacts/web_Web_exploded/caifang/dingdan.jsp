@@ -433,11 +433,18 @@
         <div class="pagination">
             <div class="pagination">
                 <!-- 上一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage - 1 %>'" <%= currentPage <= 1 ? "disabled" : "" %>>&laquo; 上一页</button>
                 <!-- 当前页信息 -->
                 <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
                 <!-- 下一页 -->
-                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+                <button onclick="location.href='${pageContext.request.contextPath}/DingdanServlet?currentPage=<%= currentPage + 1 %>'" <%= currentPage >= totalPages ? "disabled" : "" %>>下一页 &raquo;</button>
+                <!-- 跳转到指定页 -->
+                <span style="margin-left:10px;">
+                    跳转到第
+                    <input type="number" id="gotoPage" min="1" max="<%= totalPages %>" style="width:50px;" value="<%= currentPage %>">
+                    页
+                    <button onclick="gotoPageFunc()">跳转</button>
+                </span>
             </div>
 
         </div>
@@ -631,13 +638,13 @@
         // 获取模态框元素
         var modal1 = document.getElementById("myModal1");
         var closeModal1 = document.getElementById("closeModal1");
-        // 获取所有的“查看”按钮
+        // 获取所有的"查看"按钮
         var lookButtons = document.querySelectorAll("#lookButton");
 
         // 获取模态框元素
         var modal2 = document.getElementById("myModal2");
         var closeModal2 = document.getElementById("closeModal2");
-        // 获取所有的“编辑”按钮
+        // 获取所有的"编辑"按钮
         var editButtons = document.querySelectorAll("#editButton");
 
 
@@ -650,7 +657,7 @@
         }
 
 
-        // 遍历所有“查看”按钮并绑定点击事件
+        // 遍历所有"查看"按钮并绑定点击事件
         lookButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 modal1.style.display = "block";
@@ -663,7 +670,7 @@
         });
 
 
-        // 遍历所有“编辑”按钮并绑定点击事件
+        // 遍历所有"编辑"按钮并绑定点击事件
         editButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 modal2.style.display = "block";
@@ -985,7 +992,7 @@
         // 获取模态框元素
         var deleteButtons = document.querySelectorAll("#deleteButton");
 
-        // 遍历所有“删除”按钮并绑定点击事件
+        // 遍历所有"删除"按钮并绑定点击事件
         deleteButtons.forEach(function(button) {
             button.addEventListener("click", function(event) {
                 // 获取点击按钮所在行的读者信息
@@ -1022,6 +1029,14 @@
         });
 
     });
+
+    function gotoPageFunc() {
+        var page = document.getElementById('gotoPage').value;
+        var total = <%= totalPages %>;
+        if(page < 1) page = 1;
+        if(page > total) page = total;
+        location.href = '${pageContext.request.contextPath}/DingdanServlet?currentPage=' + page;
+    }
 </script>
 
 

@@ -1049,7 +1049,7 @@
                         <option value="G1 世界各国文化与文化事业">&nbsp;&nbsp;&nbsp;&nbsp;G1 世界各国文化与文化事业</option>
                         <option value="G2 信息与知识传播">&nbsp;&nbsp;&nbsp;&nbsp;G2 信息与知识传播</option>
                         <option value="G3 科学、科学研究">&nbsp;&nbsp;&nbsp;&nbsp;G3 科学、科学研究</option>
-                        <option value="G4 教育">&nbsp;&nbsp;&nbsp;&nbsp;;G4 教育</option>
+                        <option value="G4 教育">&nbsp;&nbsp;&nbsp;&nbsp;G4 教育</option>
                         <%--                         <option value="G64 高等教育">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G64 高等教育</option>--%>
                         <option value="G8 体育">&nbsp;&nbsp;&nbsp;&nbsp;G8 体育</option>
                         <option value="H 语言、文字">H 语言、文字</option>
