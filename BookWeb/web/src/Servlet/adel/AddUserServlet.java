@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import Service.PasswordSHA256Service;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -26,8 +27,9 @@ public class AddUserServlet extends HttpServlet {
         String username = request.getParameter("username");
         String userpwd = request.getParameter("userpwd");
 
-        // 创建 User 对象
-        User newUser = new User(username, userpwd);
+        // 创建 User 对象，先加密密码
+        String encryptedPwd = PasswordSHA256Service.encrypt(userpwd);
+        User newUser = new User(username, encryptedPwd);
 
         // 使用 UserDao 保存数据
         UserDao userDao = new UserDao();

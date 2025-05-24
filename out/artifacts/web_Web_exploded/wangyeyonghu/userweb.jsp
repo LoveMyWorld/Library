@@ -107,13 +107,11 @@
 <div class="sidebar">
     <div>
         <h3>小赫</h3>
-
         <a href="${pageContext.request.contextPath}/SearchServlet">搜索书目</a>
         <a href="${pageContext.request.contextPath}/liutong/NetAppointment.jsp">预约借书</a>
         <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
         <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
         <a href="${pageContext.request.contextPath}/WeiguiServlet">违规通报</a>
-
     </div>
 </div>
 <div class="container">

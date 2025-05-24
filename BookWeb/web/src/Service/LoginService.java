@@ -8,7 +8,7 @@ public class LoginService {
     public String isCorrect(User user) {
         String ret = "true";
         String uname = user.getUsername();
-        String pwd = user.getPassword();
+        String pwd = PasswordSHA256Service.encrypt(user.getPassword());
         String correctpwd = "";
 
         // 用户名是否存在
@@ -34,7 +34,7 @@ public class LoginService {
     public String isCorrect1(User user) {
         String ret = "true";
         String uname = user.getUsername();
-        String pwd = user.getPassword();
+        String pwd = PasswordSHA256Service.encrypt(user.getPassword());
         String correctpwd = "";
 
         // 用户名是否存在

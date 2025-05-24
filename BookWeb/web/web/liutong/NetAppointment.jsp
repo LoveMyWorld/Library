@@ -22,7 +22,7 @@
         }
         .sidebar {
             width: 200px;
-            background-color: #07598a;
+            background-color: #015999; /* 调整菜单栏背景颜色 */
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
@@ -30,7 +30,7 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h3 {
-            font-size: 26px; /* 小赫字体变大 */
+            font-size: 26px;
             font-family: '楷体';
             font-weight: bold;
             text-align: center;
@@ -38,60 +38,23 @@
             padding: 30px;
         }
         .sidebar a {
-
-            width: 100%; /* 按钮宽度与侧边栏一致 */
-            box-sizing: border-box; /* 确保内边距和边框不会导致宽度超出 */
+            width: 100%;
+            box-sizing: border-box;
             display: block;
             color: #ecf0f1;
             text-decoration: none;
             margin-bottom: 20px;
             padding: 15px;
-
-            font-size: 23px; /* 编目管理和帮助字体变大 */
+            font-size: 23px;
             font-weight: bold;
             font-family: '楷体';
             text-align: center;
             border-radius: 0px;
         }
-
         .sidebar a:hover {
             background-color: #34495e;
-            transform: scale(0.98); /* 按下时按钮稍微缩小 */
-            background-color: #2c3e50; /* 按下时按钮背景颜色 */
-        }
-        /*改*/
-        .sidebar-footer {
-            text-align: center;
-            padding: 350px 0;   /*改变下方横线位置，就改这里*/
-
-        }
-
-        .sidebar-footer .divider {
-            height: 2px;
-            width: 180px; /* 横杠宽度略小于侧边栏宽度 */
-            background-color: #ecf0f1;
-            margin: 0 auto 10px auto; /* 横杠居中并与按钮留出间距 */
-        }
-
-        .sidebar-footer .about-btn {
-            display: block;
-            width: 100%; /* 按钮宽度与侧边栏一致 */
-            box-sizing: border-box; /* 确保内边距和边框不会导致宽度超出 */
-            color: #ecf0f1;
-            text-decoration: none;
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            font-family: '楷体';
-            text-align: center;
-            background-color: transparent;
-            border-radius: 0;
-            transition: all 0.3s;
-        }
-
-        .sidebar-footer .about-btn:hover {
-            background-color: #34495e;
-            transform: scale(1.01);
+            transform: scale(0.98);
+            background-color: #2c3e50;
         }
         .container {
             margin-left: 220px; /* 调整左边距适应侧边栏宽度 */
@@ -258,24 +221,12 @@
 <div class="sidebar">
     <div>
         <h3>小赫</h3>
-
-        <%--        <a  onclick="location.href='${pageContext.request.contextPath}/BorrowBookServlet'">借书</a>--%>
-<%--        <a onclick="showBorrowOptions()">借书</a>--%>
-        <a  onclick="location.href='${pageContext.request.contextPath}/liutong/NetAppointment.jsp'">线上预约</a>
-        <a  onclick="location.href='${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp'">返回主页</a>
-        <%--        <a  onclick="location.href='${pageContext.request.contextPath}/damageServlet'">罚款</a>--%>
-    </div>
-
-<%--    <div id="borrowOptions" style="display: none;" class="borrow-options">--%>
-<%--        <button  class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/QuickBorrowServlet'">快速通道</button><p/>--%>
-<%--        &lt;%&ndash;        <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/DirBorrowServlet'">读者亲自借书</button>&ndash;%&gt;--%>
-<%--        <button class="borrow-option" onclick="location.href='${pageContext.request.contextPath}/liutong/DirBorrow.jsp'">读者亲自借书</button>--%>
-<%--    </div>--%>
-    <!-- 底部横杠和关于我们按钮 -->
-    <div class="sidebar-footer">
-        <div class="divider"></div>
-        <a href="#" class="about-btn">关于我们</a>
-        <a href="#" class="about-btn">帮助</a>
+        <a href="${pageContext.request.contextPath}/SearchServlet">搜索书目</a>
+        <a href="${pageContext.request.contextPath}/liutong/NetAppointment.jsp">预约借书</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/message.jsp">留言</a>
+        <a href="${pageContext.request.contextPath}/UserAnnouncementServlet">查看公告</a>
+        <a href="${pageContext.request.contextPath}/WeiguiServlet">违规通报</a>
+        <a href="${pageContext.request.contextPath}/wangyeyonghu/userweb.jsp">返回主页</a>
     </div>
 </div>
 

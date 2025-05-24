@@ -20,7 +20,7 @@
         .sidebar {
 
             width: 200px;
-            background-color: #07598a;
+            background-color: #015999;
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
