@@ -422,14 +422,29 @@
     <div class="pagination">
         <div class="pagination">
             <!-- 上一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/SearchServlet?currentPage=<%= currentPage - 1 %>'">&laquo; 上一页</button>
+            <button onclick="location.href='${pageContext.request.contextPath}/SearchServlet?currentPage=<%= currentPage - 1 %>'" <%= currentPage <= 1 ? "disabled" : "" %>>&laquo; 上一页</button>
             <!-- 当前页信息 -->
             <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
             <!-- 下一页 -->
-            <button onclick="location.href='${pageContext.request.contextPath}/SearchServlet?currentPage=<%= currentPage + 1 %>'">下一页 &raquo;</button>
+            <button onclick="location.href='${pageContext.request.contextPath}/SearchServlet?currentPage=<%= currentPage + 1 %>'" <%= currentPage >= totalPages ? "disabled" : "" %>>下一页 &raquo;</button>
+            <!-- 跳转到指定页 -->
+            <span style="margin-left:10px;">
+                跳转到第
+                <input type="number" id="gotoPage" min="1" max="<%= totalPages %>" style="width:50px;" value="<%= currentPage %>">
+                页
+                <button onclick="gotoPageFunc()">跳转</button>
+            </span>
         </div>
-
     </div>
+    <script>
+        function gotoPageFunc() {
+            var page = document.getElementById('gotoPage').value;
+            var total = Number('<%= totalPages %>');
+            if(page < 1) page = 1;
+            if(page > total) page = total;
+            location.href = '${pageContext.request.contextPath}/SearchServlet?currentPage=' + page;
+        }
+    </script>
 </div>
 </div>
 

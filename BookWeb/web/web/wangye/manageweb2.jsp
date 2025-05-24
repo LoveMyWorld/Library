@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Entity.Liutong" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +12,11 @@
             margin: 0;
             padding: 0;
             background-color: #f7f9fc;
-            overflow-x: hidden; /* 禁用横向滚动条 */
+            overflow-x: hidden;
         }
         .sidebar {
             width: 200px;
-            background-color: #015999; /* 调整菜单栏背景颜色 */
+            background-color: #015999;
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
@@ -70,56 +72,74 @@
         .content-box {
             border: 1px solid #3498db;
             background-color: white;
-            padding: 15px;
+            padding: 0px 0px 10px 0px;
             width: 100%;
             margin-left: 1%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            width: 100%; /* 确保toolbar占满整个容器宽度 */
+            position: relative;
         }
         .search {
+            padding: 0px 7px 0px 0px;
             display: flex;
             align-items: center;
-            width: 100%; /* 让搜索框占满剩余空间 */
+            gap: 10px;
         }
         .search select {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
             height: 34px;
-            width: 150px; /* 设置下拉框的宽度 */
         }
         .search input[type="text"] {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            width: 180px;
             height: 30px;
-            flex-grow: 1; /* 让输入框占据剩余空间 */
         }
-        .section-box {
+        .search button {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .search button:hover {
+            background-color: #ddd;
+        }
+        table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 20px;
         }
-        .section-box h4 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
         }
-        .section-box button {
-            padding: 10px 15px;
-            margin-right: 10px;
-            border: none;
-            background-color: #3498db;
-            color: white;
-            border-radius: 5px;
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #fffbcc;
+        }
+        .pagination {
+            text-align: center;
+            padding: 10px;
+        }
+        .pagination button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
             cursor: pointer;
         }
-        .section-box button:hover {
-            background-color: #2980b9;
+        .pagination button:hover {
+            background-color: #ddd;
         }
     </style>
 </head>
@@ -139,7 +159,73 @@
     <div class="system-title-box">
         图书馆流通系统界面
     </div>
-
+    <!-- 搜索框 -->
+    <div class="search">
+        <form action="${pageContext.request.contextPath}/Manage2Servlet" method="get">
+            <select name="searchField">
+                <option value="bookID">图书编号</option>
+                <option value="title">书名</option>
+                <option value="author">作者</option>
+            </select>
+            <input type="text" name="searchValue" placeholder="请输入关键词" />
+            <input type="text" name="search" value="" hidden="hidden"/>
+            <button type="submit">搜索</button>
+        </form>
+    </div>
+    <div class="content-box">
+        <table>
+            <thead>
+               <tr>
+                    <th>序号</th>
+                    <th>图书编号</th>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>图书类别</th>
+               </tr>
+            </thead>
+            <tbody>
+            <%
+                int currentPage = request.getAttribute("currentPage")==null?1:(int) request.getAttribute("currentPage");
+                int totalPages = request.getAttribute("totalPage")==null?1:(int) request.getAttribute("totalPage");
+                List<Liutong> liutongList= (List<Liutong>) request.getAttribute("liutongList");
+                int count = 1;
+                if (liutongList != null) {
+                    for (Liutong liutong : liutongList) {
+            %>
+            <tr>
+                <td><%= count++ %></td>
+                <td><%= liutong.getBookID() %></td>
+                <td><%= liutong.getTitle() %></td>
+                <td><%= liutong.getAuthor() %></td>
+                <td><%= liutong.getDocumentType() %></td>
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button onclick="location.href='${pageContext.request.contextPath}/Manage2Servlet?currentPage=<%= currentPage - 1 %>'" <%= currentPage <= 1 ? "disabled" : "" %>>&laquo; 上一页</button>
+            <span>第 <%= currentPage %> / <%= totalPages %> 页，每页显示 16 条</span>
+            <button onclick="location.href='${pageContext.request.contextPath}/Manage2Servlet?currentPage=<%= currentPage + 1 %>'" <%= currentPage >= totalPages ? "disabled" : "" %>>下一页 &raquo;</button>
+            <span style="margin-left:10px;">
+                跳转到第
+                <input type="number" id="gotoPage" min="1" max="<%= totalPages %>" style="width:50px;" value="<%= currentPage %>">
+                页
+                <button onclick="gotoPageFunc()">跳转</button>
+            </span>
+        </div>
+        <script>
+            function gotoPageFunc() {
+                var page = document.getElementById('gotoPage').value;
+                var total = Number('<%= totalPages %>');
+                if(page < 1) page = 1;
+                if(page > total) page = total;
+                location.href = '${pageContext.request.contextPath}/Manage2Servlet?currentPage=' + page;
+            }
+        </script>
+    </div>
 </div>
 </body>
 </html>
